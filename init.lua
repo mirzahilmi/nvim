@@ -150,6 +150,12 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
   },
 
   {
+    'windwp/nvim-autopairs',
+    event = 'InsertEnter',
+    opts = {},
+  },
+
+  {
     'sainnhe/gruvbox-material',
     lazy = false,
     priority = 1000,

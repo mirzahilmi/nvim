@@ -134,6 +134,7 @@
           mini-nvim
           neo-tree-nvim
           nui-nvim
+          nvim-autopairs
           nvim-cmp
           nvim-lspconfig
           nvim-treesitter.withAllGrammars
@@ -158,9 +159,6 @@
         ];
         kickstart-lint = [
           nvim-lint
-        ];
-        kickstart-autopairs = [
-          nvim-autopairs
         ];
         kickstart-neo-tree = [
           neo-tree-nvim
