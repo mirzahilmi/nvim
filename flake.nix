@@ -118,36 +118,31 @@
       # This is for plugins that will load at startup without using packadd:
       startupPlugins = with pkgs.vimPlugins; {
         general = [
-          vim-sleuth
-          lazy-nvim
-          comment-nvim
-          gitsigns-nvim
-          which-key-nvim
-          telescope-nvim
-          telescope-fzf-native-nvim
-          telescope-ui-select-nvim
-          nvim-web-devicons
-          plenary-nvim
-          nvim-lspconfig
-          lazydev-nvim
-          fidget-nvim
-          conform-nvim
-          nvim-cmp
-          luasnip
-          cmp_luasnip
           cmp-nvim-lsp
           cmp-path
-          tokyonight-nvim
-          todo-comments-nvim
+          cmp_luasnip
+          comment-nvim
+          conform-nvim
+          fidget-nvim
+          fzf-lua
+          gitsigns-nvim
+          kanagawa-nvim
+          lazy-nvim
+          lazydev-nvim
+          luasnip
           mini-nvim
+          nvim-cmp
+          nvim-lspconfig
           nvim-treesitter.withAllGrammars
-          # This is for if you only want some of the grammars
-          # (nvim-treesitter.withPlugins (
-          #   plugins: with plugins; [
-          #     nix
-          #     lua
-          #   ]
-          # ))
+          nvim-web-devicons
+          plenary-nvim
+          telescope-fzf-native-nvim
+          telescope-nvim
+          telescope-ui-select-nvim
+          todo-comments-nvim
+          tokyonight-nvim
+          vim-sleuth
+          which-key-nvim
         ];
         kickstart-debug = [
           nvim-dap
