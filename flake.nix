@@ -132,6 +132,8 @@
           lazydev-nvim
           luasnip
           mini-nvim
+          neo-tree-nvim
+          nui-nvim
           nvim-cmp
           nvim-lspconfig
           nvim-treesitter.withAllGrammars
