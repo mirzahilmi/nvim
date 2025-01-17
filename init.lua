@@ -133,13 +133,14 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
   {
     'ibhagwan/fzf-lua',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
-    opts = {
-      winopts = {
-        backdrop = 100,
-        treesitter = true,
-      },
-    },
     config = function()
+      require('fzf-lua').setup {
+        winopts = {
+          backdrop = 100,
+          treesitter = true,
+        },
+      }
+
       vim.keymap.set('n', '<leader>sf', require('fzf-lua').files)
       vim.keymap.set('n', '<leader>sg', require('fzf-lua').live_grep)
       vim.keymap.set('n', '<leader>/', require('fzf-lua').lgrep_curbuf)
