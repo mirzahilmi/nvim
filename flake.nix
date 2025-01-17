@@ -126,6 +126,7 @@
           fidget-nvim
           fzf-lua
           gitsigns-nvim
+          gruvbox-material
           kanagawa-nvim
           lazy-nvim
           lazydev-nvim

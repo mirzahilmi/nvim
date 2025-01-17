@@ -84,6 +84,7 @@ local function getlockfilepath()
     return vim.fn.stdpath 'config' .. '/lazy-lock.json'
   end
 end
+
 local lazyOptions = {
   lockfile = getlockfilepath(),
   ui = {
@@ -472,10 +473,15 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
   },
 
   {
-    'rebelot/kanagawa.nvim',
-    opts = { theme = 'dragon' },
+    'sainnhe/gruvbox-material',
+    lazy = false,
+    priority = 1000,
     config = function()
-      vim.cmd 'colorscheme kanagawa'
+      -- Optionally configure and load the colorscheme
+      -- directly inside the plugin declaration.
+      vim.g.gruvbox_material_enable_italic = true
+      vim.g.gruvbox_material_diagnostic_virtual_text = 1
+      vim.cmd.colorscheme 'gruvbox-material'
     end,
   },
 
@@ -573,6 +579,3 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
 }, lazyOptions)
-
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
