@@ -103,9 +103,11 @@
           fd
           stdenv.cc.cc
           nix-doc
+          stylua
+
           lua-language-server
           nixd
-          stylua
+          yaml-language-server
         ];
         kickstart-debug = [
           delve
@@ -123,6 +125,7 @@
           cmp_luasnip
           comment-nvim
           conform-nvim
+          cord-nvim
           fidget-nvim
           fzf-lua
           gitsigns-nvim
