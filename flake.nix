@@ -68,6 +68,7 @@
           nvim-treesitter.withAllGrammars
           nvim-web-devicons
           plenary-nvim
+          snacks-nvim
           todo-comments-nvim
           vim-sleuth
         ];

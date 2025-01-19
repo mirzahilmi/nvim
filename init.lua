@@ -336,6 +336,16 @@ local plugins = {
   {
     "neo-tree.nvim",
     after = function()
+      local function on_move(data)
+        Snacks.rename.on_rename_file(data.source, data.destination)
+      end
+      local events = require "neo-tree.events"
+      require("neo-tree").setup {
+        event_handlers = {
+          { event = events.FILE_MOVED, handler = on_move },
+          { event = events.FILE_RENAMED, handler = on_move },
+        },
+      }
       vim.keymap.set("n", "<C-n>", ":Neotree toggle<CR>")
     end,
   },
@@ -404,6 +414,17 @@ local plugins = {
       require("jdtls").start_or_attach {
         cmd = { "jdtls" },
         root_dir = vim.fs.dirname(vim.fs.find({ "gradlew", ".git", "mvnw" }, { upward = true })[1]),
+      }
+    end,
+  },
+  {
+    "snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    after = function()
+      require("snacks").setup {
+        input = { enabled = true },
+        rename = { enabled = true },
       }
     end,
   },
