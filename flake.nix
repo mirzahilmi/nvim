@@ -61,7 +61,10 @@
           mini-nvim
           neo-tree-nvim
           nui-nvim
+          nvim-dap
+          nvim-dap-ui
           nvim-lspconfig
+          nvim-nio
           nvim-treesitter.withAllGrammars
           nvim-web-devicons
           plenary-nvim
