@@ -82,14 +82,17 @@ local plugins = {
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
         callback = function(event)
-          local map = function(keys, func, desc, mode)
-            mode = mode or "n"
-            vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
-          end
+          vim.keymap.set("n", "<leader>ds", require("fzf-lua").lsp_document_symbols)
+          vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename)
+          vim.keymap.set({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action)
 
-          map("<leader>ds", require("fzf-lua").lsp_document_symbols, "[D]ocument [S]ymbols")
-          map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-          map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
+          local fzflua = require "fzf-lua"
+          vim.keymap.set("n", "gd", function()
+            fzflua.lsp_definitions { jump_to_single_result = true }
+          end)
+          vim.keymap.set("n", "gI", function()
+            fzflua.lsp_implementations { jump_to_single_result = true }
+          end)
 
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
@@ -116,9 +119,9 @@ local plugins = {
           end
 
           if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
-            map("<leader>th", function()
+            vim.keymap.set("n", "<leader>th", function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-            end, "[T]oggle Inlay [H]ints")
+            end)
           end
         end,
       })
