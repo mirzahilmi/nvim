@@ -394,6 +394,16 @@ local plugins = {
       vim.keymap.set("n", "<C-k>", showkeys.toggle)
     end,
   },
+  {
+    "nvim-jdtls",
+    ft = "java",
+    after = function()
+      require("jdtls").start_or_attach {
+        cmd = { "jdtls" },
+        root_dir = vim.fs.dirname(vim.fs.find({ "gradlew", ".git", "mvnw" }, { upward = true })[1]),
+      }
+    end,
+  },
 }
 
 require("lz.n").load(plugins)

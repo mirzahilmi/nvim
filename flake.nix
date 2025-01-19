@@ -78,6 +78,7 @@
           conform-nvim
           highlight-undo-nvim
           nvim-autopairs
+          nvim-jdtls
           treesj
           pkgs.neovimPlugins.showkeys
         ];
