@@ -4,6 +4,10 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixCats.url = "github:BirdeeHub/nixCats-nvim";
+    "plugins-showkeys" = {
+      url = "github:nvzone/showkeys";
+      flake = false;
+    };
   };
 
   outputs = {
@@ -72,6 +76,7 @@
           highlight-undo-nvim
           nvim-autopairs
           treesj
+          pkgs.neovimPlugins.showkeys
         ];
       };
     };

@@ -316,9 +316,7 @@ local plugins = {
       treesj.setup {
         use_default_keymaps = false,
       }
-      vim.keymap.set("n", "<space>j", function()
-        treesj.toggle()
-      end)
+      vim.keymap.set("n", "<space>j", treesj.toggle)
     end,
   },
   {
@@ -326,6 +324,15 @@ local plugins = {
     keys = { "u", "<C-r>", "p", "P" },
     after = function()
       require("highlight-undo").setup {}
+    end,
+  },
+  {
+    "showkeys",
+    keys = "<C-k>",
+    after = function()
+      local showkeys = require "showkeys"
+      showkeys.setup {}
+      vim.keymap.set("n", "<C-k>", showkeys.toggle)
     end,
   },
 }

@@ -31,10 +31,27 @@
         "type": "github"
       }
     },
+    "plugins-showkeys": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1735865298,
+        "narHash": "sha256-a4ZMn3dmLLjuh1V6ASIN6uWWB9XRtjnoqj+2L8AIZys=",
+        "owner": "nvzone",
+        "repo": "showkeys",
+        "rev": "891f95ef94ac80bc7690a0df09c6112b4b822cac",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nvzone",
+        "repo": "showkeys",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "nixCats": "nixCats",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "plugins-showkeys": "plugins-showkeys"
       }
     }
   },
