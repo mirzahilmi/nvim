@@ -324,6 +324,11 @@ local plugins = {
           backdrop = 100,
           treesitter = true,
         },
+        previewers = {
+          builtin = {
+            syntax_limit_b = 1024 * 100,
+          },
+        },
       }
       vim.keymap.set("n", "<leader>sf", fzflua.files)
       vim.keymap.set("n", "<leader>sg", fzflua.live_grep)
