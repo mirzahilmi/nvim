@@ -400,11 +400,11 @@ local plugins = {
   },
   {
     "showkeys",
-    keys = "<C-k>",
+    keys = "<leader>k",
     after = function()
       local showkeys = require "showkeys"
       showkeys.setup {}
-      vim.keymap.set("n", "<C-k>", showkeys.toggle)
+      vim.keymap.set("n", "<leader>k", showkeys.toggle)
     end,
   },
   {
