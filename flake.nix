@@ -88,9 +88,8 @@
 
     packageDefinitions = {
       nvim = {pkgs, ...}: {
-        categories = {
-          default = true;
-        };
+        settings.wrapRc = false;
+        categories.default = true;
       };
     };
     defaultPackageName = "nvim";
