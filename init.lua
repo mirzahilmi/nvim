@@ -37,7 +37,7 @@ vim.opt.scrolloff = 10
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
-vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>")
+vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { silent = true })
 -- Diagnostic keymaps
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]iagnostic message" })
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagnostic message" })
@@ -80,7 +80,6 @@ local plugins = {
     "nvim-lspconfig",
     after = function()
       vim.api.nvim_create_autocmd("LspAttach", {
-        group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
         callback = function(event)
           vim.keymap.set("n", "<leader>ds", require("fzf-lua").lsp_document_symbols)
           vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename)
@@ -92,6 +91,7 @@ local plugins = {
           vim.keymap.set("n", "gI", function()
             fzflua.lsp_implementations { jump_to_single_result = true }
           end)
+          vim.keymap.set("n", "gr", fzflua.lsp_references)
           vim.keymap.set({ "n", "v" }, "<leader>ca", function()
             fzflua.lsp_code_actions {
               winopts = {
@@ -106,7 +106,7 @@ local plugins = {
 
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
-            local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
+            local highlight_augroup = vim.api.nvim_create_augroup("lsp-highlight-word", { clear = false })
             vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
               buffer = event.buf,
               group = highlight_augroup,
@@ -120,10 +120,9 @@ local plugins = {
             })
 
             vim.api.nvim_create_autocmd("LspDetach", {
-              group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
               callback = function(event2)
                 vim.lsp.buf.clear_references()
-                vim.api.nvim_clear_autocmds { group = "kickstart-lsp-highlight", buffer = event2.buf }
+                vim.api.nvim_clear_autocmds { group = "lsp-highlight-word", buffer = event2.buf }
               end,
             })
           end
