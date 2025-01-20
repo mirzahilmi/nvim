@@ -34,6 +34,8 @@ vim.opt.inccommand = "split"
 vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
+-- Disable word wrap
+vim.opt.wrap = false
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
