@@ -8,6 +8,10 @@
       url = "github:nvzone/showkeys";
       flake = false;
     };
+    "plugins-pretty_hover" = {
+      url = "github:Fildo7525/pretty_hover";
+      flake = false;
+    };
   };
 
   outputs = {
@@ -81,6 +85,7 @@
           nvim-autopairs
           nvim-jdtls
           treesj
+          pkgs.neovimPlugins.pretty_hover
           pkgs.neovimPlugins.showkeys
         ];
       };

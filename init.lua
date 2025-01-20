@@ -510,6 +510,15 @@ local plugins = {
       }
     end,
   },
+  {
+    "pretty_hover",
+    event = "LspAttach",
+    after = function()
+      local prettyhover = require "pretty_hover"
+      prettyhover.setup {}
+      vim.keymap.set("n", "K", prettyhover.hover, { noremap = true })
+    end,
+  },
 }
 
 require("lz.n").load(plugins)
