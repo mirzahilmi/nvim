@@ -393,9 +393,40 @@ local plugins = {
     "mini.nvim",
     after = function()
       require("mini.ai").setup { n_lines = 500 }
-      require("mini.surround").setup()
+      require("mini.surround").setup {}
       local statusline = require "mini.statusline"
       statusline.setup { use_icons = vim.g.have_nerd_font }
+
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_fileinfo = function(args)
+        local filetype = vim.bo.filetype
+        if filetype == "" then
+          return ""
+        end
+
+        local icon, iconhl = require("nvim-web-devicons").get_icon(vim.fn.expand "%:t", nil, { default = true })
+        filetype = string.format("%%#%s#%s %s%%#MiniStatuslineFileinfo#", iconhl, icon, filetype)
+
+        if MiniStatusline.is_truncated(args.trunc_width) or vim.bo.buftype ~= "" then
+          return filetype
+        end
+
+        local encoding = vim.bo.fileencoding or vim.bo.encoding
+        local format = vim.bo.fileformat
+
+        local size = ""
+        local _size = vim.fn.getfsize(vim.fn.getreg "%")
+        if _size < 1024 then
+          size = string.format("%dB", _size)
+        elseif _size < 1048576 then
+          size = string.format("%.2fKiB", _size / 1024)
+        else
+          size = string.format("%.2fMiB", _size / 1048576)
+        end
+
+        return string.format("%s %s[%s] %s", filetype, encoding, format, size)
+      end
+
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function()
         return "%2l:%-2v"
@@ -515,7 +546,9 @@ local plugins = {
     event = "LspAttach",
     after = function()
       local prettyhover = require "pretty_hover"
-      prettyhover.setup {}
+      prettyhover.setup {
+        border = "none",
+      }
       vim.keymap.set("n", "K", prettyhover.hover, { noremap = true })
     end,
   },
