@@ -84,7 +84,6 @@ local plugins = {
         callback = function(event)
           vim.keymap.set("n", "<leader>ds", require("fzf-lua").lsp_document_symbols)
           vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename)
-          vim.keymap.set({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action)
 
           local fzflua = require "fzf-lua"
           vim.keymap.set("n", "gd", function()
@@ -92,6 +91,17 @@ local plugins = {
           end)
           vim.keymap.set("n", "gI", function()
             fzflua.lsp_implementations { jump_to_single_result = true }
+          end)
+          vim.keymap.set({ "n", "v" }, "<leader>ca", function()
+            fzflua.lsp_code_actions {
+              winopts = {
+                relative = "cursor",
+                width = 0.6,
+                height = 0.6,
+                row = 1,
+                preview = { vertical = "up:70%" },
+              },
+            }
           end)
 
           local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -327,6 +337,12 @@ local plugins = {
         previewers = {
           builtin = {
             syntax_limit_b = 1024 * 100,
+          },
+        },
+        lsp = {
+          code_actions = {
+            previewer = "codeaction_native",
+            preview_pager = "delta --side-by-side --width=$FZF_PREVIEW_COLUMNS --hunk-header-style='omit' --file-style='omit'",
           },
         },
       }
