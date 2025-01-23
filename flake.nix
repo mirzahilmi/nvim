@@ -64,6 +64,7 @@
           lz-n
           mini-nvim
           neo-tree-nvim
+          noice-nvim
           nui-nvim
           nvim-dap
           nvim-dap-ui
