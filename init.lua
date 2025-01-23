@@ -549,12 +549,6 @@ local plugins = {
       }
     end,
   },
-
-  "lspsaga.nvim",
-  event = "LspAttach",
-  after = function()
-    require("lspsaga").setup {}
-  end,
 }
 
 require("lz.n").load(plugins)
