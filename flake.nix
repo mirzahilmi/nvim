@@ -68,7 +68,7 @@
           nui-nvim
           nvim-dap
           nvim-dap-ui
-          nvim-jdtls
+          nvim-java
           nvim-lspconfig
           nvim-nio
           nvim-treesitter.withAllGrammars
