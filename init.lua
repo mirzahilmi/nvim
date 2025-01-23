@@ -290,7 +290,12 @@ local plugins = {
   { "nvim-web-devicons" },
   { "nvim-dap-ui" },
   { "nvim-nio" },
-  { "fidget.nvim" },
+  {
+    "fidget.nvim",
+    after = function()
+      require("fidget").setup {}
+    end,
+  },
   { "vim-sleuth" },
   { "comment.nvim" },
   { "plenary.nvim" },
@@ -467,6 +472,9 @@ local plugins = {
       require("jdtls").start_or_attach {
         cmd = { "jdtls" },
         root_dir = vim.fs.dirname(vim.fs.find({ "gradlew", ".git", "mvnw" }, { upward = true })[1]),
+        handlers = {
+          ["language/status"] = function() end,
+        },
       }
       -- local jdtlsPath = os.getenv "JDTLS_PATH"
       -- if jdtlsPath == nil then
@@ -541,17 +549,12 @@ local plugins = {
       }
     end,
   },
-  {
-    "pretty_hover",
-    event = "LspAttach",
-    after = function()
-      local prettyhover = require "pretty_hover"
-      prettyhover.setup {
-        border = "none",
-      }
-      vim.keymap.set("n", "K", prettyhover.hover, { noremap = true })
-    end,
-  },
+
+  "lspsaga.nvim",
+  event = "LspAttach",
+  after = function()
+    require("lspsaga").setup {}
+  end,
 }
 
 require("lz.n").load(plugins)

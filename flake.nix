@@ -82,6 +82,7 @@
         default = with pkgs.vimPlugins; [
           conform-nvim
           highlight-undo-nvim
+          lspsaga-nvim
           nvim-autopairs
           nvim-jdtls
           treesj
