@@ -140,6 +140,7 @@ local plugins = {
       local servers = {
         basedpyright = {},
         nixd = {},
+        jdtls = {},
         lua_ls = {
           settings = {
             Lua = {

@@ -68,7 +68,6 @@
           nui-nvim
           nvim-dap
           nvim-dap-ui
-          nvim-java
           nvim-lspconfig
           nvim-nio
           nvim-treesitter.withAllGrammars
@@ -85,6 +84,7 @@
           conform-nvim
           highlight-undo-nvim
           nvim-autopairs
+          nvim-jdtls
           treesj
           pkgs.neovimPlugins.pretty_hover
           pkgs.neovimPlugins.showkeys
