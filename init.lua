@@ -290,12 +290,6 @@ local plugins = {
   { "nvim-web-devicons" },
   { "nvim-dap-ui" },
   { "nvim-nio" },
-  {
-    "fidget.nvim",
-    after = function()
-      require("fidget").setup {}
-    end,
-  },
   { "vim-sleuth" },
   { "comment.nvim" },
   { "plenary.nvim" },
@@ -469,73 +463,11 @@ local plugins = {
     "nvim-jdtls",
     ft = "java",
     after = function()
-      require("jdtls").start_or_attach {
+      local config = {
         cmd = { "jdtls" },
         root_dir = vim.fs.dirname(vim.fs.find({ "gradlew", ".git", "mvnw" }, { upward = true })[1]),
-        handlers = {
-          ["language/status"] = function() end,
-        },
       }
-      -- local jdtlsPath = os.getenv "JDTLS_PATH"
-      -- if jdtlsPath == nil then
-      --   error "JDTLS_PATH environment variable is empty"
-      -- end
-      --
-      -- local function scandir(directory)
-      --   local i, t, popen = 0, {}, io.popen
-      --   local pfile = popen('ls -A "' .. directory .. '"')
-      --   for filename in pfile:lines() do
-      --     i = i + 1
-      --     t[i] = filename
-      --   end
-      --   pfile:close()
-      --   return t
-      -- end
-      --
-      -- local function match(substr, arr)
-      --   for _, val in ipairs(arr) do
-      --     if string.find(val, substr) ~= nil then
-      --       return val
-      --     end
-      --   end
-      --   return nil
-      -- end
-      --
-      -- local jdtlsJar = match("org.eclipse.equinox.launcher.gtk.linux.x86_64", scandir(jdtlsPath .. "/share/java/jdtls/plugins"))
-      -- if jdtlsJar == nil then
-      --   error "cannot find jdtls jar path"
-      -- end
-      --
-      -- local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
-      -- local workspace_dir = "/path/to/workspace-root/" .. project_name
-      --
-      -- local config = {
-      --   cmd = {
-      --     "java",
-      --     "-Declipse.application=org.eclipse.jdt.ls.core.id1",
-      --     "-Dosgi.bundles.defaultStartLevel=4",
-      --     "-Declipse.product=org.eclipse.jdt.ls.core.product",
-      --     "-Dlog.protocol=true",
-      --     "-Dlog.level=ALL",
-      --     "-Xmx1g",
-      --     "--add-modules=ALL-SYSTEM",
-      --     "--add-opens",
-      --     "java.base/java.util=ALL-UNNAMED",
-      --     "--add-opens",
-      --     "java.base/java.lang=ALL-UNNAMED",
-      --     "-jar",
-      --     jdtlsJar,
-      --     "-configuration",
-      --     jdtlsPath .. "/share/java/jdtls/config_linux",
-      --     "-data",
-      --     workspace_dir,
-      --   },
-      --   root_dir = vim.fs.root(0, { ".git", "mvnw", "gradlew" }),
-      --   init_options = {
-      --     bundles = {},
-      --   },
-      -- }
-      -- require("jdtls").start_or_attach(config)
+      require("jdtls").start_or_attach(config)
     end,
   },
   {
@@ -554,7 +486,6 @@ local plugins = {
     after = function()
       require("noice").setup {
         lsp = {
-          progress = { enabled = false },
           signature = { enabled = false },
           message = { enabled = false },
           override = {
@@ -566,6 +497,14 @@ local plugins = {
         messages = { enabled = false },
         popupmenu = { enabled = false },
         notify = { enabled = false },
+        views = {
+          mini = {
+            position = {
+              row = -2,
+              col = "100%",
+            },
+          },
+        },
       }
     end,
   },
