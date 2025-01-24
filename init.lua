@@ -96,7 +96,16 @@ local plugins = {
             fzflua.lsp_implementations { jump_to_single_result = true }
           end)
           vim.keymap.set("n", "gr", fzflua.lsp_references)
-          vim.keymap.set({ "n", "v" }, "<leader>ca", fzflua.lsp_code_actions)
+          vim.keymap.set({ "n", "v" }, "<leader>ca", function()
+            fzflua.lsp_code_actions {
+              winopts = {
+                preview = {
+                  layout = "vertical",
+                  vertical = "up:70%",
+                },
+              },
+            }
+          end)
 
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
