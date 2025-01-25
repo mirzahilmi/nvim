@@ -141,7 +141,6 @@ local plugins = {
       local servers = {
         basedpyright = {},
         nixd = {},
-        jdtls = {},
         lua_ls = {
           settings = {
             Lua = {
@@ -183,12 +182,8 @@ local plugins = {
 
       local lspconfig = require "lspconfig"
       for server, config in pairs(servers) do
-        if server == "jdtls" then
-          goto continue
-        end
         config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
         lspconfig[server].setup(config)
-        ::continue::
       end
     end,
   },
@@ -498,6 +493,23 @@ local plugins = {
               row = -2,
               col = "100%",
             },
+          },
+        },
+        routes = {
+          {
+            filter = {
+              event = "lsp",
+              kind = "progress",
+              cond = function(message)
+                local client = vim.tbl_get(message.opts, "progress", "client")
+                if client == "jdtls" then
+                  local content = vim.tbl_get(message.opts, "progress", "message")
+                  return content == "Validate documents"
+                end
+                return false
+              end,
+            },
+            opts = { skip = true },
           },
         },
       }
