@@ -557,6 +557,10 @@ local plugins = {
           return cmd
         end,
 
+        handlers = {
+          ["language/status"] = function() end,
+        },
+
         -- These depend on nvim-dap, but can additionally be disabled by setting false here.
         dap = { hotcodereplace = "auto", config_overrides = {} },
         -- Can set this to false to disable main class scan, which is a performance killer for large project
@@ -607,6 +611,7 @@ local plugins = {
           init_options = {
             bundles = bundles,
           },
+          handlers = opts.handlers,
           settings = opts.settings,
           capabilities = require("blink.cmp").get_lsp_capabilities(),
         }, opts.jdtls)
