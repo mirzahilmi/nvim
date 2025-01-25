@@ -524,16 +524,12 @@ local plugins = {
       table.insert(opts_cmd, string.format("--jvm-arg=-javaagent:%s", vim.env.LOMBOK_JAR_PATH))
 
       local opts = {
-        -- How to find the root dir for a given filename. The default comes from
-        -- lspconfig which provides a function specifically for java projects.
         root_dir = require("lspconfig.configs.jdtls").default_config.root_dir,
 
-        -- How to find the project name for a given root dir.
         project_name = function(root_dir)
           return root_dir and vim.fs.basename(root_dir)
         end,
 
-        -- Where are the config and workspace dirs for a project?
         jdtls_config_dir = function(project_name)
           return vim.fn.stdpath "cache" .. "/jdtls/" .. project_name .. "/config"
         end,
@@ -562,11 +558,10 @@ local plugins = {
           ["language/status"] = function() end,
         },
 
-        -- These depend on nvim-dap, but can additionally be disabled by setting false here.
         dap = { hotcodereplace = "auto", config_overrides = {} },
-        -- Can set this to false to disable main class scan, which is a performance killer for large project
         dap_main = {},
         test = true,
+
         settings = {
           java = {
             inlayHints = {
@@ -578,8 +573,6 @@ local plugins = {
         },
       }
 
-      -- Find the extra bundles that should be passed on the jdtls command-line
-      -- if nvim-dap is enabled with java debug/test.
       local bundles = {} ---@type string[]
       local jar_patterns = {
         vim.env.JAVA_DEBUG_PATH .. "/server/com.microsoft.java.debug.plugin-*.jar",
@@ -605,7 +598,6 @@ local plugins = {
       local function attach_jdtls()
         local fname = vim.api.nvim_buf_get_name(0)
 
-        -- Configuration can be augmented and overridden by opts.jdtls
         local config = extend_or_override({
           cmd = opts.full_cmd(opts),
           root_dir = opts.root_dir(fname),
@@ -617,62 +609,18 @@ local plugins = {
           capabilities = require("blink.cmp").get_lsp_capabilities(),
         }, opts.jdtls)
 
-        -- Existing server will be reused if the root_dir matches.
         require("jdtls").start_or_attach(config)
-        -- not need to require("jdtls.setup").add_commands(), start automatically adds commands
       end
 
-      -- Attach the jdtls for each java buffer. HOWEVER, this plugin loads
-      -- depending on filetype, so this autocmd doesn't run for the first file.
-      -- For that, we call directly below.
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "java",
         callback = attach_jdtls,
       })
 
-      -- Setup keymap and dap after the lsp is fully attached.
-      -- https://github.com/mfussenegger/nvim-jdtls#nvim-dap-configuration
-      -- https://neovim.io/doc/user/lsp.html#LspAttach
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
           local client = vim.lsp.get_client_by_id(args.data.client_id)
           if client and client.name == "jdtls" then
-            -- local wk = require "which-key"
-            -- wk.add {
-            --   {
-            --     mode = "n",
-            --     buffer = args.buf,
-            --     { "<leader>cx", group = "extract" },
-            --     { "<leader>cxv", require("jdtls").extract_variable_all, desc = "Extract Variable" },
-            --     { "<leader>cxc", require("jdtls").extract_constant, desc = "Extract Constant" },
-            --     { "<leader>cgs", require("jdtls").super_implementation, desc = "Goto Super" },
-            --     { "<leader>cgS", require("jdtls.tests").goto_subjects, desc = "Goto Subjects" },
-            --     { "<leader>co", require("jdtls").organize_imports, desc = "Organize Imports" },
-            --   },
-            -- }
-            -- wk.add {
-            --   {
-            --     mode = "v",
-            --     buffer = args.buf,
-            --     { "<leader>cx", group = "extract" },
-            --     {
-            --       "<leader>cxm",
-            --       [[<ESC><CMD>lua require('jdtls').extract_method(true)<CR>]],
-            --       desc = "Extract Method",
-            --     },
-            --     {
-            --       "<leader>cxv",
-            --       [[<ESC><CMD>lua require('jdtls').extract_variable_all(true)<CR>]],
-            --       desc = "Extract Variable",
-            --     },
-            --     {
-            --       "<leader>cxc",
-            --       [[<ESC><CMD>lua require('jdtls').extract_constant(true)<CR>]],
-            --       desc = "Extract Constant",
-            --     },
-            --   },
-            -- }
-
             require("jdtls").setup_dap(opts.dap)
             if opts.dap_main then
               require("jdtls.dap").setup_dap_main_class_configs(opts.dap_main)
