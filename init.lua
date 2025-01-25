@@ -206,6 +206,9 @@ local plugins = {
           use_nvim_cmp_as_default = true,
           nerd_font_variant = "normal",
         },
+        completion = {
+          documentation = { window = { border = "single" } },
+        },
       }
     end,
   },
@@ -310,6 +313,8 @@ local plugins = {
       vim.cmd.colorscheme "gruvbox-material"
       vim.g.gruvbox_material_enable_italic = true
       vim.g.gruvbox_material_diagnostic_virtual_text = 1
+      vim.api.nvim_set_hl(0, "NormalFloat", { link = "NormalFloat" })
+      vim.api.nvim_set_hl(0, "FloatBorder", { link = "FloatBorder" })
     end,
   },
   {
@@ -468,6 +473,9 @@ local plugins = {
             ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
             ["vim.lsp.util.stylize_markdown"] = true,
           },
+        },
+        presets = {
+          lsp_doc_border = true,
         },
         cmdline = { enabled = false },
         messages = { enabled = false },
