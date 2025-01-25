@@ -57,6 +57,7 @@
           gitsigns-nvim
           gruvbox-material
           lazydev-nvim
+          lualine-nvim
           lz-n
           mini-nvim
           neo-tree-nvim

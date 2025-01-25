@@ -617,6 +617,69 @@ local plugins = {
       attach_jdtls()
     end,
   },
+  {
+    "lualine.nvim",
+    before = function()
+      require("lz.n").trigger_load "nvim-web-devicons"
+    end,
+    after = function()
+      local filename = { "filename", path = 1 }
+      local progress = { "progress", color = { bg = "#32302f" } }
+      local location = { "location", color = { fg = "ddc7a1", bg = "#32302f", gui = "bold" } }
+
+      local diagnostics = {
+        "diagnostics",
+        sources = { "nvim_diagnostic" },
+        sections = { "error", "warn", "info", "hint" },
+        symbols = {
+          error = " ",
+          hint = " ",
+          info = " ",
+          warn = " ",
+        },
+        colored = true,
+        update_in_insert = false,
+        always_visible = false,
+      }
+
+      local diff = {
+        "diff",
+        source = function()
+          local gitsigns = vim.b.gitsigns_status_dict
+          if gitsigns then
+            return {
+              added = gitsigns.added,
+              modified = gitsigns.changed,
+              removed = gitsigns.removed,
+            }
+          end
+        end,
+        symbols = {
+          added = " ",
+          modified = " ",
+          removed = " ",
+        },
+        colored = true,
+        always_visible = false,
+      }
+      require("lualine").setup {
+        options = {
+          globalstatus = true,
+          section_separators = "",
+          component_separators = "",
+          disabled_filetypes = { statusline = {} },
+        },
+        sections = {
+          lualine_a = { "mode" },
+          lualine_b = {},
+          lualine_c = { filename },
+          lualine_x = { diff, diagnostics, "filetype" },
+          lualine_y = { progress },
+          lualine_z = { location },
+        },
+      }
+    end,
+  },
 }
 
 require("lz.n").load(plugins)
