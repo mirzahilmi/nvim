@@ -76,6 +76,7 @@ local plugins = {
   { "nvim-nio", lazy = true },
   { "plenary.nvim", lazy = true },
   { "nui.nvim", lazy = true },
+  { "friendly-snippets", lazy = true },
   {
     "nvim-treesitter",
     after = function()
@@ -196,6 +197,9 @@ local plugins = {
   },
   {
     "blink.cmp",
+    before = function()
+      require("lz.n").trigger_load "friendly-snippets"
+    end,
     after = function()
       require("blink.cmp").setup {
         appearance = {

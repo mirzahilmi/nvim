@@ -74,6 +74,7 @@
       optionalPlugins = {
         default = with pkgs.vimPlugins; [
           conform-nvim
+          friendly-snippets
           highlight-undo-nvim
           nui-nvim
           nvim-autopairs
