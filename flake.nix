@@ -61,14 +61,9 @@
           mini-nvim
           neo-tree-nvim
           noice-nvim
-          nui-nvim
           nvim-dap
-          nvim-dap-ui
           nvim-lspconfig
-          nvim-nio
           nvim-treesitter.withAllGrammars
-          nvim-web-devicons
-          plenary-nvim
           snacks-nvim
           todo-comments-nvim
           vim-sleuth
@@ -79,8 +74,13 @@
         default = with pkgs.vimPlugins; [
           conform-nvim
           highlight-undo-nvim
+          nui-nvim
           nvim-autopairs
+          nvim-dap-ui
           nvim-jdtls
+          nvim-nio
+          nvim-web-devicons
+          plenary-nvim
           treesj
           pkgs.neovimPlugins.showkeys
         ];

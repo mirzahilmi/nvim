@@ -69,6 +69,13 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 local plugins = {
+  { "vim-sleuth" },
+  { "comment.nvim" },
+  { "nvim-web-devicons", lazy = true },
+  { "nvim-dap-ui", lazy = true },
+  { "nvim-nio", lazy = true },
+  { "plenary.nvim", lazy = true },
+  { "nui.nvim", lazy = true },
   {
     "nvim-treesitter",
     after = function()
@@ -233,6 +240,9 @@ local plugins = {
   },
   {
     "nvim-dap",
+    before = function()
+      require("lz.n").trigger_load { "nvim-dap-ui", "nvim-nio" }
+    end,
     after = function()
       local dap = require "dap"
       local dapui = require "dapui"
@@ -289,13 +299,6 @@ local plugins = {
       },
     },
   },
-  { "nvim-web-devicons" },
-  { "nvim-dap-ui" },
-  { "nvim-nio" },
-  { "vim-sleuth" },
-  { "comment.nvim" },
-  { "plenary.nvim" },
-  { "nui.nvim" },
   {
     "gruvbox-material",
     priority = 1000,
@@ -329,6 +332,9 @@ local plugins = {
   },
   {
     "fzf-lua",
+    before = function()
+      require("lz.n").trigger_load "nvim-web-devicons"
+    end,
     after = function()
       local fzflua = require "fzf-lua"
       fzflua.setup {
@@ -358,6 +364,9 @@ local plugins = {
   },
   {
     "neo-tree.nvim",
+    before = function()
+      require("lz.n").trigger_load { "plenary.nvim", "nvim-web-devicons", "nui.nvim" }
+    end,
     after = function()
       local function on_move(data)
         Snacks.rename.on_rename_file(data.source, data.destination)
@@ -374,6 +383,9 @@ local plugins = {
   },
   {
     "todo-comments.nvim",
+    before = function()
+      require("lz.n").trigger_load "plenary.nvim"
+    end,
     after = function()
       require("todo-comments").setup {
         signs = false,
@@ -395,48 +407,14 @@ local plugins = {
     after = function()
       require("mini.ai").setup { n_lines = 500 }
       require("mini.surround").setup {}
-      local statusline = require "mini.statusline"
-      statusline.setup { use_icons = vim.g.have_nerd_font }
-
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_fileinfo = function(args)
-        local filetype = vim.bo.filetype
-        if filetype == "" then
-          return ""
-        end
-
-        local icon, iconhl = require("nvim-web-devicons").get_icon(vim.fn.expand "%:t", nil, { default = true })
-        filetype = string.format("%%#%s#%s %s%%#MiniStatuslineFileinfo#", iconhl, icon, filetype)
-
-        if MiniStatusline.is_truncated(args.trunc_width) or vim.bo.buftype ~= "" then
-          return filetype
-        end
-
-        local encoding = vim.bo.fileencoding or vim.bo.encoding
-        local format = vim.bo.fileformat
-
-        local size = ""
-        local _size = vim.fn.getfsize(vim.fn.getreg "%")
-        if _size < 1024 then
-          size = string.format("%dB", _size)
-        elseif _size < 1048576 then
-          size = string.format("%.2fKiB", _size / 1024)
-        else
-          size = string.format("%.2fMiB", _size / 1048576)
-        end
-
-        return string.format("%s %s[%s] %s", filetype, encoding, format, size)
-      end
-
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return "%2l:%-2v"
-      end
     end,
   },
   {
     "treesj",
     keys = "<space>j",
+    before = function()
+      require("lz.n").trigger_load "nvim-treesitter"
+    end,
     after = function()
       local treesj = require "treesj"
       treesj.setup {
@@ -474,6 +452,9 @@ local plugins = {
   },
   {
     "noice.nvim",
+    before = function()
+      require("lz.n").trigger_load "nui.nvim"
+    end,
     after = function()
       require("noice").setup {
         lsp = {
