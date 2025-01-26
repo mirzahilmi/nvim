@@ -362,6 +362,7 @@ local plugins = {
             preview_pager = "delta --side-by-side --width=$FZF_PREVIEW_COLUMNS --hunk-header-style='omit' --file-style='omit'",
           },
         },
+        files = { formatter = "path.filename_first" },
       }
       fzflua.register_ui_select(function(_, items)
         local min_h, max_h = 0.15, 0.70
@@ -689,7 +690,7 @@ local plugins = {
           globalstatus = true,
           section_separators = "",
           component_separators = "",
-          disabled_filetypes = { statusline = {} },
+          disabled_filetypes = { "fzf" },
         },
         sections = {
           lualine_a = { "mode" },
