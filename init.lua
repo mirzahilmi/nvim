@@ -397,6 +397,9 @@ local plugins = {
           { event = events.FILE_MOVED, handler = on_move },
           { event = events.FILE_RENAMED, handler = on_move },
         },
+        filesystem = {
+          group_empty_dirs = true,
+        },
       }
       vim.keymap.set("n", "<C-n>", ":Neotree toggle<CR>")
     end,
