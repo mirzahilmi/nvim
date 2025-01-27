@@ -380,6 +380,7 @@ local plugins = {
       vim.keymap.set("n", "<leader>sh", fzflua.help_tags)
       vim.keymap.set("n", "<leader>sk", fzflua.keymaps)
       vim.keymap.set("n", "<leader><leader>", fzflua.buffers)
+      vim.keymap.set("n", "<leader>sm", fzflua.marks)
     end,
   },
   {
