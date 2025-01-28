@@ -149,6 +149,7 @@ local plugins = {
       local servers = {
         basedpyright = {},
         nixd = {},
+        phpactor = {},
         lua_ls = {
           settings = {
             Lua = {
@@ -402,7 +403,7 @@ local plugins = {
           group_empty_dirs = true,
         },
       }
-      vim.keymap.set("n", "<C-n>", ":Neotree toggle<CR>")
+      vim.keymap.set("n", "<C-n>", ":Neotree toggle<CR>", { silent = true })
     end,
   },
   {
@@ -423,6 +424,7 @@ local plugins = {
         editor = { tooltip = "Neovim" },
         display = { show_cursor_position = true },
         lsp = { show_problem_count = false },
+        idle = { enable = false },
       }
     end,
   },
