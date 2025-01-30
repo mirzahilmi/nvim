@@ -222,7 +222,7 @@ local plugins = {
       local conform = require "conform"
       conform.setup {
         notify_on_error = false,
-        format_on_save = function(bufnr)
+        format_after_save = function(bufnr)
           local disable_filetypes = { c = true, cpp = true }
           local lsp_format_opt
           if disable_filetypes[vim.bo[bufnr].filetype] then
@@ -236,6 +236,7 @@ local plugins = {
           }
         end,
         formatters_by_ft = {
+          java = { "google-java-format" },
           lua = { "stylua" },
           nix = { "alejandra" },
           python = { "black" },
