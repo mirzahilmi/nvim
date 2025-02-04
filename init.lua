@@ -36,8 +36,8 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 -- Disable word wrap
 vim.opt.wrap = false
--- Set lsp log verbosity to TRACE
-vim.lsp.set_log_level(vim.log.levels.TRACE)
+-- Highlight zul files
+vim.filetype.add { extension = { zul = "html" } }
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
