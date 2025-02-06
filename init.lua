@@ -727,6 +727,17 @@ local plugins = {
       }
     end,
   },
+  {
+    "trouble.nvim",
+    cmd = "Trouble",
+    before = function()
+      require("lz.n").trigger_load "nvim-web-devicons"
+    end,
+    after = function()
+      require("trouble").setup {}
+      vim.keymap.set("n", "<leader>tr", ":Trouble diagnostics toggle<CR>")
+    end,
+  },
 }
 
 require("lz.n").load(plugins)

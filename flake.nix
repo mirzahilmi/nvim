@@ -84,6 +84,7 @@
           nvim-web-devicons
           plenary-nvim
           treesj
+          trouble-nvim
           pkgs.neovimPlugins.showkeys
         ];
       };
