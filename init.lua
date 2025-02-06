@@ -36,6 +36,12 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 -- Disable word wrap
 vim.opt.wrap = false
+-- more space in the neovim command line for displaying messages
+vim.opt.cmdheight = 1
+-- set term gui colors (most terminals support this)
+vim.opt.termguicolors = true
+-- enable persistent undo
+vim.opt.undofile = true
 -- Highlight zul files
 vim.filetype.add { extension = { zul = "html" } }
 
@@ -312,9 +318,13 @@ local plugins = {
     "gruvbox-material",
     priority = 1000,
     after = function()
-      vim.cmd.colorscheme "gruvbox-material"
       vim.g.gruvbox_material_enable_italic = true
       vim.g.gruvbox_material_diagnostic_virtual_text = 1
+      vim.g.gruvbox_material_foreground = "mix"
+      vim.g.gruvbox_material_background = "hard"
+      vim.g.gruvbox_material_ui_contrast = "high"
+      vim.g.gruvbox_material_float_style = "bright"
+      vim.cmd.colorscheme "gruvbox-material"
       vim.api.nvim_set_hl(0, "NormalFloat", { link = "NormalFloat" })
       vim.api.nvim_set_hl(0, "FloatBorder", { link = "FloatBorder" })
     end,
@@ -590,6 +600,9 @@ local plugins = {
                 "org.mockito.Mockito.*",
               },
             },
+            codeGeneration = {
+              addFinalForNewDeclaration = "fields",
+            },
           },
         },
       }
@@ -729,13 +742,15 @@ local plugins = {
   },
   {
     "trouble.nvim",
-    cmd = "Trouble",
+    keys = "<leader>tr",
     before = function()
       require("lz.n").trigger_load "nvim-web-devicons"
     end,
     after = function()
-      require("trouble").setup {}
-      vim.keymap.set("n", "<leader>tr", ":Trouble diagnostics toggle<CR>")
+      require("trouble").setup {
+        warn_no_results = false,
+      }
+      vim.keymap.set("n", "<leader>tr", ":Trouble diagnostics toggle<CR>", { silent = true })
     end,
   },
 }
