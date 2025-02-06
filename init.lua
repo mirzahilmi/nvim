@@ -318,7 +318,6 @@ local plugins = {
     "gruvbox-material",
     priority = 1000,
     after = function()
-      vim.g.gruvbox_material_enable_italic = true
       vim.g.gruvbox_material_diagnostic_virtual_text = 1
       vim.g.gruvbox_material_foreground = "mix"
       vim.g.gruvbox_material_background = "hard"
@@ -413,6 +412,7 @@ local plugins = {
         },
         filesystem = {
           group_empty_dirs = true,
+          follow_current_file = { enabled = true },
         },
       }
       vim.keymap.set("n", "<C-n>", ":Neotree toggle<CR>", { silent = true })
