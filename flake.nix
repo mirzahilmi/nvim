@@ -80,6 +80,7 @@
           nui-nvim
           nvim-autopairs
           nvim-dap-ui
+          nvim-dap-virtual-text
           nvim-jdtls
           nvim-nio
           nvim-web-devicons

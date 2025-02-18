@@ -89,6 +89,13 @@ local plugins = {
   { "nui.nvim", lazy = true },
   { "friendly-snippets", lazy = true },
   {
+    "nvim-dap-virtual-text",
+    lazy = true,
+    after = function()
+      require("nvim-dap-virtual-text").setup()
+    end,
+  },
+  {
     "nvim-treesitter",
     after = function()
       ---@diagnostic disable-next-line: missing-fields
