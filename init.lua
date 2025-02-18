@@ -42,6 +42,11 @@ vim.opt.cmdheight = 1
 vim.opt.termguicolors = true
 -- enable persistent undo
 vim.opt.undofile = true
+-- Default tabstop to 2 space
+vim.opt.tabstop = 2
+vim.opt.softtabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.expandtab = true
 -- Highlight zul files
 vim.filetype.add { extension = { zul = "html" } }
 
