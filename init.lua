@@ -161,6 +161,7 @@ local plugins = {
         basedpyright = {},
         nixd = {},
         phpactor = {},
+        arduino_language_server = {},
         lua_ls = {
           settings = {
             Lua = {
