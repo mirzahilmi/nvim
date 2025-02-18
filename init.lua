@@ -764,6 +764,14 @@ local plugins = {
       vim.keymap.set("n", "<leader>tr", ":Trouble diagnostics toggle<CR>", { silent = true })
     end,
   },
+  {
+    "neotest",
+    before = function()
+      require("lz.n").trigger_load "nvim-nio"
+      require("lz.n").trigger_load "plenary.nvim"
+      require("lz.n").trigger_load "nvim-treesitter"
+    end,
+  },
 }
 
 require("lz.n").load(plugins)
