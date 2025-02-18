@@ -8,6 +8,10 @@
       url = "github:nvzone/showkeys";
       flake = false;
     };
+    "plugins-spring-boot-nvim" = {
+      url = "github:JavaHello/spring-boot.nvim";
+      flake = false;
+    };
   };
 
   outputs = {
@@ -89,6 +93,7 @@
           treesj
           trouble-nvim
           pkgs.neovimPlugins.showkeys
+          pkgs.neovimPlugins.spring-boot-nvim
         ];
       };
     };
