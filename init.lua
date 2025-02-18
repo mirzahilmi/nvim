@@ -613,7 +613,7 @@ local plugins = {
         },
       }
 
-      if vim.env.JAVA8_RUNTIME_PATH ~= "" then
+      if vim.env.JAVA8_RUNTIME_PATH then
         table.insert(opts.settings.java.configuration.runtimes, {
           name = "JavaSE-1.8",
           path = vim.env.JAVA8_RUNTIME_PATH,
