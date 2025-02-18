@@ -778,6 +778,29 @@ local plugins = {
       require("lz.n").trigger_load "plenary.nvim"
       require("lz.n").trigger_load "nvim-treesitter"
     end,
+    after = function()
+      local neotest = require "neotest"
+      neotest.setup {
+        adapters = {
+          require "neotest-java" {},
+        },
+      }
+      vim.keymap.set("n", "<leader>e", neotest.run.run)
+      vim.keymap.set("n", "<leader>E", function()
+        neotest.run.run(vim.fn.expand "%")
+      end)
+      vim.keymap.set("n", "<leader>es", neotest.run.stop)
+    end,
+  },
+  {
+    "neotest-java",
+    ft = "java",
+    before = function()
+      require("lz.n").trigger_load "nvim-jdtls"
+      require("lz.n").trigger_load "nvim-dap"
+      require("lz.n").trigger_load "nvim-dap-ui"
+      require("lz.n").trigger_load "nvim-dap-virtual-text"
+    end,
   },
 }
 
