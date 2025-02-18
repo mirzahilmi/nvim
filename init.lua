@@ -773,6 +773,10 @@ local plugins = {
   },
   {
     "neotest",
+    keys = {
+      "<leader>r",
+      "<leader>rp",
+    },
     before = function()
       require("lz.n").trigger_load "nvim-nio"
       require("lz.n").trigger_load "plenary.nvim"
@@ -785,11 +789,13 @@ local plugins = {
           require "neotest-java" {},
         },
       }
-      vim.keymap.set("n", "<leader>e", neotest.run.run)
-      vim.keymap.set("n", "<leader>E", function()
-        neotest.run.run(vim.fn.expand "%")
+      vim.keymap.set("n", "<leader>r", function()
+        neotest.watch.toggle(vim.fn.expand "%")
+        neotest.summary.toggle()
       end)
-      vim.keymap.set("n", "<leader>es", neotest.run.stop)
+      vim.keymap.set("n", "<leader>rp", function()
+        neotest.output_panel.toggle()
+      end)
     end,
   },
   {
