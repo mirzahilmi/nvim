@@ -81,7 +81,6 @@
           conform-nvim
           friendly-snippets
           highlight-undo-nvim
-          neotest-java
           nui-nvim
           nvim-autopairs
           nvim-dap-ui
