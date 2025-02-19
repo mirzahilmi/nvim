@@ -429,6 +429,7 @@ local plugins = {
         },
       }
       vim.keymap.set("n", "<C-n>", ":Neotree toggle<CR>", { silent = true })
+      vim.keymap.set("n", "<leader>n", ":Neotree position=current toggle<CR>", { silent = true })
     end,
   },
   {
