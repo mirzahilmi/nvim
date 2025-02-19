@@ -778,6 +778,7 @@ local plugins = {
     after = function()
       require("trouble").setup {
         warn_no_results = false,
+        win = { wo = { wrap = true } },
       }
       vim.keymap.set("n", "<leader>tr", ":Trouble diagnostics toggle<CR>", { silent = true })
     end,
