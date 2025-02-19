@@ -92,7 +92,7 @@ local plugins = {
     "nvim-dap-virtual-text",
     lazy = true,
     after = function()
-      require("nvim-dap-virtual-text").setup()
+      require("nvim-dap-virtual-text").setup {}
     end,
   },
   {
