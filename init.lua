@@ -696,6 +696,17 @@ local plugins = {
     end,
   },
   {
+    "spring-boot-nvim",
+    ft = { "java", "yaml", "jproperties" },
+    before = function()
+      require("lz.n").trigger_load "nvim-jdtls"
+      require("lz.n").trigger_load "fzf-lua"
+    end,
+    after = function()
+      require("spring_boot").setup {}
+    end,
+  },
+  {
     "lualine.nvim",
     before = function()
       require("lz.n").trigger_load "nvim-web-devicons"
