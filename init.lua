@@ -444,7 +444,7 @@ local plugins = {
     end,
   },
   {
-    "cord.nvim",
+    "cord-nvim",
     -- after = function()
     --   require("cord").setup {
     --     editor = { tooltip = "Neovim" },
