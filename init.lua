@@ -445,14 +445,14 @@ local plugins = {
   },
   {
     "cord.nvim",
-    after = function()
-      require("cord").setup {
-        editor = { tooltip = "Neovim" },
-        display = { show_cursor_position = true },
-        lsp = { show_problem_count = false },
-        idle = { enable = false },
-      }
-    end,
+    -- after = function()
+    --   require("cord").setup {
+    --     editor = { tooltip = "Neovim" },
+    --     display = { show_cursor_position = true },
+    --     lsp = { show_problem_count = false },
+    --     idle = { enable = false },
+    --   }
+    -- end,
   },
   {
     "mini.nvim",

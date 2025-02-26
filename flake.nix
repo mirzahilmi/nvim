@@ -8,6 +8,10 @@
       url = "github:nvzone/showkeys";
       flake = false;
     };
+    "plugins-cord-nvim" = {
+      url = "github:vyfor/cord.nvim";
+      flake = false;
+    };
   };
 
   outputs = {
@@ -51,7 +55,6 @@
         default = with pkgs.vimPlugins; [
           blink-cmp
           comment-nvim
-          cord-nvim
           fidget-nvim
           fzf-lua
           gitsigns-nvim
@@ -69,6 +72,7 @@
           snacks-nvim
           todo-comments-nvim
           vim-sleuth
+          pkgs.neovimPlugins.cord-nvim
         ];
       };
 
