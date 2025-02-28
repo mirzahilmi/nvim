@@ -399,7 +399,9 @@ local plugins = {
         return { winopts = { height = h, width = 0.60, row = 0.40 } }
       end)
       vim.keymap.set("n", "<leader>sf", fzflua.files)
-      vim.keymap.set("n", "<leader>sg", fzflua.live_grep)
+      vim.keymap.set("n", "<leader>sg", function()
+        fzflua.live_grep { formatter = "path.filename_first" }
+      end)
       vim.keymap.set("n", "<leader>/", fzflua.lgrep_curbuf)
       vim.keymap.set("n", "<leader>sh", fzflua.help_tags)
       vim.keymap.set("n", "<leader>sk", fzflua.keymaps)
