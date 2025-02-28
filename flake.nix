@@ -54,7 +54,16 @@
 
       startupPlugins = {
         default = with pkgs.vimPlugins; [
-          blink-cmp
+          (blink-cmp.overrideAttrs
+            (final: previous: rec {
+              version = "0.13.1";
+              src = pkgs.fetchFromGitHub {
+                owner = "Saghen";
+                repo = "blink.cmp";
+                tag = "v${version}";
+                hash = "";
+              };
+            }))
           comment-nvim
           fidget-nvim
           fzf-lua
