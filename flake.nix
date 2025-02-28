@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixCats.url = "github:BirdeeHub/nixCats-nvim";
+    blink-cmp.url = "github:Saghen/blink.cmp";
     "plugins-showkeys" = {
       url = "github:nvzone/showkeys";
       flake = false;
@@ -54,16 +55,7 @@
 
       startupPlugins = {
         default = with pkgs.vimPlugins; [
-          (blink-cmp.overrideAttrs
-            (final: previous: rec {
-              version = "0.13.1";
-              src = pkgs.fetchFromGitHub {
-                owner = "Saghen";
-                repo = "blink.cmp";
-                tag = "v${version}";
-                hash = "";
-              };
-            }))
+          inputs.blink-cmp.packages.${pkgs.system}.default
           comment-nvim
           fidget-nvim
           fzf-lua

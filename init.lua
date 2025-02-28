@@ -216,7 +216,7 @@ local plugins = {
     end,
   },
   {
-    "blink.cmp",
+    "blink-cmp",
     before = function()
       require("lz.n").trigger_load "luasnip"
     end,
@@ -226,9 +226,11 @@ local plugins = {
           use_nvim_cmp_as_default = true,
           nerd_font_variant = "normal",
         },
-        snippets = { preset = "luasnip" },
         completion = {
           documentation = { window = { border = "single" } },
+        },
+        snippets = {
+          preset = "luasnip",
         },
       }
     end,
@@ -788,7 +790,7 @@ local plugins = {
       local neotest = require "neotest"
       neotest.setup {
         adapters = {
-          require "neotest-java" {},
+          ["neotest-java"] = {},
         },
       }
     end,
