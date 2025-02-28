@@ -44,6 +44,7 @@
           alejandra
           fzf
           lua-language-server
+          luajitPackages.jsregexp
           nixd
           ripgrep
           stylua
