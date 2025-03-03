@@ -603,6 +603,7 @@ local plugins = {
         settings = {
           java = {
             configuration = { runtimes = {} },
+            saveActions = { organizeImports = true },
             inlayHints = {
               parameterNames = {
                 enabled = "all",
