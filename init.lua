@@ -779,8 +779,9 @@ local plugins = {
   {
     "neotest",
     keys = {
-      "<leader>r",
-      "<leader>rp",
+      "<leader>tt",
+      "<leader>tT",
+      "<leader>ts",
     },
     before = function()
       require("lz.n").trigger_load "nvim-nio"
@@ -794,6 +795,14 @@ local plugins = {
           ["neotest-java"] = {},
         },
       }
+      vim.keymap.set("n", "<leader>tt", function()
+        neotest.run.run(vim.fn.expand "%")
+      end, { noremap = true })
+      vim.keymap.set("n", "<leader>tT", function()
+        ---@diagnostic disable-next-line: undefined-field
+        neotest.run.run(vim.uv.cwd())
+      end, { noremap = true })
+      vim.keymap.set("n", "<leader>ts", neotest.summary.toggle, { noremap = true })
     end,
   },
   {
