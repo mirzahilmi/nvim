@@ -390,6 +390,10 @@ local plugins = {
         },
         files = { formatter = "path.filename_first" },
         buffers = { formatter = "path.filename_first" },
+        grep = {
+          previewer = false,
+          winopts = { preview = { layout = "vertical" } },
+        },
       }
       fzflua.register_ui_select(function(_, items)
         local min_h, max_h = 0.15, 0.70
