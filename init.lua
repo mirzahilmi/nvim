@@ -120,7 +120,16 @@ local plugins = {
           vim.keymap.set("n", "gI", function()
             fzflua.lsp_implementations { jump_to_single_result = true }
           end)
-          vim.keymap.set("n", "gr", fzflua.lsp_references)
+          vim.keymap.set("n", "gr", function()
+            fzflua.lsp_references {
+              winopts = {
+                preview = {
+                  layout = "vertical",
+                  vertical = "down:70%",
+                },
+              },
+            }
+          end)
           vim.keymap.set({ "n", "v" }, "<leader>ca", function()
             fzflua.lsp_code_actions {
               previewer = false,
