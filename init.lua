@@ -403,8 +403,7 @@ local plugins = {
       end)
       vim.keymap.set("n", "<leader>sf", function()
         fzflua.files {
-          hidden = false,
-          toggle_hidden_flag = "--hidden --no-ignore",
+          hidden = true,
           formatter = "path.filename_first",
         }
       end)
@@ -809,7 +808,7 @@ local plugins = {
     "neotest",
     keys = {
       "<leader>tt",
-      "<leader>tT",
+      "<leader>TT",
       "<leader>ts",
     },
     before = function()
@@ -827,7 +826,7 @@ local plugins = {
       vim.keymap.set("n", "<leader>tt", function()
         neotest.run.run(vim.fn.expand "%")
       end, { noremap = true })
-      vim.keymap.set("n", "<leader>tT", function()
+      vim.keymap.set("n", "<leader>TT", function()
         ---@diagnostic disable-next-line: undefined-field
         neotest.run.run(vim.uv.cwd())
       end, { noremap = true })
