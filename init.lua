@@ -429,7 +429,14 @@ local plugins = {
       vim.keymap.set("n", "<leader>sh", fzflua.help_tags)
       vim.keymap.set("n", "<leader>sk", fzflua.keymaps)
       vim.keymap.set("n", "<leader><leader>", function()
-        fzflua.buffers { formatter = "path.filename_first" }
+        fzflua.buffers {
+          formatter = "path.filename_first",
+          previewer = false,
+          winopts = {
+            width = 0.5,
+            height = 0.7,
+          },
+        }
       end)
       vim.keymap.set("n", "<leader>sm", fzflua.marks)
     end,
