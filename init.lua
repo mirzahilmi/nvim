@@ -97,6 +97,7 @@ local plugins = {
   },
   {
     "nvim-treesitter",
+    lazy = false,
     after = function()
       ---@diagnostic disable-next-line: missing-fields
       require("nvim-treesitter.configs").setup {
@@ -830,6 +831,7 @@ local plugins = {
       require("lz.n").trigger_load "nvim-dap"
       require("lz.n").trigger_load "nvim-dap-ui"
       require("lz.n").trigger_load "nvim-dap-virtual-text"
+      require("lz.n").trigger_load "nvim-treesitter"
     end,
   },
 }
