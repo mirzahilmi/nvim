@@ -80,7 +80,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 local plugins = {
-  { "vim-sleuth" },
   { "comment.nvim" },
   { "nvim-web-devicons", lazy = true },
   { "nvim-dap-ui", lazy = true },
@@ -93,6 +92,12 @@ local plugins = {
     lazy = true,
     after = function()
       require("nvim-dap-virtual-text").setup {}
+    end,
+  },
+  {
+    "guess-indent",
+    after = function()
+      require("guess-indent").setup {}
     end,
   },
   {
