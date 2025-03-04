@@ -373,6 +373,7 @@ local plugins = {
     after = function()
       local fzflua = require "fzf-lua"
       fzflua.setup {
+        "border-fused",
         winopts = {
           backdrop = 100,
           treesitter = true,
