@@ -407,11 +407,13 @@ local plugins = {
         fzflua.live_grep {
           previewer = false,
           winopts = { preview = { layout = "vertical" } },
+          formatter = "path.filename_first",
         }
       end)
       vim.keymap.set("n", "<leader>/", function()
         fzflua.lgrep_curbuf {
           winopts = {
+            width = 0.6,
             preview = {
               layout = "vertical",
               vertical = "up:60%",
