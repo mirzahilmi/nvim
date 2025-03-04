@@ -810,7 +810,7 @@ local plugins = {
       local neotest = require "neotest"
       neotest.setup {
         adapters = {
-          ["neotest-java"] = {},
+          require "neotest-java" {},
         },
       }
       vim.keymap.set("n", "<leader>tt", function()
@@ -831,7 +831,6 @@ local plugins = {
       require("lz.n").trigger_load "nvim-dap"
       require("lz.n").trigger_load "nvim-dap-ui"
       require("lz.n").trigger_load "nvim-dap-virtual-text"
-      require("lz.n").trigger_load "nvim-treesitter"
     end,
   },
 }
