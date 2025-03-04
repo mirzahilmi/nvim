@@ -389,12 +389,6 @@ local plugins = {
             preview_pager = "delta --side-by-side --width=$FZF_PREVIEW_COLUMNS --hunk-header-style='omit' --file-style='omit'",
           },
         },
-        files = { formatter = "path.filename_first" },
-        buffers = { formatter = "path.filename_first" },
-        grep = {
-          previewer = false,
-          winopts = { preview = { layout = "vertical" } },
-        },
       }
       fzflua.register_ui_select(function(_, items)
         local min_h, max_h = 0.15, 0.70
@@ -406,14 +400,30 @@ local plugins = {
         end
         return { winopts = { height = h, width = 0.60, row = 0.40 } }
       end)
-      vim.keymap.set("n", "<leader>sf", fzflua.files)
-      vim.keymap.set("n", "<leader>sg", function()
-        fzflua.live_grep { formatter = "path.filename_first" }
+      vim.keymap.set("n", "<leader>sf", function()
+        fzflua.files { formatter = "path.filename_first" }
       end)
-      vim.keymap.set("n", "<leader>/", fzflua.lgrep_curbuf)
+      vim.keymap.set("n", "<leader>sg", function()
+        fzflua.live_grep {
+          previewer = false,
+          winopts = { preview = { layout = "vertical" } },
+        }
+      end)
+      vim.keymap.set("n", "<leader>/", function()
+        fzflua.lgrep_curbuf {
+          winopts = {
+            preview = {
+              layout = "vertical",
+              vertical = "up:60%",
+            },
+          },
+        }
+      end)
       vim.keymap.set("n", "<leader>sh", fzflua.help_tags)
       vim.keymap.set("n", "<leader>sk", fzflua.keymaps)
-      vim.keymap.set("n", "<leader><leader>", fzflua.buffers)
+      vim.keymap.set("n", "<leader><leader>", function()
+        fzflua.buffers { formatter = "path.filename_first" }
+      end)
       vim.keymap.set("n", "<leader>sm", fzflua.marks)
     end,
   },
