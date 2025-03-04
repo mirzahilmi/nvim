@@ -125,11 +125,10 @@ local plugins = {
           vim.keymap.set("n", "gr", fzflua.lsp_references)
           vim.keymap.set({ "n", "v" }, "<leader>ca", function()
             fzflua.lsp_code_actions {
+              previewer = false,
               winopts = {
-                preview = {
-                  layout = "vertical",
-                  vertical = "up:70%",
-                },
+                width = 0.5,
+                height = 0.7,
               },
             }
           end)
@@ -382,12 +381,6 @@ local plugins = {
         previewers = {
           builtin = {
             syntax_limit_b = 1024 * 100,
-          },
-        },
-        lsp = {
-          code_actions = {
-            previewer = "codeaction_native",
-            preview_pager = "delta --side-by-side --width=$FZF_PREVIEW_COLUMNS --hunk-header-style='omit' --file-style='omit'",
           },
         },
       }
