@@ -395,7 +395,11 @@ local plugins = {
         return { winopts = { height = h, width = 0.60, row = 0.40 } }
       end)
       vim.keymap.set("n", "<leader>sf", function()
-        fzflua.files { formatter = "path.filename_first" }
+        fzflua.files {
+          hidden = false,
+          toggle_hidden_flag = "--hidden --no-ignore",
+          formatter = "path.filename_first",
+        }
       end)
       vim.keymap.set("n", "<leader>sg", function()
         fzflua.live_grep {
