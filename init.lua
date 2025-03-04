@@ -116,9 +116,7 @@ local plugins = {
           vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename)
 
           local fzflua = require "fzf-lua"
-          vim.keymap.set("n", "gd", function()
-            fzflua.lsp_definitions { jump_to_single_result = true }
-          end)
+          vim.keymap.set("n", "gd", fzflua.lsp_definitions)
           vim.keymap.set("n", "gI", function()
             fzflua.lsp_implementations { jump_to_single_result = true }
           end)
