@@ -42,11 +42,6 @@ vim.opt.cmdheight = 1
 vim.opt.termguicolors = true
 -- enable persistent undo
 vim.opt.undofile = true
--- Default tabstop to 2 space
-vim.opt.tabstop = 2
-vim.opt.softtabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.expandtab = true
 -- Highlight zul files
 vim.filetype.add { extension = { zul = "html" } }
 
@@ -631,6 +626,11 @@ local plugins = {
           java = {
             configuration = { runtimes = {} },
             saveActions = { organizeImports = true },
+            format = {
+              enabled = true,
+              insertSpaces = true,
+              tabSize = 0,
+            },
             inlayHints = {
               parameterNames = {
                 enabled = "all",
@@ -842,14 +842,14 @@ local plugins = {
       require("lz.n").trigger_load "nvim-dap-virtual-text"
     end,
   },
-  {
-    "indent-o-matic",
-    after = function()
-      require("indent-o-matic").setup {
-        standard_widths = { 2, 4 },
-      }
-    end,
-  },
+  -- {
+  --   "indent-o-matic",
+  --   after = function()
+  --     require("indent-o-matic").setup {
+  --       standard_widths = { 2, 4 },
+  --     }
+  --   end,
+  -- },
 }
 
 require("lz.n").load(plugins)
