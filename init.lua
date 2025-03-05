@@ -262,6 +262,7 @@ local plugins = {
           lua = { "stylua" },
           nix = { "alejandra" },
           python = { "black" },
+          java = { "google-java-format" },
         },
       }
       vim.keymap.set("n", "<leader>f", function()
@@ -625,11 +626,8 @@ local plugins = {
         settings = {
           java = {
             configuration = { runtimes = {} },
-            saveActions = { organizeImports = true },
             format = {
-              enabled = true,
-              insertSpaces = true,
-              tabSize = 0,
+              enabled = false,
             },
             inlayHints = {
               parameterNames = {
@@ -842,14 +840,6 @@ local plugins = {
       require("lz.n").trigger_load "nvim-dap-virtual-text"
     end,
   },
-  -- {
-  --   "indent-o-matic",
-  --   after = function()
-  --     require("indent-o-matic").setup {
-  --       standard_widths = { 2, 4 },
-  --     }
-  --   end,
-  -- },
 }
 
 require("lz.n").load(plugins)
