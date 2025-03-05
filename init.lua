@@ -95,12 +95,6 @@ local plugins = {
     end,
   },
   {
-    "guess-indent",
-    after = function()
-      require("guess-indent").setup {}
-    end,
-  },
-  {
     "nvim-treesitter",
     lazy = false,
     after = function()
@@ -846,6 +840,14 @@ local plugins = {
       require("lz.n").trigger_load "nvim-dap"
       require("lz.n").trigger_load "nvim-dap-ui"
       require("lz.n").trigger_load "nvim-dap-virtual-text"
+    end,
+  },
+  {
+    "indent-o-matic",
+    after = function()
+      require("indent-o-matic").setup {
+        standard_widths = { 2, 4 },
+      }
     end,
   },
 }

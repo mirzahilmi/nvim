@@ -61,7 +61,7 @@
           fzf-lua
           gitsigns-nvim
           gruvbox-material
-          guess-indent-nvim
+          indent-o-matic
           lazydev-nvim
           lualine-nvim
           lz-n
