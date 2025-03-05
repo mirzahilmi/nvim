@@ -44,6 +44,9 @@ vim.opt.termguicolors = true
 vim.opt.undofile = true
 -- Highlight zul files
 vim.filetype.add { extension = { zul = "html" } }
+-- Default tab to 4 space, see https://gist.github.com/LunarLambda/4c444238fb364509b72cfb891979f1dd
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 4
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
@@ -170,6 +173,7 @@ local plugins = {
         nixd = {},
         phpactor = {},
         arduino_language_server = {},
+        lemminx = {},
         lua_ls = {
           settings = {
             Lua = {
@@ -262,7 +266,6 @@ local plugins = {
           lua = { "stylua" },
           nix = { "alejandra" },
           python = { "black" },
-          java = { "google-java-format" },
         },
       }
       vim.keymap.set("n", "<leader>f", function()
@@ -626,14 +629,13 @@ local plugins = {
         settings = {
           java = {
             configuration = { runtimes = {} },
-            signatureHelp = { enabled = true },
-            format = {
-              enabled = false,
-            },
             inlayHints = {
               parameterNames = {
                 enabled = "all",
               },
+            },
+            settings = {
+              url = vim.fn.stdpath "config" .. "/org.eclipse.jdt.core.formatter.prefs",
             },
             completion = {
               favoriteStaticMembers = {
@@ -643,8 +645,20 @@ local plugins = {
                 "org.springframework.test.web.servlet.result.MockMvcResultMatchers.*",
               },
             },
+            saveActions = {
+              organizeImports = true,
+            },
+            sources = {
+              organizeImports = {
+                starThreshold = 9999,
+                staticStarThreshold = 9999,
+              },
+            },
             codeGeneration = {
-              addFinalForNewDeclaration = "fields",
+              useBlocks = true,
+            },
+            contentProvider = {
+              preferred = "fernflower",
             },
           },
         },
@@ -839,12 +853,6 @@ local plugins = {
       require("lz.n").trigger_load "nvim-dap"
       require("lz.n").trigger_load "nvim-dap-ui"
       require("lz.n").trigger_load "nvim-dap-virtual-text"
-    end,
-  },
-  {
-    "guess-indent.nvim",
-    after = function()
-      require("guess-indent").setup {}
     end,
   },
 }

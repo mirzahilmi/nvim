@@ -1,0 +1,7 @@
+org.eclipse.jdt.core.formatter.lineSplit=100
+org.eclipse.jdt.core.formatter.comment.line_length=100
+org.eclipse.jdt.core.formatter.alignment_for_assignment=16
+org.eclipse.jdt.core.formatter.insert_space_after_opening_brace_in_array_initializer=DO_NOT_INSERT
+org.eclipse.jdt.core.formatter.insert_space_before_closing_brace_in_array_initializer=DO_NOT_INSERT
+org.eclipse.jdt.core.formatter.tabulation.char=space
+org.eclipse.jdt.core.formatter.continuation_indentation=1
