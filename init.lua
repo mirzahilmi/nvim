@@ -626,6 +626,7 @@ local plugins = {
         settings = {
           java = {
             configuration = { runtimes = {} },
+            signatureHelp = { enabled = true },
             format = {
               enabled = false,
             },
@@ -636,10 +637,10 @@ local plugins = {
             },
             completion = {
               favoriteStaticMembers = {
+                "org.mockito.Mockito.*",
+                "org.assertj.core.api.Assertions.*",
                 "org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*",
                 "org.springframework.test.web.servlet.result.MockMvcResultMatchers.*",
-                "org.assertj.core.api.Assertions.*",
-                "org.mockito.Mockito.*",
               },
             },
             codeGeneration = {
@@ -838,6 +839,12 @@ local plugins = {
       require("lz.n").trigger_load "nvim-dap"
       require("lz.n").trigger_load "nvim-dap-ui"
       require("lz.n").trigger_load "nvim-dap-virtual-text"
+    end,
+  },
+  {
+    "guess-indent.nvim",
+    after = function()
+      require("guess-indent").setup {}
     end,
   },
 }
