@@ -114,9 +114,7 @@ local plugins = {
 
           local fzflua = require "fzf-lua"
           vim.keymap.set("n", "gd", fzflua.lsp_definitions)
-          vim.keymap.set("n", "gI", function()
-            fzflua.lsp_implementations { jump_to_single_result = true }
-          end)
+          vim.keymap.set("n", "gI", fzflua.lsp_implementations)
           vim.keymap.set("n", "gr", function()
             fzflua.lsp_references {
               winopts = {
@@ -250,7 +248,7 @@ local plugins = {
       conform.setup {
         notify_on_error = false,
         format_after_save = function(bufnr)
-          local disable_filetypes = { c = true, cpp = true }
+          local disable_filetypes = { c = true, cpp = true, java = true }
           local lsp_format_opt
           if disable_filetypes[vim.bo[bufnr].filetype] then
             lsp_format_opt = "never"
@@ -401,7 +399,7 @@ local plugins = {
       end)
       vim.keymap.set("n", "<leader>sf", function()
         fzflua.files {
-          hidden = true,
+          actions = { ["ctrl-g"] = { require("fzf-lua").actions.toggle_ignore } },
           formatter = "path.filename_first",
         }
       end)
@@ -646,7 +644,7 @@ local plugins = {
               },
             },
             saveActions = {
-              organizeImports = true,
+              organizeImports = false,
             },
             sources = {
               organizeImports = {
