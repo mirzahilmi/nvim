@@ -638,6 +638,7 @@ local plugins = {
             completion = {
               favoriteStaticMembers = {
                 "org.mockito.Mockito.*",
+                "org.mockito.ArgumentMatchers.*",
                 "org.assertj.core.api.Assertions.*",
                 "org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*",
                 "org.springframework.test.web.servlet.result.MockMvcResultMatchers.*",
