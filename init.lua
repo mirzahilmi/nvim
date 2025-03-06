@@ -109,7 +109,15 @@ local plugins = {
     after = function()
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(event)
-          vim.keymap.set("n", "<leader>ds", require("fzf-lua").lsp_document_symbols)
+          vim.keymap.set("n", "<leader>ds", function()
+            require("fzf-lua").lsp_document_symbols {
+              previewer = false,
+              winopts = {
+                width = 0.5,
+                height = 0.7,
+              },
+            }
+          end)
           vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename)
 
           local fzflua = require "fzf-lua"
