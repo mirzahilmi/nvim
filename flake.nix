@@ -58,7 +58,6 @@
           inputs.blink-cmp.packages.${pkgs.system}.default
           comment-nvim
           fidget-nvim
-          FixCursorHold-nvim
           fzf-lua
           gitsigns-nvim
           gruvbox-material
