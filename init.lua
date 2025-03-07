@@ -827,6 +827,7 @@ local plugins = {
     "neotest",
     keys = {
       "<leader>tt",
+      "<leader>td",
       "<leader>TT",
       "<leader>ts",
     },
@@ -844,6 +845,9 @@ local plugins = {
       }
       vim.keymap.set("n", "<leader>tt", function()
         neotest.run.run(vim.fn.expand "%")
+      end, { noremap = true })
+      vim.keymap.set("n", "<leader>td", function()
+        neotest.run.run { strategy = "dap" }
       end, { noremap = true })
       vim.keymap.set("n", "<leader>TT", function()
         ---@diagnostic disable-next-line: undefined-field
