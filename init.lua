@@ -651,6 +651,12 @@ local plugins = {
                 "org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*",
                 "org.springframework.test.web.servlet.result.MockMvcResultMatchers.*",
               },
+              importOrder = {
+                "java",
+                "jakarta",
+                "com",
+                "org",
+              },
             },
             saveActions = {
               organizeImports = false,
