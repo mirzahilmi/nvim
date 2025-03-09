@@ -809,7 +809,7 @@ local plugins = {
           lualine_a = { "mode" },
           lualine_b = {},
           lualine_c = { filename },
-          lualine_x = { diff, diagnostics, "filetype" },
+          lualine_x = { diagnostics, diff, "filetype" },
           lualine_y = { progress },
           lualine_z = { location },
         },
