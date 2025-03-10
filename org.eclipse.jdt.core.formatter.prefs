@@ -5,3 +5,5 @@ org.eclipse.jdt.core.formatter.insert_space_after_opening_brace_in_array_initial
 org.eclipse.jdt.core.formatter.insert_space_before_closing_brace_in_array_initializer=DO_NOT_INSERT
 org.eclipse.jdt.core.formatter.tabulation.char=space
 org.eclipse.jdt.core.formatter.continuation_indentation=1
+# see https://github.com/redhat-developer/vscode-java/issues/2483#issuecomment-1142254019
+org.eclipse.jdt.core.formatter.alignment_for_arguments_in_annotation=49
