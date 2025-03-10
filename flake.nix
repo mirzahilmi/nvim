@@ -73,6 +73,7 @@
           nvim-treesitter.withAllGrammars
           snacks-nvim
           todo-comments-nvim
+          vim-fugitive
           vim-sleuth
           pkgs.neovimPlugins.cord-nvim
         ];
