@@ -873,6 +873,20 @@ local plugins = {
       require("lz.n").trigger_load "nvim-dap-virtual-text"
     end,
   },
+  {
+    "vim-fugitive",
+    after = function()
+      vim.keymap.set("n", "<C-b>", function()
+        for i = 1, vim.fn.winnr "$" do
+          if vim.api.nvim_get_option_value("filetype", { buf = vim.fn.winbufnr(i) }) == "fugitiveblame" then
+            vim.cmd(i .. "close")
+            return
+          end
+        end
+        vim.cmd "Git blame"
+      end, { silent = true })
+    end,
+  },
 }
 
 require("lz.n").load(plugins)
