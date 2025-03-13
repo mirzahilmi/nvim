@@ -71,6 +71,7 @@
           nvim-dap
           nvim-lspconfig
           nvim-treesitter.withAllGrammars
+          nvim-ufo
           snacks-nvim
           todo-comments-nvim
           vim-fugitive
@@ -94,6 +95,7 @@
           nvim-nio
           nvim-web-devicons
           plenary-nvim
+          promise-async
           treesj
           trouble-nvim
           pkgs.neovimPlugins.showkeys

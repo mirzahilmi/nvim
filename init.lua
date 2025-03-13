@@ -77,6 +77,15 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
+local function extend_or_override(config, custom, ...)
+  if type(custom) == "function" then
+    config = custom(config, ...) or config
+  elseif custom then
+    config = vim.tbl_deep_extend("force", config, custom) --[[@as table]]
+  end
+  return config
+end
+
 local plugins = {
   { "comment.nvim" },
   { "nvim-web-devicons", lazy = true },
@@ -85,6 +94,7 @@ local plugins = {
   { "plenary.nvim", lazy = true },
   { "nui.nvim", lazy = true },
   { "luasnip", lazy = true },
+  { "promise-async", lazy = true },
   {
     "nvim-dap-virtual-text",
     lazy = true,
@@ -222,6 +232,9 @@ local plugins = {
       local lspconfig = require "lspconfig"
       for server, config in pairs(servers) do
         config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
+        config.capabilities = extend_or_override({
+          textDocument = { foldingRange = { dynamicRegistration = false, lineFoldingOnly = true } },
+        }, config.capabilities)
         lspconfig[server].setup(config)
       end
     end,
@@ -654,13 +667,15 @@ local plugins = {
               },
               importOrder = {
                 "java",
+                "javax",
                 "jakarta",
                 "com",
                 "org",
+                "id",
               },
             },
             saveActions = {
-              organizeImports = false,
+              organizeImports = true,
             },
             sources = {
               organizeImports = {
@@ -670,6 +685,7 @@ local plugins = {
             },
             codeGeneration = {
               useBlocks = true,
+              addFinalForNewDeclaration = "all",
             },
             contentProvider = {
               preferred = "fernflower",
@@ -701,15 +717,6 @@ local plugins = {
         for _, bundle in ipairs(vim.split(vim.fn.glob(jar_pattern), "\n")) do
           table.insert(bundles, bundle)
         end
-      end
-
-      local function extend_or_override(config, custom, ...)
-        if type(custom) == "function" then
-          config = custom(config, ...) or config
-        elseif custom then
-          config = vim.tbl_deep_extend("force", config, custom) --[[@as table]]
-        end
-        return config
       end
 
       local function attach_jdtls()
@@ -885,6 +892,20 @@ local plugins = {
         end
         vim.cmd "Git blame"
       end, { silent = true })
+    end,
+  },
+  {
+    "nvim-ufo",
+    before = function()
+      require("lz.n").trigger_load "promise-async"
+      require("lz.n").trigger_load "lspconfig"
+    end,
+    after = function()
+      vim.opt.foldlevel = 99
+      vim.opt.foldlevelstart = 99
+      vim.opt.foldenable = true
+
+      require("ufo").setup()
     end,
   },
 }
