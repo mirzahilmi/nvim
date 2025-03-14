@@ -606,6 +606,9 @@ local plugins = {
     after = function()
       local opts_cmd = { vim.fn.exepath "jdtls" }
       table.insert(opts_cmd, string.format("--jvm-arg=-javaagent:%s", vim.env.LOMBOK_JAR_PATH))
+      table.insert(opts_cmd, "-Xmx2g")
+      table.insert(opts_cmd, "-XX:+UseTransparentHugePages")
+      table.insert(opts_cmd, "-XX:+AlwaysPreTouch")
 
       local opts = {
         root_dir = require("lspconfig.configs.jdtls").default_config.root_dir,
@@ -892,20 +895,6 @@ local plugins = {
         end
         vim.cmd "Git blame"
       end, { silent = true })
-    end,
-  },
-  {
-    "nvim-ufo",
-    before = function()
-      require("lz.n").trigger_load "promise-async"
-      require("lz.n").trigger_load "lspconfig"
-    end,
-    after = function()
-      vim.opt.foldlevel = 99
-      vim.opt.foldlevelstart = 99
-      vim.opt.foldenable = true
-
-      require("ufo").setup()
     end,
   },
 }
