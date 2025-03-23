@@ -21,7 +21,7 @@ vim.opt.signcolumn = "yes"
 vim.opt.updatetime = 250
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
-vim.opt.timeoutlen = 300
+vim.opt.timeoutlen = 500
 -- Configure how new splits should be opened
 vim.opt.splitright = true
 vim.opt.splitbelow = true
@@ -94,7 +94,6 @@ local plugins = {
   { "plenary.nvim", lazy = true },
   { "nui.nvim", lazy = true },
   { "luasnip", lazy = true },
-  { "promise-async", lazy = true },
   {
     "nvim-dap-virtual-text",
     lazy = true,
@@ -246,6 +245,12 @@ local plugins = {
     end,
     after = function()
       require("blink.cmp").setup {
+        fuzzy = {
+          prebuilt_binaries = {
+            download = false,
+            force_version = "0.12.4",
+          },
+        },
         appearance = {
           use_nvim_cmp_as_default = true,
           nerd_font_variant = "normal",
@@ -354,22 +359,28 @@ local plugins = {
       },
     },
   },
+  -- {
+  --   "gruvbox-material",
+  --   priority = 1000,
+  --   after = function()
+  --     vim.g.gruvbox_material_diagnostic_virtual_text = 1
+  --     vim.g.gruvbox_material_foreground = "mix"
+  --     vim.g.gruvbox_material_background = "hard"
+  --     vim.g.gruvbox_material_ui_contrast = "high"
+  --     vim.g.gruvbox_material_float_style = "bright"
+  --     vim.cmd.colorscheme "gruvbox-material"
+  --     vim.api.nvim_set_hl(0, "NormalFloat", { link = "NormalFloat" })
+  --     vim.api.nvim_set_hl(0, "FloatBorder", { link = "FloatBorder" })
+  --   end,
+  -- },
   {
-    "gruvbox-material",
+    "vscode.nvim",
     priority = 1000,
     after = function()
-      vim.g.gruvbox_material_diagnostic_virtual_text = 1
-      vim.g.gruvbox_material_foreground = "mix"
-      vim.g.gruvbox_material_background = "hard"
-      vim.g.gruvbox_material_ui_contrast = "high"
-      vim.g.gruvbox_material_float_style = "bright"
-      vim.cmd.colorscheme "gruvbox-material"
-      vim.api.nvim_set_hl(0, "NormalFloat", { link = "NormalFloat" })
-      vim.api.nvim_set_hl(0, "FloatBorder", { link = "FloatBorder" })
+      vim.cmd.colorscheme "vscode"
     end,
   },
   {
-
     "nvim-autopairs",
     event = "InsertEnter",
     after = function()
@@ -770,8 +781,8 @@ local plugins = {
     end,
     after = function()
       local filename = { "filename", path = 1 }
-      local progress = { "progress", color = { bg = "#32302f" } }
-      local location = { "location", color = { fg = "ddc7a1", bg = "#32302f", gui = "bold" } }
+      -- local progress = { "progress", color = { bg = "#32302f" } }
+      -- local location = { "location", color = { fg = "ddc7a1", bg = "#32302f", gui = "bold" } }
 
       local diagnostics = {
         "diagnostics",
@@ -871,6 +882,7 @@ local plugins = {
         neotest.run.run(vim.uv.cwd())
       end, { noremap = true })
       vim.keymap.set("n", "<leader>ts", neotest.summary.toggle, { noremap = true })
+      vim.keymap.set("n", "<leader>tu", neotest.output_panel.toggle, { noremap = true })
     end,
   },
   {

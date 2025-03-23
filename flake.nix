@@ -75,6 +75,7 @@
           todo-comments-nvim
           vim-fugitive
           vim-sleuth
+          vscode-nvim
           pkgs.neovimPlugins.cord-nvim
         ];
       };
