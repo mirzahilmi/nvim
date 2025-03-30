@@ -530,6 +530,7 @@ local plugins = {
       local treesj = require "treesj"
       treesj.setup {
         use_default_keymaps = false,
+        max_join_length = 1024,
       }
       vim.keymap.set("n", "<space>j", treesj.toggle)
     end,
