@@ -60,7 +60,6 @@
           fidget-nvim
           fzf-lua
           gitsigns-nvim
-          gruvbox-material
           lazydev-nvim
           lualine-nvim
           lz-n
