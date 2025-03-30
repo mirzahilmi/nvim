@@ -780,8 +780,6 @@ local plugins = {
     end,
     after = function()
       local filename = { "filename", path = 1 }
-      -- local progress = { "progress", color = { bg = "#32302f" } }
-      -- local location = { "location", color = { fg = "ddc7a1", bg = "#32302f", gui = "bold" } }
 
       local diagnostics = {
         "diagnostics",
@@ -830,8 +828,8 @@ local plugins = {
           lualine_b = {},
           lualine_c = { filename },
           lualine_x = { diagnostics, diff, "filetype" },
-          lualine_y = { progress },
-          lualine_z = { location },
+          lualine_y = { "progress" },
+          lualine_z = { "location" },
         },
       }
     end,
