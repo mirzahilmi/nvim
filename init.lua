@@ -137,7 +137,7 @@ local plugins = {
               winopts = {
                 preview = {
                   layout = "vertical",
-                  vertical = "down:70%",
+                  vertical = "down:60%",
                 },
               },
             }
@@ -274,7 +274,7 @@ local plugins = {
       conform.setup {
         notify_on_error = false,
         format_after_save = function(bufnr)
-          local disable_filetypes = { c = true, cpp = true, java = true }
+          local disable_filetypes = { c = true, cpp = true }
           local lsp_format_opt
           if disable_filetypes[vim.bo[bufnr].filetype] then
             lsp_format_opt = "never"
@@ -377,6 +377,9 @@ local plugins = {
     "vscode.nvim",
     priority = 1000,
     after = function()
+      require("vscode").setup {
+        underline_links = false,
+      }
       vim.cmd.colorscheme "vscode"
     end,
   },
@@ -438,8 +441,12 @@ local plugins = {
       end)
       vim.keymap.set("n", "<leader>sg", function()
         fzflua.live_grep {
-          previewer = false,
-          winopts = { preview = { layout = "vertical" } },
+          winopts = {
+            preview = {
+              layout = "vertical",
+              vertical = "down:60%",
+            },
+          },
           formatter = "path.filename_first",
         }
       end)
@@ -485,8 +492,10 @@ local plugins = {
           { event = events.FILE_RENAMED, handler = on_move },
         },
         filesystem = {
-          group_empty_dirs = true,
           follow_current_file = { enabled = true },
+        },
+        window = {
+          position = "right",
         },
       }
       vim.keymap.set("n", "<C-n>", ":Neotree toggle<CR>", { silent = true })
@@ -499,9 +508,7 @@ local plugins = {
       require("lz.n").trigger_load "plenary.nvim"
     end,
     after = function()
-      require("todo-comments").setup {
-        signs = false,
-      }
+      require("todo-comments").setup {}
     end,
   },
   {
