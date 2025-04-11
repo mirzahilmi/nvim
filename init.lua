@@ -91,7 +91,7 @@ local plugins = {
   { "nvim-nio", lazy = true },
   { "plenary.nvim", lazy = true },
   { "nui.nvim", lazy = true },
-  { "luasnip", lazy = true },
+  { "friendly-snippets", lazy = true },
   {
     "nvim-dap-virtual-text",
     lazy = true,
@@ -241,19 +241,17 @@ local plugins = {
   {
     "blink-cmp",
     before = function()
-      require("lz.n").trigger_load "luasnip"
+      require("lz.n").trigger_load "friendly-snippets"
     end,
     after = function()
       require("blink.cmp").setup {
+        fuzzy = { implementation = "prefer_rust" },
         appearance = {
           use_nvim_cmp_as_default = true,
           nerd_font_variant = "normal",
         },
         completion = {
           documentation = { window = { border = "single" } },
-        },
-        snippets = {
-          preset = "luasnip",
         },
       }
     end,

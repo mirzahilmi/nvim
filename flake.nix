@@ -84,7 +84,6 @@
           conform-nvim
           friendly-snippets
           highlight-undo-nvim
-          luasnip
           neotest-java
           nui-nvim
           nvim-autopairs
