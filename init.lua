@@ -251,6 +251,7 @@ local plugins = {
           nerd_font_variant = "normal",
         },
         completion = {
+          keyword = { range = "full" },
           documentation = { window = { border = "single" } },
         },
       }
@@ -351,20 +352,6 @@ local plugins = {
       },
     },
   },
-  -- {
-  --   "gruvbox-material",
-  --   priority = 1000,
-  --   after = function()
-  --     vim.g.gruvbox_material_diagnostic_virtual_text = 1
-  --     vim.g.gruvbox_material_foreground = "mix"
-  --     vim.g.gruvbox_material_background = "hard"
-  --     vim.g.gruvbox_material_ui_contrast = "high"
-  --     vim.g.gruvbox_material_float_style = "bright"
-  --     vim.cmd.colorscheme "gruvbox-material"
-  --     vim.api.nvim_set_hl(0, "NormalFloat", { link = "NormalFloat" })
-  --     vim.api.nvim_set_hl(0, "FloatBorder", { link = "FloatBorder" })
-  --   end,
-  -- },
   {
     "vscode.nvim",
     priority = 1000,
