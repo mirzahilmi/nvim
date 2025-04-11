@@ -47,6 +47,8 @@ vim.filetype.add { extension = { zul = "html" } }
 -- Default tab to 4 space, see https://gist.github.com/LunarLambda/4c444238fb364509b72cfb891979f1dd
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
+-- Silent deprecation message
+vim.deprecate = function() end
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
