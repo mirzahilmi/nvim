@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixCats.url = "github:BirdeeHub/nixCats-nvim";
-    blink-cmp.url = "github:Saghen/blink.cmp/18b352d12b35bca148427b607098df14b75a218f";
+    blink-cmp.url = "github:Saghen/blink.cmp/v1.1.1";
     "plugins-showkeys" = {
       url = "github:nvzone/showkeys";
       flake = false;

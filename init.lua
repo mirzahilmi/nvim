@@ -245,12 +245,6 @@ local plugins = {
     end,
     after = function()
       require("blink.cmp").setup {
-        fuzzy = {
-          prebuilt_binaries = {
-            download = false,
-            force_version = "0.12.4",
-          },
-        },
         appearance = {
           use_nvim_cmp_as_default = true,
           nerd_font_variant = "normal",
