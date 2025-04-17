@@ -188,7 +188,15 @@ local plugins = {
         nixd = {},
         phpactor = {},
         arduino_language_server = {},
-        lemminx = {},
+        lemminx = {
+          settings = {
+            xml = {
+              format = {
+                enabled = false,
+              },
+            },
+          },
+        },
         lua_ls = {
           settings = {
             Lua = {
