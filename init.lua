@@ -464,32 +464,6 @@ local plugins = {
     end,
   },
   {
-    "neo-tree.nvim",
-    before = function()
-      require("lz.n").trigger_load { "plenary.nvim", "nvim-web-devicons", "nui.nvim" }
-    end,
-    after = function()
-      local function on_move(data)
-        Snacks.rename.on_rename_file(data.source, data.destination)
-      end
-      local events = require "neo-tree.events"
-      require("neo-tree").setup {
-        event_handlers = {
-          { event = events.FILE_MOVED, handler = on_move },
-          { event = events.FILE_RENAMED, handler = on_move },
-        },
-        filesystem = {
-          follow_current_file = { enabled = true },
-        },
-        window = {
-          position = "right",
-        },
-      }
-      vim.keymap.set("n", "<C-n>", ":Neotree toggle<CR>", { silent = true })
-      vim.keymap.set("n", "<leader>e", ":Neotree position=current toggle<CR>", { silent = true })
-    end,
-  },
-  {
     "todo-comments.nvim",
     before = function()
       require("lz.n").trigger_load "plenary.nvim"
@@ -898,6 +872,13 @@ local plugins = {
         end
         vim.cmd "Git blame"
       end, { silent = true })
+    end,
+  },
+  {
+    "yazi.nvim",
+    after = function()
+      require("yazi").setup {}
+      vim.keymap.set("n", "<leader>e", ":Yazi<CR>", { silent = true })
     end,
   },
 }

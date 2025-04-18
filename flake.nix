@@ -65,7 +65,6 @@
           lz-n
           mini-nvim
           neotest
-          neo-tree-nvim
           noice-nvim
           nvim-dap
           nvim-lspconfig
