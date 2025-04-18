@@ -874,13 +874,6 @@ local plugins = {
       end, { silent = true })
     end,
   },
-  {
-    "yazi.nvim",
-    after = function()
-      require("yazi").setup {}
-      vim.keymap.set("n", "<leader>e", ":Yazi<CR>", { silent = true })
-    end,
-  },
 }
 
 require("lz.n").load(plugins)

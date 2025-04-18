@@ -74,7 +74,6 @@
           vim-fugitive
           vim-sleuth
           vscode-nvim
-          yazi-nvim
           pkgs.neovimPlugins.cord-nvim
         ];
       };
