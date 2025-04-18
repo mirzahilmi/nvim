@@ -1,6 +1,9 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.have_nerd_font = true
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 vim.opt.relativenumber = true
 vim.opt.mouse = "a"
@@ -871,6 +874,27 @@ local plugins = {
           end
         end
         vim.cmd "Git blame"
+      end, { silent = true })
+    end,
+  },
+  {
+    "nvim-tree.lua",
+    before = function()
+      require("lz.n").trigger_load "nvim-web-devicons"
+    end,
+    after = function()
+      require("nvim-tree").setup {
+        actions = {
+          open_file = {
+            quit_on_open = true,
+          },
+        },
+        renderer = {
+          group_empty = true,
+        },
+      }
+      vim.keymap.set("n", "<leader>e", function()
+        require("nvim-tree.api").tree.toggle { current_window = true }
       end, { silent = true })
     end,
   },

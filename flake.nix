@@ -68,6 +68,7 @@
           noice-nvim
           nvim-dap
           nvim-lspconfig
+          nvim-tree-lua
           nvim-treesitter.withAllGrammars
           snacks-nvim
           todo-comments-nvim
