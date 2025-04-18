@@ -56,7 +56,9 @@ vim.deprecate = function() end
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
-vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { silent = true })
+vim.keymap.set("n", "<Esc>", function()
+  vim.cmd "nohlsearch"
+end, { silent = true })
 -- Exit terminal mode in the builtin terminal.
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 -- Disable arrow keys in normal mode

@@ -1,9 +1,12 @@
-org.eclipse.jdt.core.formatter.lineSplit=100
-org.eclipse.jdt.core.formatter.comment.line_length=100
-org.eclipse.jdt.core.formatter.alignment_for_assignment=16
-org.eclipse.jdt.core.formatter.insert_space_after_opening_brace_in_array_initializer=DO_NOT_INSERT
-org.eclipse.jdt.core.formatter.insert_space_before_closing_brace_in_array_initializer=DO_NOT_INSERT
-org.eclipse.jdt.core.formatter.tabulation.char=space
 org.eclipse.jdt.core.formatter.continuation_indentation=1
-# see https://github.com/redhat-developer/vscode-java/issues/2483#issuecomment-1142254019
 org.eclipse.jdt.core.formatter.alignment_for_arguments_in_annotation=49
+org.eclipse.jdt.core.formatter.parentheses_positions_in_method_declaration=PRESERVE_POSITIONS
+org.eclipse.jdt.core.formatter.parentheses_positions_in_method_invocation=separate_lines_if_wrapped
+org.eclipse.jdt.core.formatter.parentheses_positions_in_enum_constant_declaration=separate_lines_if_wrapped
+org.eclipse.jdt.core.formatter.parentheses_positions_in_record_declaration=separate_lines_if_wrapped
+org.eclipse.jdt.core.formatter.parentheses_positions_in_for_statement=separate_lines_if_wrapped
+org.eclipse.jdt.core.formatter.parentheses_positions_in_switch_statement=separate_lines_if_wrapped
+org.eclipse.jdt.core.formatter.parentheses_positions_in_try_clause=separate_lines_if_wrapped
+org.eclipse.jdt.core.formatter.parentheses_positions_in_catch_clause=separate_lines_if_wrapped
+org.eclipse.jdt.core.formatter.parentheses_positions_in_annotation=separate_lines_if_wrapped
+org.eclipse.jdt.core.formatter.parentheses_positions_in_lambda_declaration=separate_lines_if_wrapped
