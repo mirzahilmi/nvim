@@ -886,17 +886,17 @@ local plugins = {
     end,
     after = function()
       require("nvim-tree").setup {
-        actions = {
-          open_file = {
-            quit_on_open = true,
-          },
-        },
+        hijack_netrw = true,
         renderer = {
           group_empty = true,
         },
       }
+      local api = require "nvim-tree.api"
       vim.keymap.set("n", "<leader>e", function()
-        require("nvim-tree.api").tree.toggle { current_window = true }
+        api.tree.toggle {
+          current_window = true,
+          find_file = true,
+        }
       end, { silent = true })
     end,
   },
