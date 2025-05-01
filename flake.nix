@@ -62,6 +62,7 @@
           gitsigns-nvim
           lazydev-nvim
           lualine-nvim
+          luasnip
           lz-n
           mini-nvim
           neotest
@@ -82,7 +83,6 @@
       optionalPlugins = {
         default = with pkgs.vimPlugins; [
           conform-nvim
-          friendly-snippets
           highlight-undo-nvim
           neotest-java
           nui-nvim

@@ -1,16 +1,29 @@
-if vim.fn.has "wsl" == 1 then
+-- see https://www.reddit.com/r/neovim/comments/17ieyn2/comment/kd9vt97
+vim.api.nvim_create_autocmd({ "FocusGained" }, {
+  pattern = { "*" },
+  command = [[call setreg("@", getreg("+"))]],
+})
+vim.api.nvim_create_autocmd({ "FocusLost" }, {
+  pattern = { "*" },
+  command = [[call setreg("+", getreg("@"))]],
+})
+
+-- see https://www.reddit.com/r/neovim/comments/1byy8lu/copying_to_the_windows_clipboard_from_wsl2
+if vim.fn.has "wsl" then
   vim.g.clipboard = {
-    name = "WslClipboard",
+    name = "win_clipboard",
     copy = {
       ["+"] = "clip.exe",
       ["*"] = "clip.exe",
     },
     paste = {
-      ["+"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-      ["*"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+      ["+"] = "powershell.exe Get-Clipboard",
+      ["*"] = "powershell.exe Get-Clipboard",
     },
     cache_enabled = 0,
   }
+  vim.keymap.set({ "n", "v" }, "y", '"+y', { noremap = true, silent = true })
+  vim.keymap.set({ "n", "v" }, "p", '"+p', { noremap = true, silent = true })
 end
 
 vim.g.mapleader = " "
@@ -24,8 +37,6 @@ vim.opt.relativenumber = true
 vim.opt.mouse = "a"
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
--- Sync clipboard between OS and Neovim.
-vim.opt.clipboard = "unnamedplus"
 -- Enable break indent
 vim.opt.breakindent = true
 -- Save undo history
@@ -111,7 +122,7 @@ local plugins = {
   { "nvim-nio", lazy = true },
   { "plenary.nvim", lazy = true },
   { "nui.nvim", lazy = true },
-  { "friendly-snippets", lazy = true },
+  { "LuaSnip", lazy = true },
   {
     "nvim-dap-virtual-text",
     lazy = true,
@@ -269,11 +280,13 @@ local plugins = {
   {
     "blink-cmp",
     before = function()
-      require("lz.n").trigger_load "friendly-snippets"
+      require("lz.n").trigger_load "luasnip"
     end,
     after = function()
       require("blink.cmp").setup {
         fuzzy = { implementation = "prefer_rust" },
+        -- see https://www.reddit.com/r/neovim/comments/1hmuwaz/comment/m421fcn
+        snippets = { preset = "luasnip" },
         appearance = {
           use_nvim_cmp_as_default = true,
           nerd_font_variant = "normal",
@@ -809,7 +822,7 @@ local plugins = {
           globalstatus = true,
           section_separators = "",
           component_separators = "",
-          disabled_filetypes = { "fzf" },
+          disabled_filetypes = { "fzf", "NvimTree" },
         },
         sections = {
           lualine_a = { "mode" },
