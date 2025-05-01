@@ -254,17 +254,7 @@ local plugins = {
             },
           },
         },
-        gopls = {
-          settings = {
-            gopls = {
-              completeUnimported = true,
-              usePlaceholders = true,
-              analyses = {
-                unusedparams = true,
-              },
-            },
-          },
-        },
+        gopls = {},
       }
 
       local lspconfig = require "lspconfig"
