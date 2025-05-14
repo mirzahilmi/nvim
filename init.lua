@@ -255,14 +255,12 @@ local plugins = {
           },
         },
         gopls = {},
+        elp = {},
       }
 
       local lspconfig = require "lspconfig"
       for server, config in pairs(servers) do
         config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
-        config.capabilities = extend_or_override({
-          textDocument = { foldingRange = { dynamicRegistration = false, lineFoldingOnly = true } },
-        }, config.capabilities)
         lspconfig[server].setup(config)
       end
     end,
@@ -298,7 +296,7 @@ local plugins = {
       conform.setup {
         notify_on_error = false,
         format_after_save = function(bufnr)
-          local disable_filetypes = { c = true, cpp = true }
+          local disable_filetypes = { c = true, cpp = true, java = true }
           local lsp_format_opt
           if disable_filetypes[vim.bo[bufnr].filetype] then
             lsp_format_opt = "never"
@@ -916,6 +914,13 @@ local plugins = {
           find_file = true,
         }
       end, { silent = true })
+    end,
+  },
+  {
+    "go.nvim",
+    ft = { "go", "gomod" },
+    after = function()
+      require("go").setup {}
     end,
   },
 }

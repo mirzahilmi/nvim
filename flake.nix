@@ -83,6 +83,7 @@
       optionalPlugins = {
         default = with pkgs.vimPlugins; [
           conform-nvim
+          go-nvim
           highlight-undo-nvim
           neotest-java
           nui-nvim
