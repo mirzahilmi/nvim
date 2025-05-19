@@ -79,6 +79,8 @@ vim.opt.shiftwidth = 4
 -- Silent deprecation message
 ---@diagnostic disable-next-line: duplicate-set-field
 vim.deprecate = function() end
+vim.opt.cursorline = false
+vim.opt.swapfile = false
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
