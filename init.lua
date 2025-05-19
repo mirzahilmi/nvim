@@ -158,6 +158,8 @@ local plugins = {
           end)
 
           local fzflua = require "fzf-lua"
+          vim.keymap.set("n", "gd", fzflua.lsp_definitions)
+          vim.keymap.set("n", "gri", fzflua.lsp_implementations)
           vim.keymap.set("n", "gr", function()
             fzflua.lsp_references {
               winopts = {
