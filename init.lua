@@ -81,6 +81,7 @@ vim.opt.shiftwidth = 4
 vim.deprecate = function() end
 vim.opt.cursorline = false
 vim.opt.swapfile = false
+vim.lsp.set_log_level "DEBUG"
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
@@ -148,7 +149,7 @@ local plugins = {
     "nvim-lspconfig",
     after = function()
       vim.api.nvim_create_autocmd("LspAttach", {
-        callback = function(event)
+        callback = function()
           vim.keymap.set("n", "<leader>ds", function()
             require("fzf-lua").lsp_document_symbols {
               previewer = false,
@@ -183,35 +184,6 @@ local plugins = {
           end)
 
           vim.diagnostic.config { virtual_text = { current_line = true } }
-
-          local client = vim.lsp.get_client_by_id(event.data.client_id)
-          if client and client.server_capabilities.documentHighlightProvider then
-            local highlight_augroup = vim.api.nvim_create_augroup("lsp-highlight-word", { clear = false })
-            vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-              buffer = event.buf,
-              group = highlight_augroup,
-              callback = vim.lsp.buf.document_highlight,
-            })
-
-            vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-              buffer = event.buf,
-              group = highlight_augroup,
-              callback = vim.lsp.buf.clear_references,
-            })
-
-            vim.api.nvim_create_autocmd("LspDetach", {
-              callback = function(event2)
-                vim.lsp.buf.clear_references()
-                vim.api.nvim_clear_autocmds { group = "lsp-highlight-word", buffer = event2.buf }
-              end,
-            })
-          end
-
-          if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
-            vim.keymap.set("n", "<leader>th", function()
-              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-            end)
-          end
         end,
       })
 
@@ -606,59 +578,15 @@ local plugins = {
     "nvim-jdtls",
     ft = "java",
     after = function()
-      local opts_cmd = { vim.fn.exepath "jdtls" }
-      table.insert(opts_cmd, string.format("--jvm-arg=-javaagent:%s", vim.env.LOMBOK_JAR_PATH))
-      table.insert(opts_cmd, "-Xmx2g")
-      table.insert(opts_cmd, "-XX:+UseTransparentHugePages")
-      table.insert(opts_cmd, "-XX:+AlwaysPreTouch")
-
-      local opts = {
-        root_dir = require("lspconfig.configs.jdtls").default_config.root_dir,
-
-        project_name = function(root_dir)
-          return root_dir and vim.fs.basename(root_dir)
-        end,
-
-        jdtls_config_dir = function(project_name)
-          return vim.fn.stdpath "cache" .. "/jdtls/" .. project_name .. "/config"
-        end,
-        jdtls_workspace_dir = function(project_name)
-          return vim.fn.stdpath "cache" .. "/jdtls/" .. project_name .. "/workspace"
-        end,
-
-        cmd = opts_cmd,
-        full_cmd = function(opts)
-          local fname = vim.api.nvim_buf_get_name(0)
-          local root_dir = opts.root_dir(fname)
-          local project_name = opts.project_name(root_dir)
-          local cmd = vim.deepcopy(opts.cmd)
-          if project_name then
-            vim.list_extend(cmd, {
-              "-configuration",
-              opts.jdtls_config_dir(project_name),
-              "-data",
-              opts.jdtls_workspace_dir(project_name),
-            })
-          end
-          return cmd
-        end,
-
-        handlers = {
-          ["language/status"] = function() end,
+      local config = {
+        cmd = {
+          vim.env.JDTLS_BIN_PATH,
+          string.format("--jvm-arg=-javaagent:%s", vim.env.LOMBOK_JAR_PATH),
+          "--jvm-arg=-Xmx4g",
         },
-
-        dap = { hotcodereplace = "auto", config_overrides = {} },
-        dap_main = {},
-        test = true,
 
         settings = {
           java = {
-            configuration = { runtimes = {} },
-            inlayHints = {
-              parameterNames = {
-                enabled = "all",
-              },
-            },
             settings = {
               url = vim.fn.stdpath "config" .. "/org.eclipse.jdt.core.formatter.prefs",
             },
@@ -695,72 +623,17 @@ local plugins = {
             },
           },
         },
+
+        init_options = {
+          bundles = {},
+        },
+
+        handlers = {
+          ["language/status"] = function() end,
+        },
       }
 
-      if vim.env.JAVA8_RUNTIME_PATH then
-        table.insert(opts.settings.java.configuration.runtimes, {
-          name = "JavaSE-1.8",
-          path = vim.env.JAVA8_RUNTIME_PATH,
-        })
-      elseif vim.env.JAVA17_RUNTIME_PATH then
-        table.insert(opts.settings.java.configuration.runtimes, {
-          name = "JavaSE-17",
-          path = vim.env.JAVA17_RUNTIME_PATH,
-        })
-      end
-
-      local bundles = {} ---@type string[]
-      local jar_patterns = {
-        vim.env.JAVA_DEBUG_PATH .. "/server/com.microsoft.java.debug.plugin-*.jar",
-      }
-      vim.list_extend(jar_patterns, {
-        vim.env.JAVA_TEST_PATH .. "/server/*.jar",
-      })
-      for _, jar_pattern in ipairs(jar_patterns) do
-        for _, bundle in ipairs(vim.split(vim.fn.glob(jar_pattern), "\n")) do
-          table.insert(bundles, bundle)
-        end
-      end
-
-      local function attach_jdtls()
-        local fname = vim.api.nvim_buf_get_name(0)
-
-        local config = extend_or_override({
-          cmd = opts.full_cmd(opts),
-          root_dir = opts.root_dir(fname),
-          init_options = {
-            bundles = bundles,
-          },
-          handlers = opts.handlers,
-          settings = opts.settings,
-          capabilities = require("blink.cmp").get_lsp_capabilities(),
-        }, opts.jdtls)
-
-        require("jdtls").start_or_attach(config)
-      end
-
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = "java",
-        callback = attach_jdtls,
-      })
-
-      vim.api.nvim_create_autocmd("LspAttach", {
-        callback = function(args)
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
-          if client and client.name == "jdtls" then
-            require("jdtls").setup_dap(opts.dap)
-            if opts.dap_main then
-              require("jdtls.dap").setup_dap_main_class_configs(opts.dap_main)
-            end
-
-            if opts.on_attach then
-              opts.on_attach(args)
-            end
-          end
-        end,
-      })
-
-      attach_jdtls()
+      require("jdtls").start_or_attach(config)
     end,
   },
   {
