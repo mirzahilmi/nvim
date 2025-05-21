@@ -109,15 +109,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
-local function extend_or_override(config, custom, ...)
-  if type(custom) == "function" then
-    config = custom(config, ...) or config
-  elseif custom then
-    config = vim.tbl_deep_extend("force", config, custom) --[[@as table]]
-  end
-  return config
-end
-
 local plugins = {
   { "comment.nvim" },
   { "nvim-web-devicons", lazy = true },
@@ -254,7 +245,11 @@ local plugins = {
         },
         completion = {
           keyword = { range = "full" },
-          documentation = { window = { border = "single" } },
+          documentation = {
+            auto_show = true,
+            auto_show_delay_ms = 500,
+            window = { border = "single" },
+          },
         },
       }
     end,
@@ -604,6 +599,7 @@ local plugins = {
                 "org",
                 "id",
               },
+              maxResults = 50,
             },
             saveActions = {
               organizeImports = true,
@@ -632,6 +628,13 @@ local plugins = {
           ["language/status"] = function() end,
         },
       }
+
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "java",
+        callback = function()
+          require("jdtls").start_or_attach(config)
+        end,
+      })
 
       require("jdtls").start_or_attach(config)
     end,
