@@ -56,7 +56,7 @@
       startupPlugins = {
         default = with pkgs.vimPlugins; [
           inputs.blink-cmp.packages.${pkgs.system}.default
-          comment-nvim
+          # comment-nvim
           fidget-nvim
           fzf-lua
           gitsigns-nvim

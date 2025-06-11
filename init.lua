@@ -110,7 +110,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 local plugins = {
-  { "comment.nvim" },
   { "nvim-web-devicons", lazy = true },
   { "nvim-dap-ui", lazy = true },
   { "nvim-nio", lazy = true },
@@ -183,15 +182,7 @@ local plugins = {
         nixd = {},
         phpactor = {},
         arduino_language_server = {},
-        lemminx = {
-          settings = {
-            xml = {
-              format = {
-                enabled = false,
-              },
-            },
-          },
-        },
+        lemminx = {},
         lua_ls = {
           settings = {
             Lua = {
@@ -208,7 +199,7 @@ local plugins = {
         yamlls = {
           settings = {
             yaml = {
-              validate = false,
+              -- validate = false,
               hover = true,
               completion = true,
               format = {
@@ -590,6 +581,8 @@ local plugins = {
                 "org.mockito.Mockito.*",
                 "org.mockito.ArgumentMatchers.*",
                 "org.assertj.core.api.Assertions.*",
+                "org.springframework.test.web.client.match.MockRestRequestMatchers.*",
+                "org.springframework.test.web.client.response.MockRestResponseCreators.*",
               },
               importOrder = {
                 "java",
