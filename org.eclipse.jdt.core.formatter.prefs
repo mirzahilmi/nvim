@@ -10,3 +10,4 @@ org.eclipse.jdt.core.formatter.parentheses_positions_in_try_clause=separate_line
 org.eclipse.jdt.core.formatter.parentheses_positions_in_catch_clause=separate_lines_if_wrapped
 org.eclipse.jdt.core.formatter.parentheses_positions_in_annotation=separate_lines_if_wrapped
 org.eclipse.jdt.core.formatter.parentheses_positions_in_lambda_declaration=separate_lines_if_wrapped
+org.eclipse.jdt.core.formatter.comment.format_line_comments=false
