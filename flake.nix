@@ -50,6 +50,7 @@
           ripgrep
           stylua
           yaml-language-server
+          texlivePackages.latexmk
         ];
       };
 
@@ -73,6 +74,7 @@
           nvim-treesitter.withAllGrammars
           snacks-nvim
           todo-comments-nvim
+          vimtex
           vim-fugitive
           vim-sleuth
           vscode-nvim
