@@ -796,6 +796,14 @@ local plugins = {
       require("go").setup {}
     end,
   },
+  {
+    "vimtex",
+    lazy = false,
+    after = function()
+      vim.g.vimtex_view_general_viewer = "sumatrapdf-wrapper"
+      vim.g.vimtex_view_general_options = "-reuse-instance -forward-search @tex @line @pdf"
+    end,
+  },
 }
 
 require("lz.n").load(plugins)
