@@ -32,6 +32,7 @@ vim.g.have_nerd_font = true
 -- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
+vim.g.vimtex_quickfix_enabled = 0
 
 vim.opt.relativenumber = true
 vim.opt.mouse = "a"
@@ -214,11 +215,13 @@ local plugins = {
         },
         gopls = {},
         elp = {},
+        rust_analyzer = {},
       }
 
       local lspconfig = require "lspconfig"
       for server, config in pairs(servers) do
         config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
+        -- vim.lsp.config(server, config)
         lspconfig[server].setup(config)
       end
     end,
@@ -230,6 +233,9 @@ local plugins = {
     end,
     after = function()
       require("blink.cmp").setup {
+        sources = {
+          default = { "lsp", "path", "snippets", "omni", "buffer" },
+        },
         fuzzy = { implementation = "prefer_rust" },
         -- see https://www.reddit.com/r/neovim/comments/1hmuwaz/comment/m421fcn
         snippets = { preset = "luasnip" },
