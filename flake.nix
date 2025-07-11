@@ -50,7 +50,7 @@
           ripgrep
           stylua
           yaml-language-server
-          texlivePackages.latexmk
+          texlivePackages.scheme-medium
         ];
       };
 
