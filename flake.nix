@@ -78,6 +78,7 @@
           vim-sleuth
           vscode-nvim
           pkgs.neovimPlugins.cord-nvim
+          rustaceanvim
         ];
       };
 

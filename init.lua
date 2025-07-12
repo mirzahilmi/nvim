@@ -215,7 +215,6 @@ local plugins = {
         },
         gopls = {},
         elp = {},
-        rust_analyzer = {},
       }
 
       local lspconfig = require "lspconfig"
@@ -810,6 +809,7 @@ local plugins = {
       vim.g.vimtex_view_general_options = "-reuse-instance -forward-search @tex @line @pdf"
     end,
   },
+  { "rustaceanvim", lazy = false },
 }
 
 require("lz.n").load(plugins)
