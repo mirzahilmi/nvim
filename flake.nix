@@ -49,6 +49,7 @@
           nixd
           ripgrep
           stylua
+          texlab
           yaml-language-server
         ];
       };
@@ -73,7 +74,6 @@
           nvim-treesitter.withAllGrammars
           snacks-nvim
           todo-comments-nvim
-          vimtex
           vim-fugitive
           vim-sleuth
           vscode-nvim
