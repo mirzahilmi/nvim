@@ -26,6 +26,10 @@ vim.api.nvim_create_autocmd({ "FocusLost" }, {
 --   vim.keymap.set({ "n", "v" }, "p", '"+p', { noremap = true, silent = true })
 -- end
 
+vim.schedule(function()
+  vim.o.clipboard = "unnamedplus"
+end)
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.have_nerd_font = true
@@ -82,10 +86,9 @@ vim.opt.shiftwidth = 4
 vim.deprecate = function() end
 vim.opt.cursorline = false
 vim.opt.swapfile = false
-vim.lsp.set_log_level "DEBUG"
+-- vim.lsp.set_log_level "DEBUG"
+vim.opt.colorcolumn = "100"
 
--- Set highlight on search, but clear on pressing <Esc> in normal mode
-vim.opt.hlsearch = true
 vim.keymap.set("n", "<Esc>", function()
   vim.cmd "nohlsearch"
 end, { silent = true })
@@ -215,6 +218,20 @@ local plugins = {
         },
         gopls = {},
         elp = {},
+        texlab = {
+          settings = {
+            texlab = {
+              build = {
+                onSave = true,
+                forwardSearchAfter = true,
+              },
+              forwardSearch = {
+                executable = "zathura",
+                args = { "--synctex-forward", "%l:1:%f", "%p" },
+              },
+            },
+          },
+        },
       }
 
       local lspconfig = require "lspconfig"
@@ -279,6 +296,7 @@ local plugins = {
           lua = { "stylua" },
           nix = { "alejandra" },
           python = { "black" },
+          tex = { "latexindent" },
         },
       }
       vim.keymap.set("n", "<leader>f", function()
