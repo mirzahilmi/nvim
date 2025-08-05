@@ -129,7 +129,8 @@ local plugins = {
   },
   {
     "nvim-treesitter",
-    lazy = false,
+    lazy = true,
+    cmd = "NvimTreeToggle",
     after = function()
       ---@diagnostic disable-next-line: missing-fields
       require("nvim-treesitter.configs").setup {
