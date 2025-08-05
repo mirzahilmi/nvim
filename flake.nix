@@ -79,6 +79,7 @@
           vscode-nvim
           pkgs.neovimPlugins.cord-nvim
           rustaceanvim
+          oil-nvim
         ];
       };
 
