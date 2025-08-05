@@ -187,7 +187,29 @@ local plugins = {
 
       local servers = {
         basedpyright = {},
-        nixd = {},
+        nixd = {
+          settings = {
+            nixd = {
+              nixpkgs = {
+                expr = [[
+                  let
+                    flake = builtins.getFlake "/home/mirza/.config/nixfiles/";
+                  in import flake.inputs.nixpkgs {
+                    overlays = builtins.attrValues flake.outputs.overlays;
+                  }
+                ]],
+              },
+              options = {
+                nixos = {
+                  expr = '(builtins.getFlake "/home/mirza/.config/nixfiles").nixosConfigurations."t4nix".options',
+                },
+                home_manager = {
+                  expr = '(builtins.getFlake "/home/mirza/.config/nixfiles").homeConfigurations."mirza@t4nix".options',
+                },
+              },
+            },
+          },
+        },
         phpactor = {},
         arduino_language_server = {},
         lemminx = {},
