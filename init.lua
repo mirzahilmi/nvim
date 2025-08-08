@@ -837,7 +837,24 @@ local plugins = {
       require("go").setup {}
     end,
   },
-  { "rustaceanvim", lazy = false },
+  {
+    "rustaceanvim",
+    lazy = false,
+    after = function()
+      vim.api.nvim_create_autocmd("BufWritePost", {
+        pattern = "*.rs",
+        callback = function()
+          local cwd = vim.lsp.buf.list_workspace_folders()
+          if not (cwd == null) then
+            if vim.fn.filereadable(cwd[1] .. "/Dioxus.toml") == 1 then
+              local command = "dx fmt --file %"
+              vim.cmd("silent ! " .. command)
+            end
+          end
+        end,
+      })
+    end,
+  },
 }
 
 require("lz.n").load(plugins)
