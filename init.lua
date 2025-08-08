@@ -73,7 +73,7 @@ vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right win
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 --- see https://www.reddit.com/r/neovim/comments/1fq0y8u/comment/lp2ez92
-vim.keymap.set({ "x" }, "y", '"+y', { silent = true })
+vim.keymap.set({ "x" }, "y", '"+y', { noremap = true, silent = true })
 
 -- see https://www.reddit.com/r/neovim/comments/1byy8lu/copying_to_the_windows_clipboard_from_wsl2
 if vim.fn.has "wsl" == 1 then
@@ -743,7 +743,7 @@ local plugins = {
         warn_no_results = false,
         win = { wo = { wrap = true } },
       }
-      vim.keymap.set("n", "<leader>tr", ":Trouble diagnostics toggle<CR>", { silent = true })
+      vim.keymap.set("n", "<C-t>", ":Trouble diagnostics toggle<CR>", { noremap = true, silent = true })
     end,
   },
   {
