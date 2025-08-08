@@ -1,35 +1,3 @@
--- see https://www.reddit.com/r/neovim/comments/17ieyn2/comment/kd9vt97
-vim.api.nvim_create_autocmd({ "FocusGained" }, {
-  pattern = { "*" },
-  command = [[call setreg("@", getreg("+"))]],
-})
-vim.api.nvim_create_autocmd({ "FocusLost" }, {
-  pattern = { "*" },
-  command = [[call setreg("+", getreg("@"))]],
-})
-
--- see https://www.reddit.com/r/neovim/comments/1byy8lu/copying_to_the_windows_clipboard_from_wsl2
--- if vim.fn.has "wsl" then
---   vim.g.clipboard = {
---     name = "win_clipboard",
---     copy = {
---       ["+"] = "clip.exe",
---       ["*"] = "clip.exe",
---     },
---     paste = {
---       ["+"] = "powershell.exe Get-Clipboard",
---       ["*"] = "powershell.exe Get-Clipboard",
---     },
---     cache_enabled = 0,
---   }
---   vim.keymap.set({ "n", "v" }, "y", '"+y', { noremap = true, silent = true })
---   vim.keymap.set({ "n", "v" }, "p", '"+p', { noremap = true, silent = true })
--- end
-
-vim.schedule(function()
-  vim.o.clipboard = "unnamedplus"
-end)
-
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.have_nerd_font = true
@@ -104,6 +72,27 @@ vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left wind
 vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+--- see https://www.reddit.com/r/neovim/comments/1fq0y8u/comment/lp2ez92
+vim.keymap.set({ "x" }, "y", '"+y', { silent = true })
+
+-- see https://www.reddit.com/r/neovim/comments/1byy8lu/copying_to_the_windows_clipboard_from_wsl2
+if vim.fn.has "wsl" == 1 then
+  print "Im here"
+  vim.g.clipboard = {
+    name = "win_clipboard",
+    copy = {
+      ["+"] = "clip.exe",
+      ["*"] = "clip.exe",
+    },
+    paste = {
+      ["+"] = "powershell.exe Get-Clipboard",
+      ["*"] = "powershell.exe Get-Clipboard",
+    },
+    cache_enabled = 0,
+  }
+  vim.keymap.set({ "n", "v" }, "y", '"+y', { noremap = true, silent = true })
+  vim.keymap.set({ "n", "v" }, "p", '"+p', { noremap = true, silent = true })
+end
 
 -- Highlight when yanking (copying) text
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -536,7 +525,7 @@ local plugins = {
   },
   {
     "highlight-undo.nvim",
-    keys = { "u", "<C-r>", "p", "P" },
+    keys = { "u", "<C-r>" },
     after = function()
       require("highlight-undo").setup {}
     end,
