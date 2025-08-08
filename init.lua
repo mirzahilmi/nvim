@@ -255,6 +255,8 @@ local plugins = {
             },
           },
         },
+        protols = {},
+        terraformls = {},
       }
 
       local lspconfig = require "lspconfig"
