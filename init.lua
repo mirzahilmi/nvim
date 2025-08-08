@@ -855,6 +855,31 @@ local plugins = {
       })
     end,
   },
+  {
+    "oil.nvim",
+    lazy = false,
+    after = function()
+      require("oil").setup {
+        use_default_keymaps = false,
+        keymaps = {
+          ["H"] = { "actions.toggle_hidden", mode = "n" },
+          ["<CR>"] = "actions.select",
+          ["<Esc>"] = { "actions.close", mode = "n" },
+        },
+        win_options = {
+          winbar = "%#@attribute.builtin#%{substitute(v:lua.require('oil').get_current_dir(), '^' . $HOME, '~', '')}",
+        },
+      }
+      -- see https://github.com/stevearc/oil.nvim/issues/384#issuecomment-2693662865
+      vim.keymap.set("n", "-", function()
+        if vim.bo.filetype == "oil" then
+          require("oil.actions").close.callback()
+        else
+          vim.cmd "Oil"
+        end
+      end)
+    end,
+  },
 }
 
 require("lz.n").load(plugins)
