@@ -547,7 +547,6 @@ local plugins = {
     after = function()
       local showkeys = require "showkeys"
       showkeys.setup {}
-      vim.keymap.set("n", "<leader>k", showkeys.toggle)
     end,
   },
   {
@@ -829,12 +828,6 @@ local plugins = {
         },
       }
       local api = require "nvim-tree.api"
-      vim.keymap.set("n", "<leader>e", function()
-        api.tree.toggle {
-          current_window = true,
-          find_file = true,
-        }
-      end, { silent = true })
     end,
   },
   {
