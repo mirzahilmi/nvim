@@ -8,8 +8,10 @@ vim.g.vimtex_quickfix_enabled = 0
 
 vim.opt.relativenumber = true
 vim.opt.mouse = "a"
--- Don't show the mode, since it's already in the status line
-vim.opt.showmode = false
+-- Default tab to 4 space, see https://gist.github.com/LunarLambda/4c444238fb364509b72cfb891979f1dd
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 4
+vim.opt.tabstop = 4
 -- Enable break indent
 vim.opt.breakindent = true
 -- Save undo history
@@ -46,15 +48,12 @@ vim.opt.termguicolors = true
 vim.opt.undofile = true
 -- Highlight zul files
 vim.filetype.add { extension = { zul = "html" } }
--- Default tab to 4 space, see https://gist.github.com/LunarLambda/4c444238fb364509b72cfb891979f1dd
-vim.opt.expandtab = true
-vim.opt.shiftwidth = 4
 -- Silent deprecation message
 ---@diagnostic disable-next-line: duplicate-set-field
 vim.deprecate = function() end
 vim.opt.cursorline = false
 vim.opt.swapfile = false
--- vim.lsp.set_log_level "DEBUG"
+-- Char-limit border
 vim.opt.colorcolumn = "100"
 
 vim.keymap.set("n", "<Esc>", function()
@@ -246,13 +245,16 @@ local plugins = {
         },
         protols = {},
         terraformls = {},
+        qmlls = {
+          cmd = { "qmlls", "-E" },
+        },
       }
 
-      local lspconfig = require "lspconfig"
+      -- tried changing it to use the new api vim.lsp.enable but it
+      -- just doesnt work, i think it got to do with missing default
+      -- config value
       for server, config in pairs(servers) do
-        config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
-        -- vim.lsp.config(server, config)
-        lspconfig[server].setup(config)
+        require("lspconfig")[server].setup(config)
       end
     end,
   },
@@ -370,6 +372,7 @@ local plugins = {
   },
   {
     "lazydev.nvim",
+    enabled = false,
     ft = "lua",
     after = {
       ---@diagnostic disable-next-line: missing-fields
@@ -539,17 +542,6 @@ local plugins = {
     end,
   },
   {
-    "snacks.nvim",
-    priority = 1000,
-    lazy = false,
-    after = function()
-      require("snacks").setup {
-        input = { enabled = true },
-        rename = { enabled = true },
-      }
-    end,
-  },
-  {
     "noice.nvim",
     before = function()
       require("lz.n").trigger_load "nui.nvim"
@@ -673,6 +665,7 @@ local plugins = {
   },
   {
     "lualine.nvim",
+    enabled = false,
     before = function()
       require("lz.n").trigger_load "nvim-web-devicons"
     end,
@@ -734,7 +727,7 @@ local plugins = {
   },
   {
     "trouble.nvim",
-    keys = "<leader>tr",
+    keys = "<C-t>",
     before = function()
       require("lz.n").trigger_load "nvim-web-devicons"
     end,
@@ -854,6 +847,7 @@ local plugins = {
           ["H"] = { "actions.toggle_hidden", mode = "n" },
           ["<CR>"] = "actions.select",
           ["<Esc>"] = { "actions.close", mode = "n" },
+          ["-"] = { "actions.parent", mode = "n" },
         },
         win_options = {
           winbar = "%#@attribute.builtin#%{substitute(v:lua.require('oil').get_current_dir(), '^' . $HOME, '~', '')}",
@@ -872,3 +866,5 @@ local plugins = {
 }
 
 require("lz.n").load(plugins)
+
+vim.cmd ":hi statusline guibg=NONE"

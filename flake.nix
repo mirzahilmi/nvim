@@ -27,9 +27,7 @@
 
     extra_pkg_config = {};
 
-    dependencyOverlays = [
-      (utils.standardPluginOverlay inputs)
-    ];
+    dependencyOverlays = [(utils.standardPluginOverlay inputs)];
 
     categoryDefinitions = {
       pkgs,
@@ -51,6 +49,7 @@
           stylua
           texlab
           yaml-language-server
+          kdePackages.qtdeclarative
         ];
       };
 
@@ -72,7 +71,6 @@
           nvim-lspconfig
           nvim-tree-lua
           nvim-treesitter.withAllGrammars
-          snacks-nvim
           todo-comments-nvim
           vim-fugitive
           vim-sleuth
