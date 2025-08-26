@@ -256,6 +256,17 @@ local plugins = {
       for server, config in pairs(servers) do
         require("lspconfig")[server].setup(config)
       end
+
+      -- vim.lsp.config("roslyn", {
+      --   cmd = {
+      --     vim.env.ROSLYN_BIN,
+      --     "--logLevel",
+      --     "Information",
+      --     "--extensionLogDirectory",
+      --     "/tmp/roslyn_ls/logs",
+      --     "--stdio",
+      --   },
+      -- })
     end,
   },
   {
@@ -861,6 +872,12 @@ local plugins = {
           vim.cmd "Oil"
         end
       end)
+    end,
+  },
+  {
+    "roslyn.nvim",
+    after = function()
+      require("roslyn").setup {}
     end,
   },
 }

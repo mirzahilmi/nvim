@@ -50,6 +50,7 @@
           texlab
           yaml-language-server
           kdePackages.qtdeclarative
+          lemminx
         ];
       };
 
@@ -78,6 +79,14 @@
           pkgs.neovimPlugins.cord-nvim
           rustaceanvim
           oil-nvim
+          (roslyn-nvim.overrideAttrs {
+            src = pkgs.fetchFromGitHub {
+              owner = "seblyng";
+              repo = "roslyn.nvim";
+              rev = "0c4a6f5b64122b51a64e0c8f7aae140ec979690e";
+              sha256 = "sha256-tZDH6VDRKaRaoSuz3zyeN/omoAwOf5So8PGUXHt2TLk=";
+            };
+          })
         ];
       };
 
