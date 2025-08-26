@@ -76,7 +76,6 @@ vim.keymap.set({ "x" }, "y", '"+y', { noremap = true, silent = true })
 
 -- see https://www.reddit.com/r/neovim/comments/1byy8lu/copying_to_the_windows_clipboard_from_wsl2
 if vim.fn.has "wsl" == 1 then
-  print "Im here"
   vim.g.clipboard = {
     name = "win_clipboard",
     copy = {
