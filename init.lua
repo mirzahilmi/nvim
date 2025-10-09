@@ -102,18 +102,10 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 local plugins = {
   { "nvim-web-devicons", lazy = true },
-  { "nvim-dap-ui", lazy = true },
   { "nvim-nio", lazy = true },
   { "plenary.nvim", lazy = true },
   { "nui.nvim", lazy = true },
   { "LuaSnip", lazy = true },
-  {
-    "nvim-dap-virtual-text",
-    lazy = true,
-    after = function()
-      require("nvim-dap-virtual-text").setup {}
-    end,
-  },
   {
     "nvim-treesitter",
     lazy = true,
@@ -247,6 +239,7 @@ local plugins = {
         qmlls = {
           cmd = { "qmlls", "-E" },
         },
+        r_language_server = {},
       }
 
       -- tried changing it to use the new api vim.lsp.enable but it
@@ -255,17 +248,6 @@ local plugins = {
       for server, config in pairs(servers) do
         require("lspconfig")[server].setup(config)
       end
-
-      -- vim.lsp.config("roslyn", {
-      --   cmd = {
-      --     vim.env.ROSLYN_BIN,
-      --     "--logLevel",
-      --     "Information",
-      --     "--extensionLogDirectory",
-      --     "/tmp/roslyn_ls/logs",
-      --     "--stdio",
-      --   },
-      -- })
     end,
   },
   {
@@ -333,28 +315,11 @@ local plugins = {
   {
     "nvim-dap",
     before = function()
-      require("lz.n").trigger_load { "nvim-dap-ui", "nvim-nio" }
+      require("lz.n").trigger_load { "nvim-nio" }
     end,
     after = function()
       local dap = require "dap"
-      local dapui = require "dapui"
-
-      dapui.setup {
-        icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
-        controls = {
-          icons = {
-            pause = "⏸",
-            play = "▶",
-            step_into = "⏎",
-            step_over = "⏭",
-            step_out = "⏮",
-            step_back = "b",
-            run_last = "▶▶",
-            terminate = "⏹",
-            disconnect = "⏏",
-          },
-        },
-      }
+      local dap_view = require "dap-view"
 
       vim.api.nvim_set_hl(0, "DapBreak", { fg = "#e51400" })
       vim.api.nvim_set_hl(0, "DapStop", { fg = "#ffcc00" })
@@ -367,17 +332,25 @@ local plugins = {
         vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
       end
 
-      dap.listeners.after.event_initialized["dapui_config"] = dapui.open
-      dap.listeners.before.event_terminated["dapui_config"] = dapui.close
-      dap.listeners.before.event_exited["dapui_config"] = dapui.close
-
       vim.keymap.set("n", "<F5>", dap.continue)
-      vim.keymap.set("n", "<F1>", dap.step_into)
-      vim.keymap.set("n", "<F2>", dap.step_over)
-      vim.keymap.set("n", "<F3>", dap.step_out)
-      vim.keymap.set("n", "<F4>", dap.step_back)
+      vim.keymap.set("n", "<F7>", dap_view.toggle)
       vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint)
-      vim.keymap.set("n", "<F7>", dapui.toggle)
+    end,
+  },
+  {
+    "nvim-dap-view",
+    after = function()
+      require("dap-view").setup {
+        auto_toggle = true,
+        winbar = { controls = { enabled = true } },
+      }
+    end,
+  },
+  {
+    "nvim-dap-virtual-text",
+    lazy = true,
+    after = function()
+      require("nvim-dap-virtual-text").setup {}
     end,
   },
   {
@@ -543,14 +516,14 @@ local plugins = {
       require("highlight-undo").setup {}
     end,
   },
-  {
-    "showkeys",
-    keys = "<leader>k",
-    after = function()
-      local showkeys = require "showkeys"
-      showkeys.setup {}
-    end,
-  },
+  -- {
+  --   "showkeys",
+  --   keys = "<leader>k",
+  --   after = function()
+  --     local showkeys = require "showkeys"
+  --     showkeys.setup {}
+  --   end,
+  -- },
   {
     "noice.nvim",
     before = function()
@@ -673,68 +646,68 @@ local plugins = {
       require("jdtls").start_or_attach(config)
     end,
   },
-  {
-    "lualine.nvim",
-    enabled = false,
-    before = function()
-      require("lz.n").trigger_load "nvim-web-devicons"
-    end,
-    after = function()
-      local filename = { "filename", path = 1 }
-
-      local diagnostics = {
-        "diagnostics",
-        sources = { "nvim_diagnostic" },
-        sections = { "error", "warn", "info", "hint" },
-        symbols = {
-          error = "E ",
-          hint = "H ",
-          info = "I ",
-          warn = "W ",
-        },
-        colored = true,
-        update_in_insert = false,
-        always_visible = false,
-      }
-
-      local diff = {
-        "diff",
-        source = function()
-          local gitsigns = vim.b.gitsigns_status_dict
-          if gitsigns then
-            return {
-              added = gitsigns.added,
-              modified = gitsigns.changed,
-              removed = gitsigns.removed,
-            }
-          end
-        end,
-        symbols = {
-          added = " ",
-          modified = " ",
-          removed = " ",
-        },
-        colored = true,
-        always_visible = false,
-      }
-      require("lualine").setup {
-        options = {
-          globalstatus = true,
-          section_separators = "",
-          component_separators = "",
-          disabled_filetypes = { "fzf", "NvimTree" },
-        },
-        sections = {
-          lualine_a = { "mode" },
-          lualine_b = {},
-          lualine_c = { filename },
-          lualine_x = { diagnostics, diff, "filetype" },
-          lualine_y = { "progress" },
-          lualine_z = { "location" },
-        },
-      }
-    end,
-  },
+  -- {
+  --   "lualine.nvim",
+  --   enabled = false,
+  --   before = function()
+  --     require("lz.n").trigger_load "nvim-web-devicons"
+  --   end,
+  --   after = function()
+  --     local filename = { "filename", path = 1 }
+  --
+  --     local diagnostics = {
+  --       "diagnostics",
+  --       sources = { "nvim_diagnostic" },
+  --       sections = { "error", "warn", "info", "hint" },
+  --       symbols = {
+  --         error = "E ",
+  --         hint = "H ",
+  --         info = "I ",
+  --         warn = "W ",
+  --       },
+  --       colored = true,
+  --       update_in_insert = false,
+  --       always_visible = false,
+  --     }
+  --
+  --     local diff = {
+  --       "diff",
+  --       source = function()
+  --         local gitsigns = vim.b.gitsigns_status_dict
+  --         if gitsigns then
+  --           return {
+  --             added = gitsigns.added,
+  --             modified = gitsigns.changed,
+  --             removed = gitsigns.removed,
+  --           }
+  --         end
+  --       end,
+  --       symbols = {
+  --         added = " ",
+  --         modified = " ",
+  --         removed = " ",
+  --       },
+  --       colored = true,
+  --       always_visible = false,
+  --     }
+  --     require("lualine").setup {
+  --       options = {
+  --         globalstatus = true,
+  --         section_separators = "",
+  --         component_separators = "",
+  --         disabled_filetypes = { "fzf", "NvimTree" },
+  --       },
+  --       sections = {
+  --         lualine_a = { "mode" },
+  --         lualine_b = {},
+  --         lualine_c = { filename },
+  --         lualine_x = { diagnostics, diff, "filetype" },
+  --         lualine_y = { "progress" },
+  --         lualine_z = { "location" },
+  --       },
+  --     }
+  --   end,
+  -- },
   {
     "trouble.nvim",
     keys = "<C-t>",
@@ -743,8 +716,9 @@ local plugins = {
     end,
     after = function()
       require("trouble").setup {
+        auto_preview = false,
         warn_no_results = false,
-        win = { wo = { wrap = true } },
+        -- win = { wo = { wrap = true } },
       }
       vim.keymap.set("n", "<C-t>", ":Trouble diagnostics toggle<CR>", { noremap = true, silent = true })
     end,
@@ -789,7 +763,6 @@ local plugins = {
     before = function()
       require("lz.n").trigger_load "nvim-jdtls"
       require("lz.n").trigger_load "nvim-dap"
-      require("lz.n").trigger_load "nvim-dap-ui"
       require("lz.n").trigger_load "nvim-dap-virtual-text"
     end,
   },
@@ -807,26 +780,28 @@ local plugins = {
       end, { silent = true })
     end,
   },
-  {
-    "nvim-tree.lua",
-    before = function()
-      require("lz.n").trigger_load "nvim-web-devicons"
-    end,
-    after = function()
-      require("nvim-tree").setup {
-        hijack_netrw = true,
-        renderer = {
-          group_empty = true,
-        },
-      }
-      local api = require "nvim-tree.api"
-    end,
-  },
+  -- {
+  --   "nvim-tree.lua",
+  --   before = function()
+  --     require("lz.n").trigger_load "nvim-web-devicons"
+  --   end,
+  --   after = function()
+  --     require("nvim-tree").setup {
+  --       hijack_netrw = true,
+  --       renderer = {
+  --         group_empty = true,
+  --       },
+  --     }
+  --     local api = require "nvim-tree.api"
+  --   end,
+  -- },
   {
     "go.nvim",
     ft = { "go", "gomod" },
     after = function()
-      require("go").setup {}
+      require("go").setup {
+        icons = false,
+      }
     end,
   },
   {
@@ -852,6 +827,8 @@ local plugins = {
     lazy = false,
     after = function()
       require("oil").setup {
+        default_file_explorer = true,
+        skip_confirm_for_simple_edits = true,
         use_default_keymaps = false,
         keymaps = {
           ["H"] = { "actions.toggle_hidden", mode = "n" },

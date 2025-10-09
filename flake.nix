@@ -62,7 +62,7 @@
           fzf-lua
           gitsigns-nvim
           lazydev-nvim
-          lualine-nvim
+          # lualine-nvim
           luasnip
           lz-n
           mini-nvim
@@ -70,7 +70,7 @@
           noice-nvim
           nvim-dap
           nvim-lspconfig
-          nvim-tree-lua
+          # nvim-tree-lua
           nvim-treesitter.withAllGrammars
           todo-comments-nvim
           vim-fugitive
@@ -79,6 +79,7 @@
           pkgs.neovimPlugins.cord-nvim
           rustaceanvim
           oil-nvim
+          nvim-dap-view
           (roslyn-nvim.overrideAttrs {
             src = pkgs.fetchFromGitHub {
               owner = "seblyng";
@@ -98,7 +99,6 @@
           neotest-java
           nui-nvim
           nvim-autopairs
-          nvim-dap-ui
           nvim-dap-virtual-text
           nvim-jdtls
           nvim-nio
@@ -106,7 +106,7 @@
           plenary-nvim
           treesj
           trouble-nvim
-          pkgs.neovimPlugins.showkeys
+          # pkgs.neovimPlugins.showkeys
         ];
       };
     };
