@@ -13,6 +13,10 @@
       url = "github:vyfor/cord.nvim";
       flake = false;
     };
+    "plugins-duck-nvim" = {
+      url = "github:tamton-aquib/duck.nvim";
+      flake = false;
+    };
   };
 
   outputs = {
@@ -51,18 +55,17 @@
           yaml-language-server
           kdePackages.qtdeclarative
           lemminx
+          python313Packages.cfn-lint
         ];
       };
 
       startupPlugins = {
         default = with pkgs.vimPlugins; [
           inputs.blink-cmp.packages.${pkgs.system}.default
-          # comment-nvim
           fidget-nvim
           fzf-lua
           gitsigns-nvim
           lazydev-nvim
-          # lualine-nvim
           luasnip
           lz-n
           mini-nvim
@@ -70,13 +73,11 @@
           noice-nvim
           nvim-dap
           nvim-lspconfig
-          # nvim-tree-lua
           nvim-treesitter.withAllGrammars
           todo-comments-nvim
           vim-fugitive
           vim-sleuth
           vscode-nvim
-          pkgs.neovimPlugins.cord-nvim
           rustaceanvim
           oil-nvim
           nvim-dap-view
@@ -88,6 +89,9 @@
               sha256 = "sha256-tZDH6VDRKaRaoSuz3zyeN/omoAwOf5So8PGUXHt2TLk=";
             };
           })
+
+          pkgs.neovimPlugins.cord-nvim
+          pkgs.neovimPlugins.duck-nvim
         ];
       };
 
@@ -106,7 +110,7 @@
           plenary-nvim
           treesj
           trouble-nvim
-          # pkgs.neovimPlugins.showkeys
+          nvim-lint
         ];
       };
     };

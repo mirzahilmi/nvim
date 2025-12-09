@@ -5,6 +5,21 @@ vim.g.have_nerd_font = true
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.g.vimtex_quickfix_enabled = 0
+vim.g.loaded_sql_completion = 0
+vim.g.rustaceanvim = {
+  server = {
+    default_settings = {
+      -- see https://github.com/rust-lang/rust-analyzer/discussions/17881#discussioncomment-10351763
+      ["rust-analyzer"] = {
+        cargo = {
+          allFeatures = false,
+          extraArgs = { "--release" },
+          allTargets = false,
+        },
+      },
+    },
+  },
+}
 
 vim.opt.relativenumber = true
 vim.opt.mouse = "a"
@@ -208,17 +223,19 @@ local plugins = {
         yamlls = {
           settings = {
             yaml = {
-              -- validate = false,
+              validate = false,
               hover = true,
               completion = true,
               format = {
                 enable = true,
                 bracketSpacing = true,
               },
+              schemaStore = {
+                enable = true,
+              },
             },
           },
         },
-        gopls = {},
         elp = {},
         texlab = {
           settings = {
@@ -240,6 +257,13 @@ local plugins = {
           cmd = { "qmlls", "-E" },
         },
         r_language_server = {},
+        gopls = {
+          settings = {
+            gopls = {
+              semanticTokens = true,
+            },
+          },
+        },
       }
 
       -- tried changing it to use the new api vim.lsp.enable but it
@@ -368,6 +392,7 @@ local plugins = {
   },
   {
     "vscode.nvim",
+    -- enabled = false,
     priority = 1000,
     after = function()
       require("vscode").setup {
@@ -516,14 +541,6 @@ local plugins = {
       require("highlight-undo").setup {}
     end,
   },
-  -- {
-  --   "showkeys",
-  --   keys = "<leader>k",
-  --   after = function()
-  --     local showkeys = require "showkeys"
-  --     showkeys.setup {}
-  --   end,
-  -- },
   {
     "noice.nvim",
     before = function()
@@ -646,68 +663,6 @@ local plugins = {
       require("jdtls").start_or_attach(config)
     end,
   },
-  -- {
-  --   "lualine.nvim",
-  --   enabled = false,
-  --   before = function()
-  --     require("lz.n").trigger_load "nvim-web-devicons"
-  --   end,
-  --   after = function()
-  --     local filename = { "filename", path = 1 }
-  --
-  --     local diagnostics = {
-  --       "diagnostics",
-  --       sources = { "nvim_diagnostic" },
-  --       sections = { "error", "warn", "info", "hint" },
-  --       symbols = {
-  --         error = "E ",
-  --         hint = "H ",
-  --         info = "I ",
-  --         warn = "W ",
-  --       },
-  --       colored = true,
-  --       update_in_insert = false,
-  --       always_visible = false,
-  --     }
-  --
-  --     local diff = {
-  --       "diff",
-  --       source = function()
-  --         local gitsigns = vim.b.gitsigns_status_dict
-  --         if gitsigns then
-  --           return {
-  --             added = gitsigns.added,
-  --             modified = gitsigns.changed,
-  --             removed = gitsigns.removed,
-  --           }
-  --         end
-  --       end,
-  --       symbols = {
-  --         added = " ",
-  --         modified = " ",
-  --         removed = " ",
-  --       },
-  --       colored = true,
-  --       always_visible = false,
-  --     }
-  --     require("lualine").setup {
-  --       options = {
-  --         globalstatus = true,
-  --         section_separators = "",
-  --         component_separators = "",
-  --         disabled_filetypes = { "fzf", "NvimTree" },
-  --       },
-  --       sections = {
-  --         lualine_a = { "mode" },
-  --         lualine_b = {},
-  --         lualine_c = { filename },
-  --         lualine_x = { diagnostics, diff, "filetype" },
-  --         lualine_y = { "progress" },
-  --         lualine_z = { "location" },
-  --       },
-  --     }
-  --   end,
-  -- },
   {
     "trouble.nvim",
     keys = "<C-t>",
@@ -780,26 +735,12 @@ local plugins = {
       end, { silent = true })
     end,
   },
-  -- {
-  --   "nvim-tree.lua",
-  --   before = function()
-  --     require("lz.n").trigger_load "nvim-web-devicons"
-  --   end,
-  --   after = function()
-  --     require("nvim-tree").setup {
-  --       hijack_netrw = true,
-  --       renderer = {
-  --         group_empty = true,
-  --       },
-  --     }
-  --     local api = require "nvim-tree.api"
-  --   end,
-  -- },
   {
     "go.nvim",
     ft = { "go", "gomod" },
     after = function()
       require("go").setup {
+        -- lsp_keymaps = false,
         icons = false,
       }
     end,
@@ -830,6 +771,7 @@ local plugins = {
         default_file_explorer = true,
         skip_confirm_for_simple_edits = true,
         use_default_keymaps = false,
+        delete_to_trash = true,
         keymaps = {
           ["H"] = { "actions.toggle_hidden", mode = "n" },
           ["<CR>"] = "actions.select",
@@ -839,6 +781,7 @@ local plugins = {
         win_options = {
           winbar = "%#@attribute.builtin#%{substitute(v:lua.require('oil').get_current_dir(), '^' . $HOME, '~', '')}",
         },
+        view_options = { show_hidden = true },
       }
       -- see https://github.com/stevearc/oil.nvim/issues/384#issuecomment-2693662865
       vim.keymap.set("n", "-", function()
@@ -854,6 +797,30 @@ local plugins = {
     "roslyn.nvim",
     after = function()
       require("roslyn").setup {}
+    end,
+  },
+  {
+    "nvim-lint",
+    event = { "BufReadPre", "BufNewFile" },
+    after = function()
+      local lint = require "lint"
+      print "Hello, World!"
+      lint.linters_by_ft = {
+        yaml = { "cfn_lint" },
+      }
+
+      local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
+      vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+        group = lint_augroup,
+        callback = function()
+          -- Only run the linter in buffers that you can modify in order to
+          -- avoid superfluous noise, notably within the handy LSP pop-ups that
+          -- describe the hovered symbol using Markdown.
+          if vim.bo.modifiable then
+            lint.try_lint()
+          end
+        end,
+      })
     end,
   },
 }

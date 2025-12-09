@@ -106,11 +106,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1754772842,
-        "narHash": "sha256-aKmIQcvT857VRc3XbLvsuMdLeUuYfz+8zQ4eTXe78KE=",
+        "lastModified": 1765270179,
+        "narHash": "sha256-g2a4MhRKu4ymR4xwo+I+auTknXt/+j37Lnf0Mvfl1rE=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "1ef586712f85b4b004caecd385d6b023e7fd2450",
+        "rev": "677fbe97984e7af3175b6c121f3c39ee5c8d62c9",
         "type": "github"
       },
       "original": {
@@ -123,16 +123,32 @@
     "plugins-cord-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1754819978,
-        "narHash": "sha256-NKuenYI2yURXWXKyP+R+TVcPKkuBTqnwM3tlZwRRKMs=",
+        "lastModified": 1761738903,
+        "narHash": "sha256-iatVlFU44iigiQKuXO3fS0OnKAZbgpBImaTLi6uECXs=",
         "owner": "vyfor",
         "repo": "cord.nvim",
-        "rev": "1332d6342dd02e878789483eca01dddcb3680772",
+        "rev": "1af0ff6826b10f9ae8b01c63d16a90b8b31e7c48",
         "type": "github"
       },
       "original": {
         "owner": "vyfor",
         "repo": "cord.nvim",
+        "type": "github"
+      }
+    },
+    "plugins-duck-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1709800496,
+        "narHash": "sha256-97QSkZHpHLq1XyLNhPz88i9VuWy6ux7ZFNJx/g44K2A=",
+        "owner": "tamton-aquib",
+        "repo": "duck.nvim",
+        "rev": "d8a6b08af440e5a0e2b3b357e2f78bb1883272cd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tamton-aquib",
+        "repo": "duck.nvim",
         "type": "github"
       }
     },
@@ -158,6 +174,7 @@
         "nixCats": "nixCats",
         "nixpkgs": "nixpkgs_2",
         "plugins-cord-nvim": "plugins-cord-nvim",
+        "plugins-duck-nvim": "plugins-duck-nvim",
         "plugins-showkeys": "plugins-showkeys"
       }
     },
