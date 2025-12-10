@@ -398,7 +398,6 @@ local plugins = {
       require("vscode").setup {
         underline_links = false,
       }
-      vim.cmd.colorscheme "vscode"
     end,
   },
   {
@@ -823,8 +822,13 @@ local plugins = {
       })
     end,
   },
+  {
+    "no-clown-fiesta.nvim",
+    priority = 1000,
+  },
 }
 
 require("lz.n").load(plugins)
 
+vim.cmd.colorscheme "no-clown-fiesta"
 vim.cmd ":hi statusline guibg=NONE"

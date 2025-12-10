@@ -81,6 +81,8 @@
           rustaceanvim
           oil-nvim
           nvim-dap-view
+          no-clown-fiesta-nvim
+
           (roslyn-nvim.overrideAttrs {
             src = pkgs.fetchFromGitHub {
               owner = "seblyng";
