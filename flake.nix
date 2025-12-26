@@ -56,6 +56,7 @@
           kdePackages.qtdeclarative
           lemminx
           python313Packages.cfn-lint
+          hadolint
         ];
       };
 

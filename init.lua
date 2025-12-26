@@ -115,6 +115,12 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
+vim.filetype.add {
+  pattern = {
+    [".*/*.cf.yaml"] = "cloudformation",
+  },
+}
+
 local plugins = {
   { "nvim-web-devicons", lazy = true },
   { "nvim-nio", lazy = true },
@@ -803,9 +809,9 @@ local plugins = {
     event = { "BufReadPre", "BufNewFile" },
     after = function()
       local lint = require "lint"
-      print "Hello, World!"
       lint.linters_by_ft = {
-        yaml = { "cfn_lint" },
+        cloudformation = { "cfn_lint" },
+        dockerfile = { "hadolint" },
       }
 
       local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
@@ -830,5 +836,5 @@ local plugins = {
 
 require("lz.n").load(plugins)
 
-vim.cmd.colorscheme "no-clown-fiesta"
+vim.cmd.colorscheme "vscode"
 vim.cmd ":hi statusline guibg=NONE"
