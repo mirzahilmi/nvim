@@ -119,9 +119,14 @@
     };
 
     packageDefinitions = {
-      nvim = {pkgs, ...}: {
+      nvim = {...}: {
         settings.wrapRc = false;
         categories.default = true;
+      };
+      precompiled = {...}: {
+        settings.wrapRc = true;
+        categories.default = true;
+        settings.aliases = ["nvim"];
       };
     };
     defaultPackageName = "nvim";
