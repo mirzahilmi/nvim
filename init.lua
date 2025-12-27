@@ -1,7 +1,6 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.have_nerd_font = true
--- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.g.vimtex_quickfix_enabled = 0
@@ -145,6 +144,7 @@ local plugins = {
   },
   {
     "nvim-lspconfig",
+    lazy = false,
     after = function()
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function()
@@ -193,7 +193,7 @@ local plugins = {
               nixpkgs = {
                 expr = [[
                   let
-                    flake = builtins.getFlake "/home/mirza/.config/nixfiles/";
+                    flake = builtins.getFlake "/home/mirza/nixfilesv2/";
                   in import flake.inputs.nixpkgs {
                     overlays = builtins.attrValues flake.outputs.overlays;
                   }
@@ -201,10 +201,10 @@ local plugins = {
               },
               options = {
                 nixos = {
-                  expr = '(builtins.getFlake "/home/mirza/.config/nixfiles").nixosConfigurations."t4nix".options',
+                  expr = '(builtins.getFlake "/home/mirza/nixfiles2").nixosConfigurations."t4nix".options',
                 },
                 home_manager = {
-                  expr = '(builtins.getFlake "/home/mirza/.config/nixfiles").homeConfigurations."mirza@t4nix".options',
+                  expr = '(builtins.getFlake "/home/mirza/nixfiles2").homeConfigurations."mirza@t4nix".options',
                 },
               },
             },
@@ -282,6 +282,7 @@ local plugins = {
   },
   {
     "blink-cmp",
+    lazy = false,
     before = function()
       require("lz.n").trigger_load "luasnip"
     end,
@@ -310,6 +311,7 @@ local plugins = {
   },
   {
     "conform.nvim",
+    lazy = true,
     event = "BufWritePre",
     cmd = "ConformInfo",
     keys = "<leader>f",
@@ -344,6 +346,7 @@ local plugins = {
   },
   {
     "nvim-dap",
+    lazy = false,
     before = function()
       require("lz.n").trigger_load { "nvim-nio" }
     end,
@@ -369,6 +372,7 @@ local plugins = {
   },
   {
     "nvim-dap-view",
+    lazy = false,
     after = function()
       require("dap-view").setup {
         auto_toggle = true,
@@ -398,7 +402,7 @@ local plugins = {
   },
   {
     "vscode.nvim",
-    -- enabled = false,
+    lazy = false,
     priority = 1000,
     after = function()
       require("vscode").setup {
@@ -408,6 +412,7 @@ local plugins = {
   },
   {
     "nvim-autopairs",
+    lazy = true,
     event = "InsertEnter",
     after = function()
       require("nvim-autopairs").setup {}
@@ -415,6 +420,7 @@ local plugins = {
   },
   {
     "gitsigns.nvim",
+    lazy = false,
     after = function()
       require("gitsigns").setup {
         signs = {
@@ -429,6 +435,7 @@ local plugins = {
   },
   {
     "fzf-lua",
+    lazy = false,
     before = function()
       require("lz.n").trigger_load "nvim-web-devicons"
     end,
@@ -501,6 +508,7 @@ local plugins = {
   },
   {
     "todo-comments.nvim",
+    lazy = false,
     before = function()
       require("lz.n").trigger_load "plenary.nvim"
     end,
@@ -510,6 +518,7 @@ local plugins = {
   },
   {
     "cord-nvim",
+    lazy = false,
     after = function()
       require("cord").setup {
         editor = { tooltip = "Neovim" },
@@ -519,6 +528,7 @@ local plugins = {
   },
   {
     "mini.nvim",
+    lazy = false,
     after = function()
       require("mini.ai").setup { n_lines = 500 }
       require("mini.surround").setup {}
@@ -526,6 +536,7 @@ local plugins = {
   },
   {
     "treesj",
+    lazy = true,
     keys = "<space>j",
     before = function()
       require("lz.n").trigger_load "nvim-treesitter"
@@ -541,6 +552,7 @@ local plugins = {
   },
   {
     "highlight-undo.nvim",
+    lazy = true,
     keys = { "u", "<C-r>" },
     after = function()
       require("highlight-undo").setup {}
@@ -548,6 +560,7 @@ local plugins = {
   },
   {
     "noice.nvim",
+    lazy = false,
     before = function()
       require("lz.n").trigger_load "nui.nvim"
     end,
@@ -598,6 +611,7 @@ local plugins = {
   },
   {
     "nvim-jdtls",
+    lazy = true,
     ft = "java",
     after = function()
       local config = {
@@ -670,6 +684,7 @@ local plugins = {
   },
   {
     "trouble.nvim",
+    lazy = true,
     keys = "<C-t>",
     before = function()
       require("lz.n").trigger_load "nvim-web-devicons"
@@ -685,6 +700,7 @@ local plugins = {
   },
   {
     "neotest",
+    lazy = true,
     keys = {
       "<leader>tt",
       "<leader>td",
@@ -719,6 +735,7 @@ local plugins = {
   },
   {
     "neotest-java",
+    lazy = true,
     ft = "java",
     before = function()
       require("lz.n").trigger_load "nvim-jdtls"
@@ -728,6 +745,7 @@ local plugins = {
   },
   {
     "vim-fugitive",
+    lazy = false,
     after = function()
       vim.keymap.set("n", "<C-b>", function()
         for i = 1, vim.fn.winnr "$" do
@@ -742,6 +760,7 @@ local plugins = {
   },
   {
     "go.nvim",
+    lazy = true,
     ft = { "go", "gomod" },
     after = function()
       require("go").setup {
@@ -800,12 +819,14 @@ local plugins = {
   },
   {
     "roslyn.nvim",
+    lazy = false,
     after = function()
       require("roslyn").setup {}
     end,
   },
   {
     "nvim-lint",
+    lazy = true,
     event = { "BufReadPre", "BufNewFile" },
     after = function()
       local lint = require "lint"
@@ -830,6 +851,7 @@ local plugins = {
   },
   {
     "no-clown-fiesta.nvim",
+    lazy = false,
     priority = 1000,
   },
 }
