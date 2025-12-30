@@ -128,7 +128,7 @@ local plugins = {
   { "LuaSnip", lazy = true },
   {
     "nvim-treesitter",
-    lazy = true,
+    lazy = false,
     cmd = "NvimTreeToggle",
     after = function()
       ---@diagnostic disable-next-line: missing-fields
@@ -443,10 +443,6 @@ local plugins = {
       local fzflua = require "fzf-lua"
       fzflua.setup {
         "border-fused",
-        winopts = {
-          backdrop = 100,
-          treesitter = true,
-        },
         previewers = {
           builtin = {
             syntax_limit_b = 1024 * 100,
@@ -467,6 +463,11 @@ local plugins = {
         fzflua.files {
           actions = { ["ctrl-g"] = { require("fzf-lua").actions.toggle_ignore } },
           formatter = "path.filename_first",
+          previewer = false,
+          winopts = {
+            height = 0.70,
+            width = 0.40,
+          },
         }
       end)
       vim.keymap.set("n", "<leader>sg", function()
@@ -474,7 +475,7 @@ local plugins = {
           winopts = {
             preview = {
               layout = "vertical",
-              vertical = "down:60%",
+              vertical = "down:40%",
             },
           },
           formatter = "path.filename_first",
@@ -493,16 +494,6 @@ local plugins = {
       end)
       vim.keymap.set("n", "<leader>sh", fzflua.help_tags)
       vim.keymap.set("n", "<leader>sk", fzflua.keymaps)
-      vim.keymap.set("n", "<leader><leader>", function()
-        fzflua.buffers {
-          formatter = "path.filename_first",
-          previewer = false,
-          winopts = {
-            width = 0.5,
-            height = 0.7,
-          },
-        }
-      end)
       vim.keymap.set("n", "<leader>sm", fzflua.marks)
     end,
   },
@@ -853,6 +844,16 @@ local plugins = {
     "no-clown-fiesta.nvim",
     lazy = false,
     priority = 1000,
+  },
+  {
+    "snipe.nvim",
+    lazy = true,
+    keys = { "gb" },
+    after = function()
+      local snipe = require "snipe"
+      snipe.setup()
+      vim.keymap.set("n", "gb", snipe.open_buffer_menu)
+    end,
   },
 }
 

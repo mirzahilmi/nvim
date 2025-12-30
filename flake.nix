@@ -46,43 +46,42 @@
         default = with pkgs; [
           alejandra
           fzf
+          hadolint
+          kdePackages.qtdeclarative
+          lemminx
           lua-language-server
           luajitPackages.jsregexp
           nixd
+          python313Packages.cfn-lint
           ripgrep
           stylua
           texlab
           yaml-language-server
-          kdePackages.qtdeclarative
-          lemminx
-          python313Packages.cfn-lint
-          hadolint
         ];
       };
 
       startupPlugins = {
         default = with pkgs.vimPlugins; [
-          inputs.blink-cmp.packages.${pkgs.system}.default
           fidget-nvim
           fzf-lua
           gitsigns-nvim
           lazydev-nvim
-          luasnip
           lz-n
           mini-nvim
-          neotest
+          no-clown-fiesta-nvim
           noice-nvim
           nvim-dap
+          nvim-dap-view
           nvim-lspconfig
           nvim-treesitter.withAllGrammars
+          oil-nvim
+          rustaceanvim
           todo-comments-nvim
           vim-fugitive
           vim-sleuth
           vscode-nvim
-          rustaceanvim
-          oil-nvim
-          nvim-dap-view
-          no-clown-fiesta-nvim
+
+          inputs.blink-cmp.packages.${pkgs.system}.default
 
           (roslyn-nvim.overrideAttrs {
             src = pkgs.fetchFromGitHub {
@@ -103,17 +102,20 @@
           conform-nvim
           go-nvim
           highlight-undo-nvim
+          luasnip
+          neotest
           neotest-java
           nui-nvim
           nvim-autopairs
           nvim-dap-virtual-text
           nvim-jdtls
+          nvim-lint
           nvim-nio
           nvim-web-devicons
           plenary-nvim
+          snipe-nvim
           treesj
           trouble-nvim
-          nvim-lint
         ];
       };
     };
