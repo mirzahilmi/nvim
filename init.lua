@@ -120,7 +120,7 @@ local plugins = {
   { "nvim-nio", lazy = true },
   { "plenary.nvim", lazy = true },
   { "nui.nvim", lazy = true },
-  { "LuaSnip", lazy = true },
+  { "luasnip", lazy = true },
   {
     "nvim-treesitter",
     lazy = false,
@@ -461,7 +461,7 @@ local plugins = {
           previewer = false,
           winopts = {
             height = 0.70,
-            width = 0.40,
+            width = 0.50,
           },
         }
       end)
@@ -846,9 +846,19 @@ local plugins = {
     keys = { "gb" },
     after = function()
       local snipe = require "snipe"
-      snipe.setup()
+      snipe.setup {
+        ui = {
+          position = "center",
+          open_win_override = { border = "rounded" },
+        },
+      }
       vim.keymap.set("n", "gb", snipe.open_buffer_menu)
     end,
+  },
+  {
+    "cellular-automaton.nvim",
+    lazy = true,
+    cmd = "CellularAutomaton",
   },
 }
 

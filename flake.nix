@@ -99,6 +99,7 @@
 
       optionalPlugins = {
         default = with pkgs.vimPlugins; [
+          cellular-automaton-nvim
           conform-nvim
           go-nvim
           highlight-undo-nvim
