@@ -76,6 +76,7 @@
           nvim-treesitter.withAllGrammars
           oil-nvim
           rustaceanvim
+          snacks-nvim
           todo-comments-nvim
           vim-fugitive
           vim-sleuth
