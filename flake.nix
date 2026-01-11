@@ -71,18 +71,6 @@
           vscode-nvim
 
           inputs.blink-cmp.packages.${pkgs.system}.default
-
-          (roslyn-nvim.overrideAttrs {
-            src = pkgs.fetchFromGitHub {
-              owner = "seblyng";
-              repo = "roslyn.nvim";
-              rev = "0c4a6f5b64122b51a64e0c8f7aae140ec979690e";
-              sha256 = "sha256-tZDH6VDRKaRaoSuz3zyeN/omoAwOf5So8PGUXHt2TLk=";
-            };
-          })
-
-          pkgs.neovimPlugins.cord-nvim
-          pkgs.neovimPlugins.duck-nvim
         ];
       };
 
@@ -115,6 +103,17 @@
           todo-comments-nvim
           treesj
           trouble-nvim
+
+          pkgs.neovimPlugins.cord-nvim
+
+          (roslyn-nvim.overrideAttrs {
+            src = pkgs.fetchFromGitHub {
+              owner = "seblyng";
+              repo = "roslyn.nvim";
+              rev = "0c4a6f5b64122b51a64e0c8f7aae140ec979690e";
+              sha256 = "sha256-tZDH6VDRKaRaoSuz3zyeN/omoAwOf5So8PGUXHt2TLk=";
+            };
+          })
         ];
       };
     };

@@ -115,6 +115,21 @@ vim.filetype.add {
   },
 }
 
+local lzn = require "lz.n"
+
+local colorschems = {
+  {
+    "vscode.nvim",
+    lazy = false,
+    priority = 1000,
+    after = function()
+      require("vscode").setup {
+        underline_links = false,
+      }
+    end,
+  },
+}
+
 local plugins = {
   { "nvim-web-devicons", lazy = true },
   { "nvim-nio", lazy = true },
@@ -123,8 +138,9 @@ local plugins = {
   { "luasnip", lazy = true },
   {
     "nvim-treesitter",
-    lazy = false,
+    lazy = true,
     cmd = "NvimTreeToggle",
+    event = "BufReadPost",
     after = function()
       ---@diagnostic disable-next-line: missing-fields
       require("nvim-treesitter.configs").setup {
@@ -265,6 +281,7 @@ local plugins = {
             },
           },
         },
+        ruff = {},
       }
 
       -- tried changing it to use the new api vim.lsp.enable but it
@@ -279,7 +296,7 @@ local plugins = {
     "blink-cmp",
     lazy = false,
     before = function()
-      require("lz.n").trigger_load "luasnip"
+      lzn.trigger_load "luasnip"
     end,
     after = function()
       require("blink.cmp").setup {
@@ -330,7 +347,6 @@ local plugins = {
         formatters_by_ft = {
           lua = { "stylua" },
           nix = { "alejandra" },
-          python = { "black" },
           tex = { "latexindent" },
         },
       }
@@ -341,13 +357,34 @@ local plugins = {
   },
   {
     "nvim-dap",
-    lazy = false,
+    lazy = true,
+    keys = { "<F7>" },
     before = function()
-      require("lz.n").trigger_load { "nvim-nio" }
+      lzn.trigger_load { "nvim-nio" }
     end,
     after = function()
       local dap = require "dap"
-      local dap_view = require "dap-view"
+
+      -- see https://codeberg.org/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#go-using-delve-directly
+      dap.adapters.delve = function(callback, config)
+        if config.mode == "remote" and config.request == "attach" then
+          callback {
+            type = "server",
+            host = config.host or "127.0.0.1",
+            port = config.port or "38697",
+          }
+        else
+          callback {
+            type = "server",
+            port = "${port}",
+            executable = {
+              command = "dlv",
+              args = { "dap", "-l", "127.0.0.1:${port}", "--log", "--log-output=dap" },
+              detached = vim.fn.has "win32" == 0,
+            },
+          }
+        end
+      end
 
       vim.api.nvim_set_hl(0, "DapBreak", { fg = "#e51400" })
       vim.api.nvim_set_hl(0, "DapStop", { fg = "#ffcc00" })
@@ -361,48 +398,22 @@ local plugins = {
       end
 
       vim.keymap.set("n", "<F5>", dap.continue)
-      vim.keymap.set("n", "<F7>", dap_view.toggle)
       vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint)
+
+      -- load nvim-dap-view after dap configured
+      lzn.trigger_load { "nvim-dap-view" }
     end,
   },
   {
     "nvim-dap-view",
-    lazy = false,
+    lazy = true,
     after = function()
-      require("dap-view").setup {
+      local dapview = require "dap-view"
+      dapview.setup {
         auto_toggle = true,
         winbar = { controls = { enabled = true } },
       }
-    end,
-  },
-  {
-    "nvim-dap-virtual-text",
-    lazy = true,
-    after = function()
-      require("nvim-dap-virtual-text").setup {}
-    end,
-  },
-  {
-    "lazydev.nvim",
-    enabled = false,
-    ft = "lua",
-    after = {
-      ---@diagnostic disable-next-line: missing-fields
-      require("lazydev").setup {
-        library = {
-          { path = (require("nixCats").nixCatsPath or "") .. "/lua", words = { "nixCats" } },
-        },
-      },
-    },
-  },
-  {
-    "vscode.nvim",
-    lazy = false,
-    priority = 1000,
-    after = function()
-      require("vscode").setup {
-        underline_links = false,
-      }
+      vim.keymap.set("n", "<F7>", dapview.toggle)
     end,
   },
   {
@@ -415,7 +426,8 @@ local plugins = {
   },
   {
     "gitsigns.nvim",
-    lazy = false,
+    lazy = true,
+    event = "BufReadPre",
     after = function()
       require("gitsigns").setup {
         signs = {
@@ -430,9 +442,10 @@ local plugins = {
   },
   {
     "fzf-lua",
-    lazy = false,
+    lazy = true,
+    event = "UIEnter",
     before = function()
-      require("lz.n").trigger_load "nvim-web-devicons"
+      lzn.trigger_load "nvim-web-devicons"
     end,
     after = function()
       local fzflua = require "fzf-lua"
@@ -441,6 +454,11 @@ local plugins = {
         previewers = {
           builtin = {
             syntax_limit_b = 1024 * 100,
+          },
+          extensions = {
+            ["png"] = { "chafa" },
+            ["svg"] = { "chafa" },
+            ["jpg"] = { "chafa" },
           },
         },
       }
@@ -494,9 +512,10 @@ local plugins = {
   },
   {
     "todo-comments.nvim",
-    lazy = false,
+    lazy = true,
+    event = "BufReadPost",
     before = function()
-      require("lz.n").trigger_load "plenary.nvim"
+      lzn.trigger_load "plenary.nvim"
     end,
     after = function()
       require("todo-comments").setup {}
@@ -504,7 +523,8 @@ local plugins = {
   },
   {
     "cord-nvim",
-    lazy = false,
+    lazy = true,
+    event = "VimEnter",
     after = function()
       require("cord").setup {
         editor = { tooltip = "Neovim" },
@@ -525,7 +545,7 @@ local plugins = {
     lazy = true,
     keys = "<space>j",
     before = function()
-      require("lz.n").trigger_load "nvim-treesitter"
+      lzn.trigger_load "nvim-treesitter"
     end,
     after = function()
       local treesj = require "treesj"
@@ -546,9 +566,10 @@ local plugins = {
   },
   {
     "noice.nvim",
-    lazy = false,
+    lazy = true,
+    event = "VimEnter",
     before = function()
-      require("lz.n").trigger_load "nui.nvim"
+      lzn.trigger_load "nui.nvim"
     end,
     after = function()
       require("noice").setup {
@@ -673,7 +694,7 @@ local plugins = {
     lazy = true,
     keys = "<C-t>",
     before = function()
-      require("lz.n").trigger_load "nvim-web-devicons"
+      lzn.trigger_load "nvim-web-devicons"
     end,
     after = function()
       require("trouble").setup {
@@ -694,9 +715,9 @@ local plugins = {
       "<leader>ts",
     },
     before = function()
-      require("lz.n").trigger_load "nvim-nio"
-      require("lz.n").trigger_load "plenary.nvim"
-      require("lz.n").trigger_load "nvim-treesitter"
+      lzn.trigger_load "nvim-nio"
+      lzn.trigger_load "plenary.nvim"
+      lzn.trigger_load "nvim-treesitter"
     end,
     after = function()
       local neotest = require "neotest"
@@ -724,24 +745,9 @@ local plugins = {
     lazy = true,
     ft = "java",
     before = function()
-      require("lz.n").trigger_load "nvim-jdtls"
-      require("lz.n").trigger_load "nvim-dap"
-      require("lz.n").trigger_load "nvim-dap-virtual-text"
-    end,
-  },
-  {
-    "vim-fugitive",
-    lazy = false,
-    after = function()
-      vim.keymap.set("n", "<C-b>", function()
-        for i = 1, vim.fn.winnr "$" do
-          if vim.api.nvim_get_option_value("filetype", { buf = vim.fn.winbufnr(i) }) == "fugitiveblame" then
-            vim.cmd(i .. "close")
-            return
-          end
-        end
-        vim.cmd "Git blame"
-      end, { silent = true })
+      lzn.trigger_load "nvim-jdtls"
+      lzn.trigger_load "nvim-dap"
+      lzn.trigger_load "nvim-dap-virtual-text"
     end,
   },
   {
@@ -752,6 +758,7 @@ local plugins = {
       require("go").setup {
         -- lsp_keymaps = false,
         icons = false,
+        dap_debug = false,
       }
     end,
   },
@@ -775,7 +782,8 @@ local plugins = {
   },
   {
     "oil.nvim",
-    lazy = false,
+    lazy = true,
+    keys = { "-" },
     after = function()
       require("oil").setup {
         default_file_explorer = true,
@@ -805,7 +813,8 @@ local plugins = {
   },
   {
     "roslyn.nvim",
-    lazy = false,
+    lazy = true,
+    ft = { "cs", "razor", "cshtml" },
     after = function()
       require("roslyn").setup {}
     end,
@@ -860,9 +869,30 @@ local plugins = {
     lazy = true,
     cmd = "CellularAutomaton",
   },
+  {
+    "snacks.nvim",
+    lazy = true,
+    event = "UIEnter",
+    after = function()
+      local snacks = require "snacks"
+      snacks.setup {
+        zen = { enabled = true },
+        toggles = { dim = false },
+        styles = {
+          zen = {
+            backdrop = { transparent = false },
+          },
+        },
+      }
+      vim.keymap.set("n", "<leader>z", function()
+        snacks.zen()
+      end)
+    end,
+  },
 }
 
-require("lz.n").load(plugins)
-
+lzn.load(colorschems)
 vim.cmd.colorscheme "vscode"
+lzn.load(plugins)
+
 vim.cmd ":hi statusline guibg=NONE"
