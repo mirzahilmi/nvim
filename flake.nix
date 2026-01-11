@@ -62,23 +62,11 @@
 
       startupPlugins = {
         default = with pkgs.vimPlugins; [
-          fidget-nvim
-          fzf-lua
-          gitsigns-nvim
-          lazydev-nvim
           lz-n
           mini-nvim
           no-clown-fiesta-nvim
-          noice-nvim
-          nvim-dap
-          nvim-dap-view
           nvim-lspconfig
-          nvim-treesitter.withAllGrammars
-          oil-nvim
           rustaceanvim
-          snacks-nvim
-          todo-comments-nvim
-          vim-fugitive
           vim-sleuth
           vscode-nvim
 
@@ -102,20 +90,29 @@
         default = with pkgs.vimPlugins; [
           cellular-automaton-nvim
           conform-nvim
+          fzf-lua
+          gitsigns-nvim
           go-nvim
           highlight-undo-nvim
           luasnip
           neotest
           neotest-java
+          noice-nvim
           nui-nvim
           nvim-autopairs
+          nvim-dap
+          nvim-dap-view
           nvim-dap-virtual-text
           nvim-jdtls
           nvim-lint
           nvim-nio
+          nvim-treesitter.withAllGrammars
           nvim-web-devicons
+          oil-nvim
           plenary-nvim
+          snacks-nvim
           snipe-nvim
+          todo-comments-nvim
           treesj
           trouble-nvim
         ];
