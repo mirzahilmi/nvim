@@ -80,8 +80,12 @@ vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left wind
 vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
---- see https://www.reddit.com/r/neovim/comments/1fq0y8u/comment/lp2ez92
+-- see https://www.reddit.com/r/neovim/comments/1fq0y8u/comment/lp2ez92
 vim.keymap.set({ "x" }, "y", '"+y', { noremap = true, silent = true })
+-- see https://stackoverflow.com/a/5562707
+vim.keymap.set("n", "<leader>n", ":bnext<cr>", { desc = "Goto next buffer" })
+vim.keymap.set("n", "<leader>p", ":bprevious<cr>", { desc = "Goto previous buffer" })
+vim.keymap.set("n", "<leader>d", ":bdelete<cr>", { desc = "Delete buffer" })
 
 -- see https://www.reddit.com/r/neovim/comments/1byy8lu/copying_to_the_windows_clipboard_from_wsl2
 if vim.fn.has "wsl" == 1 then
@@ -158,7 +162,7 @@ local plugins = {
     lazy = false,
     after = function()
       vim.api.nvim_create_autocmd("LspAttach", {
-        callback = function()
+        callback = function(event)
           vim.keymap.set("n", "<leader>ds", function()
             require("fzf-lua").lsp_document_symbols {
               previewer = false,
@@ -191,8 +195,37 @@ local plugins = {
               },
             }
           end)
+          vim.keymap.set("n", "<leader>th", function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
+          end, { desc = "[T]oggle Inlay [H]ints" })
 
-          vim.diagnostic.config { virtual_text = { current_line = true } }
+          vim.diagnostic.config {
+            severity_sort = true,
+            float = { border = "rounded", source = "if_many" },
+            underline = { severity = vim.diagnostic.severity.ERROR },
+            signs = {
+              text = {
+                [vim.diagnostic.severity.ERROR] = "󰅚 ",
+                [vim.diagnostic.severity.WARN] = "󰀪 ",
+                [vim.diagnostic.severity.INFO] = "󰋽 ",
+                [vim.diagnostic.severity.HINT] = "󰌶 ",
+              },
+            },
+            virtual_text = {
+              source = "if_many",
+              spacing = 2,
+              current_line = true,
+              format = function(diagnostic)
+                local diagnostic_message = {
+                  [vim.diagnostic.severity.ERROR] = diagnostic.message,
+                  [vim.diagnostic.severity.WARN] = diagnostic.message,
+                  [vim.diagnostic.severity.INFO] = diagnostic.message,
+                  [vim.diagnostic.severity.HINT] = diagnostic.message,
+                }
+                return diagnostic_message[diagnostic.severity]
+              end,
+            },
+          }
         end,
       })
 
@@ -231,7 +264,7 @@ local plugins = {
                 callSnippet = "Replace",
               },
               diagnostics = {
-                globals = { "nixCats" },
+                globals = { "nixCats", "vim" },
                 disable = { "missing-fields" },
               },
             },
@@ -274,21 +307,19 @@ local plugins = {
           cmd = { "qmlls", "-E" },
         },
         r_language_server = {},
-        gopls = {
-          settings = {
-            gopls = {
-              semanticTokens = true,
-            },
-          },
-        },
         ruff = {},
+        gopls = {},
       }
+
+      local capabilities = require("blink.cmp").get_lsp_capabilities()
 
       -- tried changing it to use the new api vim.lsp.enable but it
       -- just doesnt work, i think it got to do with missing default
       -- config value
-      for server, config in pairs(servers) do
-        require("lspconfig")[server].setup(config)
+      for server_name, config in pairs(servers) do
+        local server = servers[server_name] or {}
+        server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+        require("lspconfig")[server_name].setup(config)
       end
     end,
   },
@@ -756,10 +787,23 @@ local plugins = {
     ft = { "go", "gomod" },
     after = function()
       require("go").setup {
-        -- lsp_keymaps = false,
+        lsp_keymaps = false,
+        lsp_cfg = true,
         icons = false,
         dap_debug = false,
       }
+
+      -- see https://github.com/ray-x/go.nvim?tab=readme-ov-file#run-gofmt--goimports-on-save
+      local format_sync_grp = vim.api.nvim_create_augroup("goimports", {})
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        pattern = "*.go",
+        callback = function()
+          require("go.format").goimports()
+        end,
+        group = format_sync_grp,
+      })
+
+      vim.lsp.inlay_hint.enable(false)
     end,
   },
   {
@@ -790,16 +834,13 @@ local plugins = {
         skip_confirm_for_simple_edits = true,
         use_default_keymaps = false,
         delete_to_trash = true,
+        view_options = { show_hidden = true },
         keymaps = {
           ["H"] = { "actions.toggle_hidden", mode = "n" },
           ["<CR>"] = "actions.select",
           ["<Esc>"] = { "actions.close", mode = "n" },
           ["-"] = { "actions.parent", mode = "n" },
         },
-        win_options = {
-          winbar = "%#@attribute.builtin#%{substitute(v:lua.require('oil').get_current_dir(), '^' . $HOME, '~', '')}",
-        },
-        view_options = { show_hidden = true },
       }
       -- see https://github.com/stevearc/oil.nvim/issues/384#issuecomment-2693662865
       vim.keymap.set("n", "-", function()
