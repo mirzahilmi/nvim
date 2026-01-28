@@ -930,6 +930,20 @@ local plugins = {
       end)
     end,
   },
+  {
+    "leetcode.nvim",
+    lazy = true,
+    cmd = "Leet",
+    before = function()
+      lzn.trigger_load "plenary.nvim"
+      lzn.trigger_load "nui.nvim"
+    end,
+    after = function()
+      require("leetcode").setup {
+        lang = "python",
+      }
+    end,
+  },
 }
 
 lzn.load(colorschems)

@@ -82,6 +82,7 @@
           gitsigns-nvim
           go-nvim
           highlight-undo-nvim
+          leetcode-nvim
           luasnip
           neotest
           neotest-java
