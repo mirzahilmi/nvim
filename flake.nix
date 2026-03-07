@@ -77,6 +77,7 @@
       optionalPlugins = {
         default = with pkgs.vimPlugins; [
           cellular-automaton-nvim
+          cloak-nvim
           conform-nvim
           fzf-lua
           gitsigns-nvim

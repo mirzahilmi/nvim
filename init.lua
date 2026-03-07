@@ -944,6 +944,37 @@ local plugins = {
       }
     end,
   },
+  {
+    "cloak.nvim",
+    lazy = true,
+    ft = {
+      "sh", -- ft for *.env files, perhaps set custom ft for these?
+      "json",
+      "yaml",
+    },
+    after = function()
+      require("cloak").setup {
+        patterns = {
+          {
+            file_pattern = "*.env",
+            cloak_pattern = "=.+",
+            replace = nil,
+          },
+          {
+            file_pattern = "*.yaml",
+            cloak_pattern = { ":.+", "-.+" },
+            replace = nil,
+          },
+          {
+            file_pattern = "*.json",
+            cloak_pattern = ': ".+"',
+            replace = nil,
+          },
+        },
+      }
+      vim.keymap.set("n", "gct", ":CloakToggle<cr>", { noremap = true, silent = true })
+    end,
+  },
 }
 
 lzn.load(colorschems)
