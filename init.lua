@@ -309,6 +309,18 @@ local plugins = {
         r_language_server = {},
         ruff = {},
         gopls = {},
+        vtsls = {
+          settings = {
+            typescript = {
+              format = {
+                semicolons = "insert",
+              },
+              preferences = {
+                quoteStyle = "double",
+              },
+            },
+          },
+        },
       }
 
       local capabilities = require("blink.cmp").get_lsp_capabilities()
@@ -788,7 +800,7 @@ local plugins = {
     after = function()
       require("go").setup {
         lsp_keymaps = false,
-        lsp_cfg = true,
+        lsp_cfg = false,
         icons = false,
         dap_debug = false,
       }
