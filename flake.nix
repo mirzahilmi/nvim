@@ -79,6 +79,7 @@
           cellular-automaton-nvim
           cloak-nvim
           conform-nvim
+          friendly-snippets
           fzf-lua
           gitsigns-nvim
           go-nvim

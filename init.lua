@@ -139,7 +139,17 @@ local plugins = {
   { "nvim-nio", lazy = true },
   { "plenary.nvim", lazy = true },
   { "nui.nvim", lazy = true },
-  { "luasnip", lazy = true },
+  { "friendly-snippets", lazy = true },
+  {
+    "luasnip",
+    lazy = true,
+    before = function()
+      lzn.trigger_load "friendly-snippets"
+    end,
+    after = function()
+      require("luasnip.loaders.from_vscode").lazy_load()
+    end,
+  },
   {
     "nvim-treesitter",
     lazy = true,
