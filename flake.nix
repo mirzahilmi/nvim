@@ -64,7 +64,6 @@
         default = with pkgs.vimPlugins; [
           lz-n
           mini-nvim
-          no-clown-fiesta-nvim
           nvim-lspconfig
           rustaceanvim
           vim-sleuth
@@ -84,7 +83,6 @@
           gitsigns-nvim
           go-nvim
           highlight-undo-nvim
-          leetcode-nvim
           luasnip
           neotest
           neotest-java

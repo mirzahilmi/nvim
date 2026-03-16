@@ -121,19 +121,6 @@ vim.filetype.add {
 
 local lzn = require "lz.n"
 
-local colorschems = {
-  {
-    "vscode.nvim",
-    lazy = false,
-    priority = 1000,
-    after = function()
-      require("vscode").setup {
-        underline_links = false,
-      }
-    end,
-  },
-}
-
 local plugins = {
   { "nvim-web-devicons", lazy = true },
   { "nvim-nio", lazy = true },
@@ -331,6 +318,7 @@ local plugins = {
             },
           },
         },
+        biome = {},
       }
 
       local capabilities = require("blink.cmp").get_lsp_capabilities()
@@ -401,6 +389,7 @@ local plugins = {
           lua = { "stylua" },
           nix = { "alejandra" },
           tex = { "latexindent" },
+          html = { "biome" },
         },
       }
       vim.keymap.set("n", "<leader>f", function()
@@ -908,11 +897,6 @@ local plugins = {
     end,
   },
   {
-    "no-clown-fiesta.nvim",
-    lazy = false,
-    priority = 1000,
-  },
-  {
     "snipe.nvim",
     lazy = true,
     keys = { "gb" },
@@ -953,26 +937,10 @@ local plugins = {
     end,
   },
   {
-    "leetcode.nvim",
-    lazy = true,
-    cmd = "Leet",
-    before = function()
-      lzn.trigger_load "plenary.nvim"
-      lzn.trigger_load "nui.nvim"
-    end,
-    after = function()
-      require("leetcode").setup {
-        lang = "python",
-      }
-    end,
-  },
-  {
     "cloak.nvim",
     lazy = true,
     ft = {
       "sh", -- ft for *.env files, perhaps set custom ft for these?
-      "json",
-      "yaml",
     },
     after = function()
       require("cloak").setup {
@@ -982,25 +950,24 @@ local plugins = {
             cloak_pattern = "=.+",
             replace = nil,
           },
-          {
-            file_pattern = "*.yaml",
-            cloak_pattern = { ":.+", "-.+" },
-            replace = nil,
-          },
-          {
-            file_pattern = "*.json",
-            cloak_pattern = ': ".+"',
-            replace = nil,
-          },
+          -- TODO: configures json yaml secrets
         },
       }
       vim.keymap.set("n", "gct", ":CloakToggle<cr>", { noremap = true, silent = true })
     end,
   },
+  {
+    "vscode.nvim",
+    lazy = false,
+    priority = 1000,
+    after = function()
+      require("vscode").setup {
+        underline_links = false,
+      }
+    end,
+  },
 }
-
-lzn.load(colorschems)
-vim.cmd.colorscheme "vscode"
 lzn.load(plugins)
 
+vim.cmd.colorscheme "vscode"
 vim.cmd ":hi statusline guibg=NONE"
