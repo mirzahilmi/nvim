@@ -89,6 +89,7 @@
           noice-nvim
           nui-nvim
           nvim-autopairs
+          nvim-colorizer-lua
           nvim-dap
           nvim-dap-view
           nvim-dap-virtual-text
