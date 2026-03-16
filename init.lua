@@ -156,6 +156,7 @@ local plugins = {
   },
   {
     "nvim-lspconfig",
+    -- see https://www.reddit.com/r/neovim/comments/1nb0w5k/comment/nczrv70
     lazy = false,
     after = function()
       vim.api.nvim_create_autocmd("LspAttach", {
@@ -331,11 +332,13 @@ local plugins = {
         server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
         require("lspconfig")[server_name].setup(config)
       end
+
+      lzn.trigger_load "blink-cmp"
     end,
   },
   {
     "blink-cmp",
-    lazy = false,
+    lazy = true,
     before = function()
       lzn.trigger_load "luasnip"
     end,
@@ -353,6 +356,7 @@ local plugins = {
         },
         completion = {
           keyword = { range = "full" },
+          list = { selection = { auto_insert = false } },
           documentation = {
             auto_show = true,
             auto_show_delay_ms = 500,
@@ -398,9 +402,23 @@ local plugins = {
     end,
   },
   {
+    "nvim-dap-view",
+    lazy = false,
+    before = function()
+      lzn.trigger_load "nvim-dap"
+    end,
+    after = function()
+      local dapview = require "dap-view"
+      dapview.setup {
+        auto_toggle = true,
+        winbar = { controls = { enabled = true } },
+      }
+      vim.keymap.set("n", "<F7>", dapview.toggle)
+    end,
+  },
+  {
     "nvim-dap",
     lazy = true,
-    keys = { "<F7>" },
     before = function()
       lzn.trigger_load { "nvim-nio" }
     end,
@@ -447,21 +465,9 @@ local plugins = {
     end,
   },
   {
-    "nvim-dap-view",
-    lazy = true,
-    after = function()
-      local dapview = require "dap-view"
-      dapview.setup {
-        auto_toggle = true,
-        winbar = { controls = { enabled = true } },
-      }
-      vim.keymap.set("n", "<F7>", dapview.toggle)
-    end,
-  },
-  {
     "nvim-autopairs",
     lazy = true,
-    event = "InsertEnter",
+    event = "BufReadPost",
     after = function()
       require("nvim-autopairs").setup {}
     end,
@@ -469,7 +475,7 @@ local plugins = {
   {
     "gitsigns.nvim",
     lazy = true,
-    event = "BufReadPre",
+    event = "BufReadPost",
     after = function()
       require("gitsigns").setup {
         signs = {
@@ -566,7 +572,7 @@ local plugins = {
   {
     "cord-nvim",
     lazy = true,
-    event = "VimEnter",
+    event = "UIEnter",
     after = function()
       require("cord").setup {
         editor = { tooltip = "Neovim" },
@@ -576,7 +582,8 @@ local plugins = {
   },
   {
     "mini.nvim",
-    lazy = false,
+    lazy = true,
+    event = "BufReadPost",
     after = function()
       require("mini.ai").setup { n_lines = 500 }
       require("mini.surround").setup {}
@@ -609,7 +616,7 @@ local plugins = {
   {
     "noice.nvim",
     lazy = true,
-    event = "VimEnter",
+    event = "UIEnter",
     before = function()
       lzn.trigger_load "nui.nvim"
     end,
@@ -819,6 +826,7 @@ local plugins = {
   },
   {
     "rustaceanvim",
+    -- already lazy, as the docs said
     lazy = false,
     after = function()
       vim.api.nvim_create_autocmd("BufWritePost", {
@@ -874,7 +882,7 @@ local plugins = {
   {
     "nvim-lint",
     lazy = true,
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPost" },
     after = function()
       local lint = require "lint"
       lint.linters_by_ft = {
