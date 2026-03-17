@@ -41,7 +41,6 @@ in {
       alejandra
       fzf
       hadolint
-      kdePackages.qtdeclarative
       lemminx
       lua-language-server
       luajitPackages.jsregexp
@@ -49,7 +48,6 @@ in {
       python313Packages.cfn-lint
       ripgrep
       stylua
-      texlab
       yaml-language-server
     ];
 
@@ -91,7 +89,6 @@ in {
       nvim-tree-lua
       nvim-treesitter.withAllGrammars
       nvim-web-devicons
-      oil-nvim
       plenary-nvim
       snacks-nvim
       snipe-nvim

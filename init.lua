@@ -866,35 +866,6 @@ lze.load {
     end,
   },
   {
-    "oil.nvim",
-    enabled = false,
-    lazy = true,
-    keys = { "-" },
-    after = function()
-      require("oil").setup {
-        default_file_explorer = true,
-        skip_confirm_for_simple_edits = true,
-        use_default_keymaps = false,
-        delete_to_trash = true,
-        view_options = { show_hidden = true },
-        keymaps = {
-          ["H"] = { "actions.toggle_hidden", mode = "n" },
-          ["<CR>"] = "actions.select",
-          ["<Esc>"] = { "actions.close", mode = "n" },
-          ["-"] = { "actions.parent", mode = "n" },
-        },
-      }
-      -- see https://github.com/stevearc/oil.nvim/issues/384#issuecomment-2693662865
-      vim.keymap.set("n", "-", function()
-        if vim.bo.filetype == "oil" then
-          require("oil.actions").close.callback()
-        else
-          vim.cmd "Oil"
-        end
-      end)
-    end,
-  },
-  {
     "snipe.nvim",
     lazy = true,
     keys = { "gb" },
