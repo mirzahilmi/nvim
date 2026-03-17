@@ -2,6 +2,8 @@
 -- OPTIONS
 -- ============================================================================
 
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 vim.opt.termguicolors = true
 
 vim.opt.relativenumber = true -- relative line numbers
@@ -715,33 +717,9 @@ lzn.load {
 }
 
 -- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
--- Editor
+-- UI
 -- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 lzn.load {
-  {
-    "nvim-autopairs",
-    lazy = true,
-    event = "BufReadPost",
-    after = function()
-      require("nvim-autopairs").setup {}
-    end,
-  },
-  {
-    "gitsigns.nvim",
-    lazy = true,
-    event = "BufReadPost",
-    after = function()
-      require("gitsigns").setup {
-        signs = {
-          add = { text = "+" },
-          change = { text = "~" },
-          delete = { text = "_" },
-          topdelete = { text = "‾" },
-          changedelete = { text = "~" },
-        },
-      }
-    end,
-  },
   {
     "fzf-lua",
     lazy = true,
@@ -810,61 +788,6 @@ lzn.load {
       vim.keymap.set("n", "<leader>sh", fzflua.help_tags)
       vim.keymap.set("n", "<leader>sk", fzflua.keymaps)
       vim.keymap.set("n", "<leader>sm", fzflua.marks)
-    end,
-  },
-  {
-    "todo-comments.nvim",
-    lazy = true,
-    event = "BufReadPost",
-    before = function()
-      lzn.trigger_load "plenary.nvim"
-    end,
-    after = function()
-      require("todo-comments").setup {}
-    end,
-  },
-  {
-    "cord-nvim",
-    lazy = true,
-    event = "UIEnter",
-    after = function()
-      require("cord").setup {
-        editor = { tooltip = "Neovim" },
-        idle = { enabled = false },
-      }
-    end,
-  },
-  {
-    "mini.nvim",
-    lazy = true,
-    event = "BufReadPost",
-    after = function()
-      require("mini.ai").setup { n_lines = 500 }
-      require("mini.surround").setup {}
-    end,
-  },
-  {
-    "treesj",
-    lazy = true,
-    keys = "<space>j",
-    before = function()
-      lzn.trigger_load "nvim-treesitter"
-    end,
-    after = function()
-      local treesj = require "treesj"
-      treesj.setup {
-        use_default_keymaps = false,
-        max_join_length = 1024,
-      }
-      vim.keymap.set("n", "<space>j", treesj.toggle)
-    end,
-  },
-  {
-    "highlight-undo.nvim",
-    lazy = true,
-    keys = { "u", "<C-r>" },
-    after = function()
-      require("highlight-undo").setup {}
     end,
   },
   {
@@ -937,6 +860,7 @@ lzn.load {
   },
   {
     "oil.nvim",
+    enabled = false,
     lazy = true,
     keys = { "-" },
     after = function()
@@ -977,11 +901,6 @@ lzn.load {
     end,
   },
   {
-    "cellular-automaton.nvim",
-    lazy = true,
-    cmd = "CellularAutomaton",
-  },
-  {
     "snacks.nvim",
     lazy = true,
     event = "UIEnter",
@@ -995,6 +914,137 @@ lzn.load {
       vim.keymap.set("n", "<leader>z", function()
         snacks.zen()
       end)
+    end,
+  },
+  {
+    "nvim-tree.lua",
+    lazy = false,
+    after = function()
+      require("nvim-tree").setup {
+        view = {
+          width = 35,
+        },
+        filters = {
+          dotfiles = false,
+        },
+        renderer = {
+          group_empty = true,
+        },
+      }
+      vim.keymap.set("n", "<leader>e", function()
+        require("nvim-tree.api").tree.toggle()
+      end, { desc = "Toggle NvimTree" })
+    end,
+  },
+}
+
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- Editor
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+lzn.load {
+  {
+    "gitsigns.nvim",
+    lazy = true,
+    event = "BufReadPost",
+    after = function()
+      require("gitsigns").setup {
+        signs = {
+          add = { text = "+" },
+          change = { text = "~" },
+          delete = { text = "_" },
+          topdelete = { text = "‾" },
+          changedelete = { text = "~" },
+        },
+      }
+    end,
+  },
+  {
+    "nvim-autopairs",
+    lazy = true,
+    event = "BufReadPost",
+    after = function()
+      require("nvim-autopairs").setup {}
+    end,
+  },
+  {
+    "todo-comments.nvim",
+    lazy = true,
+    event = "BufReadPost",
+    before = function()
+      lzn.trigger_load "plenary.nvim"
+    end,
+    after = function()
+      require("todo-comments").setup {}
+    end,
+  },
+  {
+    "nvim-colorizer.lua",
+    lazy = true,
+    event = "BufReadPre",
+    after = function()
+      require("colorizer").setup {}
+      vim.keymap.set("n", "gtc", ":ColorizerToggle<cr>", { desc = "[g]o [t]oggle [c]olor" })
+    end,
+  },
+  {
+    "cellular-automaton.nvim",
+    lazy = true,
+    cmd = "CellularAutomaton",
+  },
+  {
+    "cord-nvim",
+    lazy = true,
+    event = "UIEnter",
+    after = function()
+      require("cord").setup {
+        editor = { tooltip = "Neovim" },
+        idle = { enabled = false },
+      }
+    end,
+  },
+  {
+    "mini.nvim",
+    lazy = true,
+    event = "BufReadPost",
+    after = function()
+      require("mini.ai").setup { n_lines = 500 }
+      require("mini.surround").setup {}
+    end,
+  },
+  {
+    "treesj",
+    lazy = true,
+    keys = "<space>j",
+    before = function()
+      lzn.trigger_load "nvim-treesitter"
+    end,
+    after = function()
+      local treesj = require "treesj"
+      treesj.setup {
+        use_default_keymaps = false,
+        max_join_length = 1024,
+      }
+      vim.keymap.set("n", "<space>j", treesj.toggle)
+    end,
+  },
+  {
+    "highlight-undo.nvim",
+    lazy = true,
+    keys = { "u", "<C-r>" },
+    after = function()
+      require("highlight-undo").setup {}
+    end,
+  },
+  {
+    "vscode.nvim",
+    lazy = false,
+    priority = 1000,
+    after = function()
+      local c = require("vscode.colors").get_colors()
+      require("vscode").setup {
+        underline_links = false,
+        group_overrides = { BlinkCmpMenu = { bg = c.vscPopupBack } },
+      }
     end,
   },
   {
@@ -1015,27 +1065,6 @@ lzn.load {
         },
       }
       vim.keymap.set("n", "gct", ":CloakToggle<cr>", { noremap = true, silent = true })
-    end,
-  },
-  {
-    "vscode.nvim",
-    lazy = false,
-    priority = 1000,
-    after = function()
-      local c = require("vscode.colors").get_colors()
-      require("vscode").setup {
-        underline_links = false,
-        group_overrides = { BlinkCmpMenu = { bg = c.vscPopupBack } },
-      }
-    end,
-  },
-  {
-    "nvim-colorizer.lua",
-    lazy = true,
-    event = "BufReadPre",
-    after = function()
-      require("colorizer").setup {}
-      vim.keymap.set("n", "gtc", ":ColorizerToggle<cr>", { desc = "[g]o [t]oggle [c]olor" })
     end,
   },
 }

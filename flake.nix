@@ -96,6 +96,7 @@
           nvim-jdtls
           nvim-lint
           nvim-nio
+          nvim-tree-lua
           nvim-treesitter.withAllGrammars
           nvim-web-devicons
           oil-nvim
