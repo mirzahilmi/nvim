@@ -1,197 +1,64 @@
 {
-  description = "i just want to code";
+  description = "I just want to code in peace.";
 
-  inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nixCats.url = "github:BirdeeHub/nixCats-nvim";
-    blink-cmp.url = "github:Saghen/blink.cmp/v1.1.1";
-    "plugins-showkeys" = {
-      url = "github:nvzone/showkeys";
-      flake = false;
-    };
-    "plugins-cord-nvim" = {
-      url = "github:vyfor/cord.nvim";
-      flake = false;
-    };
-    "plugins-duck-nvim" = {
-      url = "github:tamton-aquib/duck.nvim";
-      flake = false;
-    };
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+  inputs.wrappers.url = "github:BirdeeHub/nix-wrapper-modules";
+  inputs.wrappers.inputs.nixpkgs.follows = "nixpkgs";
+  inputs.plugins-lze = {
+    url = "github:BirdeeHub/lze";
+    flake = false;
   };
 
   outputs = {
     self,
     nixpkgs,
-    nixCats,
+    wrappers,
     ...
   } @ inputs: let
-    inherit (nixCats) utils;
-    luaPath = "${./.}";
-    forEachSystem = utils.eachSystem nixpkgs.lib.platforms.all;
+    forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.platforms.all;
+    module = nixpkgs.lib.modules.importApply ./module.nix inputs;
+    wrapper = wrappers.lib.evalModule module;
+  in {
+    overlays = {
+      neovim = final: prev: {neovim = wrapper.config.wrap {pkgs = final;};};
+      default = self.overlays.neovim;
+    };
+    wrapperModules = {
+      neovim = module;
+      default = self.wrapperModules.neovim;
+    };
+    wrappers = {
+      neovim = wrapper.config;
+      default = self.wrappers.neovim;
+    };
 
-    extra_pkg_config = {};
+    packages = forAllSystems (
+      system: let
+        pkgs = import nixpkgs {inherit system;};
+      in {
+        neovim = wrapper.config.wrap {inherit pkgs;};
+        default = self.packages.${system}.neovim;
+      }
+    );
 
-    dependencyOverlays = [(utils.standardPluginOverlay inputs)];
-
-    categoryDefinitions = {
-      pkgs,
-      settings,
-      categories,
-      extra,
-      name,
-      mkNvimPlugin,
-      ...
-    } @ packageDef: {
-      lspsAndRuntimeDeps = {
-        default = with pkgs; [
-          alejandra
-          fzf
-          hadolint
-          kdePackages.qtdeclarative
-          lemminx
-          lua-language-server
-          luajitPackages.jsregexp
-          nixd
-          python313Packages.cfn-lint
-          ripgrep
-          stylua
-          texlab
-          yaml-language-server
-        ];
-      };
-
-      startupPlugins = {
-        default = with pkgs.vimPlugins; [
-          lz-n
-          mini-nvim
-          nvim-lspconfig
-          rustaceanvim
-          vim-sleuth
-          vscode-nvim
-
-          inputs.blink-cmp.packages.${pkgs.system}.default
-        ];
-      };
-
-      optionalPlugins = {
-        default = with pkgs.vimPlugins; [
-          cellular-automaton-nvim
-          cloak-nvim
-          conform-nvim
-          friendly-snippets
-          fzf-lua
-          gitsigns-nvim
-          go-nvim
-          highlight-undo-nvim
-          luasnip
-          neotest
-          neotest-java
-          noice-nvim
-          nui-nvim
-          nvim-autopairs
-          nvim-colorizer-lua
-          nvim-dap
-          nvim-dap-view
-          nvim-dap-virtual-text
-          nvim-jdtls
-          nvim-lint
-          nvim-nio
-          nvim-tree-lua
-          nvim-treesitter.withAllGrammars
-          nvim-web-devicons
-          oil-nvim
-          plenary-nvim
-          snacks-nvim
-          snipe-nvim
-          todo-comments-nvim
-          treesj
-          trouble-nvim
-
-          pkgs.neovimPlugins.cord-nvim
-
-          (roslyn-nvim.overrideAttrs {
-            src = pkgs.fetchFromGitHub {
-              owner = "seblyng";
-              repo = "roslyn.nvim";
-              rev = "0c4a6f5b64122b51a64e0c8f7aae140ec979690e";
-              sha256 = "sha256-tZDH6VDRKaRaoSuz3zyeN/omoAwOf5So8PGUXHt2TLk=";
-            };
-          })
-        ];
+    nixosModules = {
+      default = self.nixosModules.neovim;
+      neovim = wrappers.lib.mkInstallModule {
+        name = "neovim";
+        value = module;
       };
     };
 
-    packageDefinitions = {
-      nvim = {...}: {
-        settings.wrapRc = false;
-        categories.default = true;
-      };
-      precompiled = {...}: {
-        settings.wrapRc = true;
-        categories.default = true;
-        settings.aliases = ["nvim"];
+    homeModules = {
+      default = self.homeModules.neovim;
+      neovim = wrappers.lib.mkInstallModule {
+        name = "neovim";
+        value = module;
+        loc = [
+          "home"
+          "packages"
+        ];
       };
     };
-    defaultPackageName = "nvim";
-  in
-    forEachSystem (system: let
-      nixCatsBuilder =
-        utils.baseBuilder luaPath {
-          inherit nixpkgs system dependencyOverlays extra_pkg_config;
-        }
-        categoryDefinitions
-        packageDefinitions;
-      defaultPackage = nixCatsBuilder defaultPackageName;
-      pkgs = import nixpkgs {inherit system;};
-    in {
-      packages = utils.mkAllWithDefault defaultPackage;
-
-      devShells = {
-        default = pkgs.mkShell {
-          name = defaultPackageName;
-          packages = [defaultPackage];
-          inputsFrom = [];
-          shellHook = ''
-          '';
-        };
-      };
-    })
-    // (let
-      nixosModule = utils.mkNixosModules {
-        inherit
-          defaultPackageName
-          dependencyOverlays
-          luaPath
-          categoryDefinitions
-          packageDefinitions
-          extra_pkg_config
-          nixpkgs
-          ;
-      };
-      homeModule = utils.mkHomeModules {
-        inherit
-          defaultPackageName
-          dependencyOverlays
-          luaPath
-          categoryDefinitions
-          packageDefinitions
-          extra_pkg_config
-          nixpkgs
-          ;
-      };
-    in {
-      overlays =
-        utils.makeOverlays luaPath {
-          inherit nixpkgs dependencyOverlays extra_pkg_config;
-        }
-        categoryDefinitions
-        packageDefinitions
-        defaultPackageName;
-
-      nixosModules.default = nixosModule;
-      homeModules.default = homeModule;
-
-      inherit utils nixosModule homeModule;
-      inherit (utils) templates;
-    });
+  };
 }
