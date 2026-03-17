@@ -183,10 +183,10 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 -- ============================================================================
 local lze = require 'lze'
 lze.load {
-  { 'nvim-web-devicons', lazy = true },
-  { 'nvim-nio', lazy = true },
-  { 'plenary.nvim', lazy = true },
-  { 'nui.nvim', lazy = true },
+  { 'nvim-web-devicons', lazy = true, dep_of = { 'fzf-lua', 'trouble.nvim' } },
+  { 'nvim-nio', lazy = true, dep_of = { 'nvim-dap', 'neotest' } },
+  { 'plenary.nvim', lazy = true, dep_of = { 'neotest', 'todo-comments.nvim' } },
+  { 'nui.nvim', lazy = true, dep_of = { 'noice.nvim' } },
 }
 
 -- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -280,50 +280,6 @@ lze.load {
         callback = function(event)
           vim.keymap.set(
             'n',
-            '<leader>ds',
-            function()
-              require('fzf-lua').lsp_document_symbols {
-                previewer = false,
-                winopts = {
-                  width = 0.5,
-                  height = 0.7,
-                },
-              }
-            end
-          )
-
-          local fzflua = require 'fzf-lua'
-          vim.keymap.set('n', 'gd', fzflua.lsp_definitions)
-          vim.keymap.set('n', 'gri', fzflua.lsp_implementations)
-          vim.keymap.set(
-            'n',
-            'gr',
-            function()
-              fzflua.lsp_references {
-                winopts = {
-                  preview = {
-                    layout = 'vertical',
-                    vertical = 'down:60%',
-                  },
-                },
-              }
-            end
-          )
-          vim.keymap.set(
-            { 'n', 'v' },
-            '<leader>ca',
-            function()
-              fzflua.lsp_code_actions {
-                previewer = false,
-                winopts = {
-                  width = 0.5,
-                  height = 0.7,
-                },
-              }
-            end
-          )
-          vim.keymap.set(
-            'n',
             '<leader>th',
             function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end,
             { desc = '[T]oggle Inlay [H]ints' }
@@ -359,9 +315,6 @@ lze.load {
         end,
       })
 
-      lze.trigger_load 'blink.cmp'
-      vim.lsp.config['*'] = { capabilities = require('blink.cmp').get_lsp_capabilities() }
-
       for server_name, config in pairs(servers) do
         vim.lsp.config(server_name, config)
         vim.lsp.enable(server_name)
@@ -377,9 +330,11 @@ lze.load {
   },
   {
     'blink.cmp',
-    lazy = false,
+    event = { 'InsertEnter', 'CmdlineEnter' },
     before = function() lze.trigger_load 'luasnip' end,
     after = function()
+      vim.lsp.config['*'] = { capabilities = require('blink.cmp').get_lsp_capabilities() }
+
       require('blink.cmp').setup {
         sources = { default = { 'lsp', 'path', 'buffer', 'snippets', 'omni' } },
         fuzzy = { implementation = 'prefer_rust' },
@@ -516,9 +471,7 @@ lze.load {
 lze.load {
   {
     'nvim-treesitter',
-    lazy = true,
-    cmd = 'NvimTreeToggle',
-    event = 'BufReadPost',
+    lazy = false,
     after = function()
       vim.api.nvim_create_autocmd('FileType', {
         callback = function(args)
@@ -607,8 +560,8 @@ lze.load {
 lze.load {
   {
     'nvim-dap-view',
-    lazy = false,
-    before = function() lze.trigger_load 'nvim-dap' end,
+    lazy = true,
+    on_plugin = 'nvim-dap',
     after = function()
       local dapview = require 'dap-view'
       dapview.setup {
@@ -621,7 +574,7 @@ lze.load {
   {
     'nvim-dap',
     lazy = true,
-    before = function() lze.trigger_load { 'nvim-nio' } end,
+    event = 'DeferredUIEnter',
     after = function()
       local dap = require 'dap'
 
@@ -693,7 +646,6 @@ lze.load {
     },
     before = function()
       lze.trigger_load 'nvim-nio'
-      lze.trigger_load 'plenary.nvim'
       lze.trigger_load 'nvim-treesitter'
     end,
     after = function()
@@ -732,8 +684,7 @@ lze.load {
   {
     'fzf-lua',
     lazy = true,
-    event = 'UIEnter',
-    before = function() lze.trigger_load 'nvim-web-devicons' end,
+    event = 'DeferredUIEnter',
     after = function()
       local fzflua = require 'fzf-lua'
       fzflua.setup {
@@ -759,6 +710,12 @@ lze.load {
         end
         return { winopts = { height = h, width = 0.60, row = 0.40 } }
       end)
+
+      vim.keymap.set('n', '<leader>sh', fzflua.help_tags)
+      vim.keymap.set('n', '<leader>sk', fzflua.keymaps)
+      vim.keymap.set('n', '<leader>sm', fzflua.marks)
+      vim.keymap.set('n', 'gd', fzflua.lsp_definitions)
+      vim.keymap.set('n', 'gri', fzflua.lsp_implementations)
       vim.keymap.set(
         'n',
         '<leader>sf',
@@ -804,16 +761,52 @@ lze.load {
           }
         end
       )
-      vim.keymap.set('n', '<leader>sh', fzflua.help_tags)
-      vim.keymap.set('n', '<leader>sk', fzflua.keymaps)
-      vim.keymap.set('n', '<leader>sm', fzflua.marks)
+      vim.keymap.set(
+        'n',
+        '<leader>ds',
+        function()
+          fzflua.lsp_document_symbols {
+            previewer = false,
+            winopts = {
+              width = 0.5,
+              height = 0.7,
+            },
+          }
+        end
+      )
+      vim.keymap.set(
+        'n',
+        'gr',
+        function()
+          fzflua.lsp_references {
+            winopts = {
+              preview = {
+                layout = 'vertical',
+                vertical = 'down:60%',
+              },
+            },
+          }
+        end
+      )
+      vim.keymap.set(
+        { 'n', 'v' },
+        '<leader>ca',
+        function()
+          fzflua.lsp_code_actions {
+            previewer = false,
+            winopts = {
+              width = 0.5,
+              height = 0.7,
+            },
+          }
+        end
+      )
     end,
   },
   {
     'noice.nvim',
     lazy = true,
-    event = 'UIEnter',
-    before = function() lze.trigger_load 'nui.nvim' end,
+    event = 'DeferredUIEnter',
     after = function()
       require('noice').setup {
         lsp = {
@@ -863,7 +856,6 @@ lze.load {
     'trouble.nvim',
     lazy = true,
     keys = '<C-t>',
-    before = function() lze.trigger_load 'nvim-web-devicons' end,
     after = function()
       require('trouble').setup {
         auto_preview = false,
@@ -931,7 +923,8 @@ lze.load {
   },
   {
     'nvim-tree.lua',
-    lazy = false,
+    lazy = true,
+    keys = { '<leader>e' },
     after = function()
       require('nvim-tree').setup {
         view = {
@@ -979,7 +972,6 @@ lze.load {
     'todo-comments.nvim',
     lazy = true,
     event = 'BufReadPost',
-    before = function() lze.trigger_load 'plenary.nvim' end,
     after = function() require('todo-comments').setup {} end,
   },
   {
@@ -987,7 +979,9 @@ lze.load {
     lazy = true,
     event = 'BufReadPre',
     after = function()
-      require('colorizer').setup {}
+      require('colorizer').setup {
+        options = { parsers = { css_fn = true } },
+      }
       vim.keymap.set('n', 'gtc', ':ColorizerToggle<cr>', { desc = '[g]o [t]oggle [c]olor' })
     end,
   },
@@ -1047,6 +1041,8 @@ lze.load {
         underline_links = false,
         group_overrides = { BlinkCmpMenu = { bg = c.vscPopupBack } },
       }
+      vim.cmd.colorscheme 'vscode'
+      vim.cmd ':hi statusline guibg=NONE'
     end,
   },
   {
@@ -1070,6 +1066,3 @@ lze.load {
     end,
   },
 }
-
-vim.cmd.colorscheme 'vscode'
-vim.cmd ':hi statusline guibg=NONE'
