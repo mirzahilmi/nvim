@@ -1,10 +1,90 @@
+-- ============================================================================
+-- OPTIONS
+-- ============================================================================
+
+vim.opt.termguicolors = true
+
+vim.opt.relativenumber = true -- relative line numbers
+vim.opt.cursorline = true -- highlight current line
+vim.opt.wrap = false -- do not wrap lines by default
+vim.opt.scrolloff = 10 -- keep 10 lines above/below cursor
+vim.opt.sidescrolloff = 10 -- keep 10 lines to left/right of cursor
+
+vim.opt.tabstop = 2 -- tabwidth
+vim.opt.shiftwidth = 2 -- indent width
+vim.opt.softtabstop = 2 -- soft tab stop not tabs on tab/backspace
+vim.opt.expandtab = true -- use spaces instead of tabs
+vim.opt.smartindent = true -- smart auto-indent
+vim.opt.autoindent = true -- copy indent from current line
+vim.opt.list = true
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+
+vim.opt.ignorecase = true -- case insensitive search
+vim.opt.smartcase = true -- case sensitive if uppercase in string
+vim.opt.hlsearch = true -- highlight search matches
+vim.opt.incsearch = true -- show matches as you type
+
+vim.opt.signcolumn = "yes" -- always show a sign column
+vim.opt.colorcolumn = "100" -- show a column at 100 position chars
+vim.opt.showmatch = true -- highlights matching brackets
+vim.opt.cmdheight = 1 -- single line command line
+vim.opt.completeopt = "menuone,noinsert,noselect" -- completion options
+vim.opt.showmode = false -- do not show the mode, instead have it in statusline
+vim.opt.pumheight = 10 -- popup menu height
+vim.opt.pumblend = 10 -- popup menu transparency
+vim.opt.winblend = 0 -- floating window transparency
+vim.opt.conceallevel = 0 -- do not hide markup
+vim.opt.concealcursor = "" -- do not hide cursorline in markup
+vim.opt.synmaxcol = 300 -- syntax highlighting limit
+vim.opt.fillchars = { eob = " " } -- hide "~" on empty lines
+
+local undodir = vim.fn.expand "~/.vim/undodir"
+if
+  vim.fn.isdirectory(undodir) == 0 -- create undodir if nonexistent
+then
+  vim.fn.mkdir(undodir, "p")
+end
+
+vim.opt.backup = false -- do not create a backup file
+vim.opt.writebackup = false -- do not write to a backup file
+vim.opt.swapfile = false -- do not create a swapfile
+vim.opt.undofile = true -- do create an undo file
+vim.opt.undodir = undodir -- set the undo directory
+vim.opt.updatetime = 300 -- faster completion
+vim.opt.timeoutlen = 500 -- timeout duration
+vim.opt.ttimeoutlen = 0 -- key code timeout
+vim.opt.autoread = true -- auto-reload changes if outside of neovim
+vim.opt.autowrite = false -- do not auto-save
+
+vim.opt.hidden = true -- allow hidden buffers
+vim.opt.errorbells = false -- no error sounds
+vim.opt.backspace = "indent,eol,start" -- better backspace behaviour
+vim.opt.autochdir = false -- do not autochange directories
+vim.opt.iskeyword:append "-" -- include - in words
+vim.opt.path:append "**" -- include subdirs in search
+vim.opt.selection = "inclusive" -- include last char in selection
+vim.opt.mouse = "a" -- enable mouse support
+-- vim.opt.clipboard:append "unnamedplus" -- use system clipboard
+vim.opt.modifiable = true -- allow buffer modifications
+vim.opt.encoding = "utf-8" -- set encoding
+
+-- Folding: requires treesitter available at runtime; safe fallback if not
+vim.opt.foldmethod = "expr" -- use expression for folding
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()" -- use treesitter for folding
+vim.opt.foldlevel = 99 -- start with all folds open
+
+vim.opt.splitbelow = true -- horizontal splits go below
+vim.opt.splitright = true -- vertical splits go right
+
+vim.opt.wildmenu = true -- tab completion
+vim.opt.wildmode = "longest:full,full" -- complete longest common match, full completion list, cycle through with Tab
+vim.opt.diffopt:append "linematch:60" -- improve diff display
+vim.opt.redrawtime = 10000 -- increase neovim redraw tolerance
+vim.opt.maxmempattern = 20000 -- increase max memory
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.have_nerd_font = true
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-vim.g.vimtex_quickfix_enabled = 0
-vim.g.loaded_sql_completion = 0
 vim.g.rustaceanvim = {
   server = {
     default_settings = {
@@ -20,72 +100,12 @@ vim.g.rustaceanvim = {
   },
 }
 
-vim.opt.relativenumber = true
-vim.opt.mouse = "a"
--- Default tab to 4 space, see https://gist.github.com/LunarLambda/4c444238fb364509b72cfb891979f1dd
-vim.opt.expandtab = true
-vim.opt.shiftwidth = 4
-vim.opt.tabstop = 4
--- Enable break indent
-vim.opt.breakindent = true
--- Save undo history
-vim.opt.undofile = true
--- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
--- Keep signcolumn on by default
-vim.opt.signcolumn = "yes"
--- Decrease update time
-vim.opt.updatetime = 250
--- Decrease mapped sequence wait time
--- Displays which-key popup sooner
-vim.opt.timeoutlen = 500
--- Configure how new splits should be opened
-vim.opt.splitright = true
-vim.opt.splitbelow = true
--- Sets how neovim will display certain whitespace characters in the editor.
-vim.opt.list = true
-vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
--- Preview substitutions live, as you type!
-vim.opt.inccommand = "split"
--- Show which line your cursor is on
-vim.opt.cursorline = true
--- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
--- Disable word wrap
-vim.opt.wrap = false
--- more space in the neovim command line for displaying messages
-vim.opt.cmdheight = 1
--- set term gui colors (most terminals support this)
-vim.opt.termguicolors = true
--- enable persistent undo
-vim.opt.undofile = true
--- Highlight zul files
 vim.filetype.add { extension = { zul = "html" } }
--- Silent deprecation message
----@diagnostic disable-next-line: duplicate-set-field
-vim.deprecate = function() end
-vim.opt.cursorline = false
-vim.opt.swapfile = false
--- Char-limit border
-vim.opt.colorcolumn = "100"
-
-vim.keymap.set("n", "<Esc>", function()
-  vim.cmd "nohlsearch"
-end, { silent = true })
--- Exit terminal mode in the builtin terminal.
-vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
--- Keybinds to make split navigation easier.
-vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
--- see https://www.reddit.com/r/neovim/comments/1fq0y8u/comment/lp2ez92
-vim.keymap.set({ "x" }, "y", '"+y', { noremap = true, silent = true })
--- see https://stackoverflow.com/a/5562707
-vim.keymap.set("n", "<leader>n", ":bnext<cr>", { desc = "Goto next buffer" })
-vim.keymap.set("n", "<leader>p", ":bprevious<cr>", { desc = "Goto previous buffer" })
-vim.keymap.set("n", "<leader>d", ":bdelete<cr>", { desc = "Delete buffer" })
+vim.filetype.add {
+  pattern = {
+    [".*/*.cf.yaml"] = "cloudformation",
+  },
+}
 
 -- see https://www.reddit.com/r/neovim/comments/1byy8lu/copying_to_the_windows_clipboard_from_wsl2
 if vim.fn.has "wsl" == 1 then
@@ -105,55 +125,156 @@ if vim.fn.has "wsl" == 1 then
   vim.keymap.set({ "n", "v" }, "p", '"+p', { noremap = true, silent = true })
 end
 
+-- ============================================================================
+-- KEYMAPS
+-- ============================================================================
+
+-- Exit terminal mode in the builtin terminal.
+vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+-- Keybinds to make split navigation easier.
+vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
+vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
+vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
+vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+-- see https://www.reddit.com/r/neovim/comments/1fq0y8u/comment/lp2ez92
+vim.keymap.set({ "x" }, "y", '"+y', { noremap = true, silent = true })
+-- see https://stackoverflow.com/a/5562707
+vim.keymap.set("n", "<leader>n", ":bnext<cr>", { desc = "Goto next buffer" })
+vim.keymap.set("n", "<leader>p", ":bprevious<cr>", { desc = "Goto previous buffer" })
+vim.keymap.set("n", "<leader>d", ":bdelete<cr>", { desc = "Delete buffer" })
+vim.keymap.set("n", "<Esc>", function()
+  vim.cmd "nohlsearch"
+end, { silent = true })
+
+-- ============================================================================
+-- AUTOCMDS
+-- ============================================================================
+
+local augroup = vim.api.nvim_create_augroup("UserConfig", { clear = true })
+
 -- Highlight when yanking (copying) text
 vim.api.nvim_create_autocmd("TextYankPost", {
+  group = augroup,
   desc = "Highlight when yanking (copying) text",
   callback = function()
     vim.highlight.on_yank()
   end,
 })
 
-vim.filetype.add {
-  pattern = {
-    [".*/*.cf.yaml"] = "cloudformation",
-  },
-}
+-- Return to last cursor position
+vim.api.nvim_create_autocmd("BufReadPost", {
+  group = augroup,
+  desc = "Restore last cursor position",
+  callback = function()
+    if vim.o.diff then -- except in diff mode
+      return
+    end
 
+    local last_pos = vim.api.nvim_buf_get_mark(0, '"') -- {line, col}
+    local last_line = vim.api.nvim_buf_line_count(0)
+
+    local row = last_pos[1]
+    if row < 1 or row > last_line then
+      return
+    end
+
+    pcall(vim.api.nvim_win_set_cursor, 0, last_pos)
+  end,
+})
+
+-- ============================================================================
+-- PLUGINS
+-- ============================================================================
 local lzn = require "lz.n"
-
-local plugins = {
+lzn.load {
   { "nvim-web-devicons", lazy = true },
   { "nvim-nio", lazy = true },
   { "plenary.nvim", lazy = true },
   { "nui.nvim", lazy = true },
-  { "friendly-snippets", lazy = true },
-  {
-    "luasnip",
-    lazy = true,
-    before = function()
-      lzn.trigger_load "friendly-snippets"
-    end,
-    after = function()
-      require("luasnip.loaders.from_vscode").lazy_load()
-    end,
-  },
-  {
-    "nvim-treesitter",
-    lazy = true,
-    cmd = "NvimTreeToggle",
-    event = "BufReadPost",
-    after = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require("nvim-treesitter.configs").setup {
-        auto_install = false,
-        highlight = {
-          enable = true,
-          disable = { "latex" },
+}
+
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- LSP, Completions, Snippets
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+local servers = {
+  basedpyright = {},
+  phpactor = {},
+  arduino_language_server = {},
+  lemminx = {},
+  protols = {},
+  terraformls = {},
+  ruff = {},
+  gopls = {},
+  biome = {},
+  elp = {},
+  qmlls = { cmd = { "qmlls", "-E" } },
+  nixd = {
+    settings = {
+      nixd = {
+        nixpkgs = {
+          expr = [[
+                  let
+                    flake = builtins.getFlake "/home/mirza/nixfilesv2/";
+                  in import flake.inputs.nixpkgs {
+                    overlays = builtins.attrValues flake.outputs.overlays;
+                  }
+                ]],
         },
-        indent = { enable = true },
-      }
-    end,
+        options = {
+          nixos = {
+            expr = '(builtins.getFlake "/home/mirza/nixfiles2").nixosConfigurations."t4nix".options',
+          },
+          home_manager = {
+            expr = '(builtins.getFlake "/home/mirza/nixfiles2").homeConfigurations."mirza@t4nix".options',
+          },
+        },
+      },
+    },
   },
+  lua_ls = {
+    settings = {
+      Lua = {
+        completion = { callSnippet = "Replace" },
+        diagnostics = {
+          globals = { "nixCats", "vim" },
+          disable = { "missing-fields" },
+        },
+      },
+    },
+  },
+  yamlls = {
+    settings = {
+      yaml = {
+        validate = false,
+        hover = true,
+        completion = true,
+        format = { enable = true, bracketSpacing = true },
+        schemaStore = { enable = true },
+      },
+    },
+  },
+  texlab = {
+    settings = {
+      texlab = {
+        build = { onSave = true, forwardSearchAfter = true },
+        forwardSearch = {
+          executable = "zathura",
+          args = { "--synctex-forward", "%l:1:%f", "%p" },
+        },
+      },
+    },
+  },
+  vtsls = {
+    settings = {
+      typescript = {
+        format = { semicolons = "insert" },
+        preferences = { quoteStyle = "double" },
+      },
+    },
+  },
+}
+
+lzn.load {
   {
     "nvim-lspconfig",
     -- see https://www.reddit.com/r/neovim/comments/1nb0w5k/comment/nczrv70
@@ -227,113 +348,24 @@ local plugins = {
         end,
       })
 
-      local servers = {
-        basedpyright = {},
-        nixd = {
-          settings = {
-            nixd = {
-              nixpkgs = {
-                expr = [[
-                  let
-                    flake = builtins.getFlake "/home/mirza/nixfilesv2/";
-                  in import flake.inputs.nixpkgs {
-                    overlays = builtins.attrValues flake.outputs.overlays;
-                  }
-                ]],
-              },
-              options = {
-                nixos = {
-                  expr = '(builtins.getFlake "/home/mirza/nixfiles2").nixosConfigurations."t4nix".options',
-                },
-                home_manager = {
-                  expr = '(builtins.getFlake "/home/mirza/nixfiles2").homeConfigurations."mirza@t4nix".options',
-                },
-              },
-            },
-          },
-        },
-        phpactor = {},
-        arduino_language_server = {},
-        lemminx = {},
-        lua_ls = {
-          settings = {
-            Lua = {
-              completion = {
-                callSnippet = "Replace",
-              },
-              diagnostics = {
-                globals = { "nixCats", "vim" },
-                disable = { "missing-fields" },
-              },
-            },
-          },
-        },
-        yamlls = {
-          settings = {
-            yaml = {
-              validate = false,
-              hover = true,
-              completion = true,
-              format = {
-                enable = true,
-                bracketSpacing = true,
-              },
-              schemaStore = {
-                enable = true,
-              },
-            },
-          },
-        },
-        elp = {},
-        texlab = {
-          settings = {
-            texlab = {
-              build = {
-                onSave = true,
-                forwardSearchAfter = true,
-              },
-              forwardSearch = {
-                executable = "zathura",
-                args = { "--synctex-forward", "%l:1:%f", "%p" },
-              },
-            },
-          },
-        },
-        protols = {},
-        terraformls = {},
-        qmlls = {
-          cmd = { "qmlls", "-E" },
-        },
-        r_language_server = {},
-        ruff = {},
-        gopls = {},
-        vtsls = {
-          settings = {
-            typescript = {
-              format = {
-                semicolons = "insert",
-              },
-              preferences = {
-                quoteStyle = "double",
-              },
-            },
-          },
-        },
-        biome = {},
-      }
-
-      local capabilities = require("blink.cmp").get_lsp_capabilities()
-
-      -- tried changing it to use the new api vim.lsp.enable but it
-      -- just doesnt work, i think it got to do with missing default
-      -- config value
-      for server_name, config in pairs(servers) do
-        local server = servers[server_name] or {}
-        server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-        require("lspconfig")[server_name].setup(config)
-      end
-
       lzn.trigger_load "blink-cmp"
+      vim.lsp.config["*"] = { capabilities = require("blink.cmp").get_lsp_capabilities() }
+
+      for server_name, config in pairs(servers) do
+        vim.lsp.config(server_name, config)
+        vim.lsp.enable(server_name)
+      end
+    end,
+  },
+  { "friendly-snippets", lazy = true },
+  {
+    "luasnip",
+    lazy = true,
+    before = function()
+      lzn.trigger_load "friendly-snippets"
+    end,
+    after = function()
+      require("luasnip.loaders.from_vscode").lazy_load()
     end,
   },
   {
@@ -344,18 +376,12 @@ local plugins = {
     end,
     after = function()
       require("blink.cmp").setup {
-        sources = {
-          default = { "lsp", "path", "snippets", "omni", "buffer" },
-        },
+        sources = { default = { "lsp", "path", "buffer", "snippets", "omni" } },
         fuzzy = { implementation = "prefer_rust" },
         -- see https://www.reddit.com/r/neovim/comments/1hmuwaz/comment/m421fcn
         snippets = { preset = "luasnip" },
-        appearance = {
-          use_nvim_cmp_as_default = true,
-          nerd_font_variant = "normal",
-        },
+        appearance = { nerd_font_variant = "mono" },
         completion = {
-          keyword = { range = "full" },
           list = { selection = { auto_insert = false } },
           documentation = {
             auto_show = true,
@@ -363,6 +389,146 @@ local plugins = {
             window = { border = "single" },
           },
         },
+      }
+    end,
+  },
+  {
+    "nvim-jdtls",
+    lazy = true,
+    ft = "java",
+    after = function()
+      local config = {
+        cmd = {
+          vim.env.JDTLS_BIN_PATH,
+          string.format("--jvm-arg=-javaagent:%s", vim.env.LOMBOK_JAR_PATH),
+          "--jvm-arg=-Xmx4g",
+        },
+
+        settings = {
+          java = {
+            settings = { url = vim.fn.stdpath "config" .. "/org.eclipse.jdt.core.formatter.prefs" },
+            completion = {
+              favoriteStaticMembers = {
+                "org.mockito.Mockito.*",
+                "org.mockito.ArgumentMatchers.*",
+                "org.assertj.core.api.Assertions.*",
+                "org.springframework.test.web.client.match.MockRestRequestMatchers.*",
+                "org.springframework.test.web.client.response.MockRestResponseCreators.*",
+              },
+              importOrder = {
+                "java",
+                "javax",
+                "jakarta",
+                "com",
+                "org",
+                "id",
+              },
+              maxResults = 50,
+            },
+            saveActions = { organizeImports = true },
+            sources = {
+              organizeImports = {
+                starThreshold = 9999,
+                staticStarThreshold = 9999,
+              },
+            },
+            codeGeneration = {
+              useBlocks = true,
+              addFinalForNewDeclaration = "all",
+            },
+            contentProvider = { preferred = "fernflower" },
+          },
+        },
+
+        init_options = { bundles = {} },
+
+        handlers = {
+          ["language/status"] = function() end,
+        },
+      }
+
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "java",
+        callback = function()
+          require("jdtls").start_or_attach(config)
+        end,
+      })
+
+      require("jdtls").start_or_attach(config)
+    end,
+  },
+  {
+    "roslyn.nvim",
+    lazy = true,
+    ft = { "cs", "razor", "cshtml" },
+    after = function()
+      require("roslyn").setup {}
+    end,
+  },
+  {
+    "rustaceanvim",
+    -- already lazy, as the docs said
+    lazy = false,
+    after = function()
+      vim.api.nvim_create_autocmd("BufWritePost", {
+        pattern = "*.rs",
+        callback = function()
+          local cwd = vim.lsp.buf.list_workspace_folders()
+          if not (cwd == null) then
+            if vim.fn.filereadable(cwd[1] .. "/Dioxus.toml") == 1 then
+              local command = "dx fmt --file %"
+              vim.cmd("silent ! " .. command)
+            end
+          end
+        end,
+      })
+    end,
+  },
+  {
+    "go.nvim",
+    lazy = true,
+    ft = { "go", "gomod" },
+    after = function()
+      require("go").setup {
+        lsp_keymaps = false,
+        lsp_cfg = false,
+        icons = false,
+        dap_debug = false,
+      }
+
+      -- see https://github.com/ray-x/go.nvim?tab=readme-ov-file#run-gofmt--goimports-on-save
+      local format_sync_grp = vim.api.nvim_create_augroup("goimports", {})
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        pattern = "*.go",
+        callback = function()
+          require("go.format").goimports()
+        end,
+        group = format_sync_grp,
+      })
+
+      vim.lsp.inlay_hint.enable(false)
+    end,
+  },
+}
+
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- Highlighting, Formatting, Lint
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+lzn.load {
+  {
+    "nvim-treesitter",
+    lazy = true,
+    cmd = "NvimTreeToggle",
+    event = "BufReadPost",
+    after = function()
+      ---@diagnostic disable-next-line: missing-fields
+      require("nvim-treesitter.configs").setup {
+        auto_install = false,
+        highlight = {
+          enable = true,
+          disable = { "latex" },
+        },
+        indent = { enable = true },
       }
     end,
   },
@@ -401,6 +567,37 @@ local plugins = {
       end)
     end,
   },
+  {
+    "nvim-lint",
+    lazy = true,
+    event = { "BufReadPost" },
+    after = function()
+      local lint = require "lint"
+      lint.linters_by_ft = {
+        cloudformation = { "cfn_lint" },
+        dockerfile = { "hadolint" },
+      }
+
+      local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
+      vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+        group = lint_augroup,
+        callback = function()
+          -- Only run the linter in buffers that you can modify in order to
+          -- avoid superfluous noise, notably within the handy LSP pop-ups that
+          -- describe the hovered symbol using Markdown.
+          if vim.bo.modifiable then
+            lint.try_lint()
+          end
+        end,
+      })
+    end,
+  },
+}
+
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- Debugger
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+lzn.load {
   {
     "nvim-dap-view",
     lazy = false,
@@ -464,6 +661,63 @@ local plugins = {
       lzn.trigger_load { "nvim-dap-view" }
     end,
   },
+}
+
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- Test runner
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+lzn.load {
+  {
+    "neotest",
+    lazy = true,
+    keys = {
+      "<leader>tt",
+      "<leader>td",
+      "<leader>TT",
+      "<leader>ts",
+    },
+    before = function()
+      lzn.trigger_load "nvim-nio"
+      lzn.trigger_load "plenary.nvim"
+      lzn.trigger_load "nvim-treesitter"
+    end,
+    after = function()
+      local neotest = require "neotest"
+      neotest.setup {
+        adapters = {
+          require "neotest-java" {},
+        },
+      }
+      vim.keymap.set("n", "<leader>tt", function()
+        neotest.run.run(vim.fn.expand "%")
+      end, { noremap = true })
+      vim.keymap.set("n", "<leader>td", function()
+        neotest.run.run { strategy = "dap" }
+      end, { noremap = true })
+      vim.keymap.set("n", "<leader>TT", function()
+        ---@diagnostic disable-next-line: undefined-field
+        neotest.run.run(vim.uv.cwd())
+      end, { noremap = true })
+      vim.keymap.set("n", "<leader>ts", neotest.summary.toggle, { noremap = true })
+      vim.keymap.set("n", "<leader>tu", neotest.output_panel.toggle, { noremap = true })
+    end,
+  },
+  {
+    "neotest-java",
+    lazy = true,
+    ft = "java",
+    before = function()
+      lzn.trigger_load "nvim-jdtls"
+      lzn.trigger_load "nvim-dap"
+      lzn.trigger_load "nvim-dap-virtual-text"
+    end,
+  },
+}
+
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- Editor
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+lzn.load {
   {
     "nvim-autopairs",
     lazy = true,
@@ -666,79 +920,6 @@ local plugins = {
     end,
   },
   {
-    "nvim-jdtls",
-    lazy = true,
-    ft = "java",
-    after = function()
-      local config = {
-        cmd = {
-          vim.env.JDTLS_BIN_PATH,
-          string.format("--jvm-arg=-javaagent:%s", vim.env.LOMBOK_JAR_PATH),
-          "--jvm-arg=-Xmx4g",
-        },
-
-        settings = {
-          java = {
-            settings = {
-              url = vim.fn.stdpath "config" .. "/org.eclipse.jdt.core.formatter.prefs",
-            },
-            completion = {
-              favoriteStaticMembers = {
-                "org.mockito.Mockito.*",
-                "org.mockito.ArgumentMatchers.*",
-                "org.assertj.core.api.Assertions.*",
-                "org.springframework.test.web.client.match.MockRestRequestMatchers.*",
-                "org.springframework.test.web.client.response.MockRestResponseCreators.*",
-              },
-              importOrder = {
-                "java",
-                "javax",
-                "jakarta",
-                "com",
-                "org",
-                "id",
-              },
-              maxResults = 50,
-            },
-            saveActions = {
-              organizeImports = true,
-            },
-            sources = {
-              organizeImports = {
-                starThreshold = 9999,
-                staticStarThreshold = 9999,
-              },
-            },
-            codeGeneration = {
-              useBlocks = true,
-              addFinalForNewDeclaration = "all",
-            },
-            contentProvider = {
-              preferred = "fernflower",
-            },
-          },
-        },
-
-        init_options = {
-          bundles = {},
-        },
-
-        handlers = {
-          ["language/status"] = function() end,
-        },
-      }
-
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = "java",
-        callback = function()
-          require("jdtls").start_or_attach(config)
-        end,
-      })
-
-      require("jdtls").start_or_attach(config)
-    end,
-  },
-  {
     "trouble.nvim",
     lazy = true,
     keys = "<C-t>",
@@ -752,95 +933,6 @@ local plugins = {
         -- win = { wo = { wrap = true } },
       }
       vim.keymap.set("n", "<C-t>", ":Trouble diagnostics toggle<CR>", { noremap = true, silent = true })
-    end,
-  },
-  {
-    "neotest",
-    lazy = true,
-    keys = {
-      "<leader>tt",
-      "<leader>td",
-      "<leader>TT",
-      "<leader>ts",
-    },
-    before = function()
-      lzn.trigger_load "nvim-nio"
-      lzn.trigger_load "plenary.nvim"
-      lzn.trigger_load "nvim-treesitter"
-    end,
-    after = function()
-      local neotest = require "neotest"
-      neotest.setup {
-        adapters = {
-          require "neotest-java" {},
-        },
-      }
-      vim.keymap.set("n", "<leader>tt", function()
-        neotest.run.run(vim.fn.expand "%")
-      end, { noremap = true })
-      vim.keymap.set("n", "<leader>td", function()
-        neotest.run.run { strategy = "dap" }
-      end, { noremap = true })
-      vim.keymap.set("n", "<leader>TT", function()
-        ---@diagnostic disable-next-line: undefined-field
-        neotest.run.run(vim.uv.cwd())
-      end, { noremap = true })
-      vim.keymap.set("n", "<leader>ts", neotest.summary.toggle, { noremap = true })
-      vim.keymap.set("n", "<leader>tu", neotest.output_panel.toggle, { noremap = true })
-    end,
-  },
-  {
-    "neotest-java",
-    lazy = true,
-    ft = "java",
-    before = function()
-      lzn.trigger_load "nvim-jdtls"
-      lzn.trigger_load "nvim-dap"
-      lzn.trigger_load "nvim-dap-virtual-text"
-    end,
-  },
-  {
-    "go.nvim",
-    lazy = true,
-    ft = { "go", "gomod" },
-    after = function()
-      require("go").setup {
-        lsp_keymaps = false,
-        lsp_cfg = false,
-        icons = false,
-        dap_debug = false,
-      }
-
-      -- see https://github.com/ray-x/go.nvim?tab=readme-ov-file#run-gofmt--goimports-on-save
-      local format_sync_grp = vim.api.nvim_create_augroup("goimports", {})
-      vim.api.nvim_create_autocmd("BufWritePre", {
-        pattern = "*.go",
-        callback = function()
-          require("go.format").goimports()
-        end,
-        group = format_sync_grp,
-      })
-
-      vim.lsp.inlay_hint.enable(false)
-    end,
-  },
-  {
-    "rustaceanvim",
-    -- already lazy, as the docs said
-    lazy = false,
-    after = function()
-      vim.api.nvim_create_autocmd("BufWritePost", {
-        pattern = "*.rs",
-        callback = function()
-          local cwd = vim.lsp.buf.list_workspace_folders()
-          if not (cwd == null) then
-            if vim.fn.filereadable(cwd[1] .. "/Dioxus.toml") == 1 then
-              local command = "dx fmt --file %"
-              vim.cmd("silent ! " .. command)
-            end
-          end
-        end,
-      })
     end,
   },
   {
@@ -872,49 +964,14 @@ local plugins = {
     end,
   },
   {
-    "roslyn.nvim",
-    lazy = true,
-    ft = { "cs", "razor", "cshtml" },
-    after = function()
-      require("roslyn").setup {}
-    end,
-  },
-  {
-    "nvim-lint",
-    lazy = true,
-    event = { "BufReadPost" },
-    after = function()
-      local lint = require "lint"
-      lint.linters_by_ft = {
-        cloudformation = { "cfn_lint" },
-        dockerfile = { "hadolint" },
-      }
-
-      local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
-      vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
-        group = lint_augroup,
-        callback = function()
-          -- Only run the linter in buffers that you can modify in order to
-          -- avoid superfluous noise, notably within the handy LSP pop-ups that
-          -- describe the hovered symbol using Markdown.
-          if vim.bo.modifiable then
-            lint.try_lint()
-          end
-        end,
-      })
-    end,
-  },
-  {
     "snipe.nvim",
     lazy = true,
     keys = { "gb" },
     after = function()
       local snipe = require "snipe"
       snipe.setup {
-        ui = {
-          position = "center",
-          open_win_override = { border = "rounded" },
-        },
+        ui = { open_win_override = { border = "rounded" } },
+        navigate = { cancel_snipe = { "<Esc>", "q" } },
       }
       vim.keymap.set("n", "gb", snipe.open_buffer_menu)
     end,
@@ -933,11 +990,7 @@ local plugins = {
       snacks.setup {
         zen = { enabled = true },
         toggles = { dim = false },
-        styles = {
-          zen = {
-            backdrop = { transparent = false },
-          },
-        },
+        styles = { zen = { backdrop = { transparent = false } } },
       }
       vim.keymap.set("n", "<leader>z", function()
         snacks.zen()
@@ -969,13 +1022,23 @@ local plugins = {
     lazy = false,
     priority = 1000,
     after = function()
+      local c = require("vscode.colors").get_colors()
       require("vscode").setup {
         underline_links = false,
+        group_overrides = { BlinkCmpMenu = { bg = c.vscPopupBack } },
       }
     end,
   },
+  {
+    "nvim-colorizer.lua",
+    lazy = true,
+    event = "BufReadPre",
+    after = function()
+      require("colorizer").setup {}
+      vim.keymap.set("n", "gtc", ":ColorizerToggle<cr>", { desc = "[g]o [t]oggle [c]olor" })
+    end,
+  },
 }
-lzn.load(plugins)
 
 vim.cmd.colorscheme "vscode"
 vim.cmd ":hi statusline guibg=NONE"
