@@ -4,9 +4,7 @@ inputs: {
   pkgs,
   lib,
   ...
-}: let
-  neovimPlugins = config.nvim-lib.pluginsFromPrefix "plugins-" inputs;
-in {
+}: {
   imports = [wlib.wrapperModules.neovim];
 
   options.nvim-lib.pluginsFromPrefix = lib.mkOption {
@@ -58,7 +56,7 @@ in {
       vim-sleuth
       vscode-nvim
 
-      neovimPlugins.lze
+      config.nvim-lib.neovimPlugins.lze
     ];
 
     specs.optional.lazy = true;
