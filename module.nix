@@ -50,13 +50,12 @@ inputs: {
     ];
 
     specs.default = with pkgs.vimPlugins; [
+      config.nvim-lib.neovimPlugins.lze
       mini-nvim
       nvim-lspconfig
       rustaceanvim
       vim-sleuth
       vscode-nvim
-
-      config.nvim-lib.neovimPlugins.lze
     ];
 
     specs.optional.lazy = true;
