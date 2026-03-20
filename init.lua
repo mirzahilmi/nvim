@@ -321,17 +321,16 @@ lze.load {
       end
     end,
   },
-  { "friendly-snippets", lazy = true },
+  { "friendly-snippets", dep_of = "luasnip" },
   {
     "luasnip",
     lazy = true,
-    before = function() lze.trigger_load "friendly-snippets" end,
+    dep_of = "blink.cmp",
     after = function() require("luasnip.loaders.from_vscode").lazy_load() end,
   },
   {
     "blink.cmp",
     event = { "InsertEnter", "CmdlineEnter" },
-    before = function() lze.trigger_load "luasnip" end,
     after = function()
       vim.lsp.config["*"] = { capabilities = require("blink.cmp").get_lsp_capabilities() }
 
@@ -356,6 +355,7 @@ lze.load {
     "nvim-jdtls",
     lazy = true,
     ft = "java",
+    dep_of = { "neotest-java" },
     after = function()
       local config = {
         cmd = {
@@ -644,10 +644,6 @@ lze.load {
       "<leader>TT",
       "<leader>ts",
     },
-    before = function()
-      lze.trigger_load "nvim-nio"
-      lze.trigger_load "nvim-treesitter"
-    end,
     after = function()
       local neotest = require "neotest"
       neotest.setup {
@@ -669,11 +665,6 @@ lze.load {
     "neotest-java",
     lazy = true,
     ft = "java",
-    before = function()
-      lze.trigger_load "nvim-jdtls"
-      lze.trigger_load "nvim-dap"
-      lze.trigger_load "nvim-dap-virtual-text"
-    end,
   },
 }
 
@@ -711,11 +702,11 @@ lze.load {
         return { winopts = { height = h, width = 0.60, row = 0.40 } }
       end)
 
-      vim.keymap.set("n", "<leader>sh", fzflua.help_tags)
+      vim.keymap.set("n", "<leader>sh", fzflua.helptags)
       vim.keymap.set("n", "<leader>sk", fzflua.keymaps)
       vim.keymap.set("n", "<leader>sm", fzflua.marks)
       vim.keymap.set("n", "gd", fzflua.lsp_definitions)
-      vim.keymap.set("n", "gri", fzflua.lsp_implementations)
+      vim.keymap.set("n", "gi", fzflua.lsp_implementations)
       vim.keymap.set(
         "n",
         "<leader>sf",
@@ -776,7 +767,7 @@ lze.load {
       )
       vim.keymap.set(
         "n",
-        "gr",
+        "<leader>gr",
         function()
           fzflua.lsp_references {
             winopts = {
@@ -936,7 +927,7 @@ lze.load {
   {
     "nvim-autopairs",
     lazy = true,
-    event = "BufReadPost",
+    event = "InsertEnter",
     after = function() require("nvim-autopairs").setup {} end,
   },
   {
@@ -980,13 +971,19 @@ lze.load {
     after = function()
       require("mini.ai").setup { n_lines = 500 }
       require("mini.surround").setup {}
+      -- motions:
+      -- [r]eplace
+      -- [m]ultiply
+      -- [x]change (swap)
+      -- [=]evaluate
+      -- [s]ort
+      require("mini.operators").setup {}
     end,
   },
   {
     "treesj",
     lazy = true,
     keys = "<space>j",
-    before = function() lze.trigger_load "nvim-treesitter" end,
     after = function()
       local treesj = require "treesj"
       treesj.setup {
