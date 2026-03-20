@@ -65,7 +65,6 @@ vim.opt.iskeyword:append "-" -- include - in words
 vim.opt.path:append "**" -- include subdirs in search
 vim.opt.selection = "inclusive" -- include last char in selection
 vim.opt.mouse = "a" -- enable mouse support
--- vim.opt.clipboard:append "unnamedplus" -- use system clipboard
 vim.opt.modifiable = true -- allow buffer modifications
 vim.opt.encoding = "utf-8" -- set encoding
 
@@ -180,6 +179,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 -- ============================================================================
 -- PLUGINS
 -- ============================================================================
+
 local lze = require "lze"
 lze.load {
   { "nvim-web-devicons", lazy = true, dep_of = { "fzf-lua", "trouble.nvim" } },
