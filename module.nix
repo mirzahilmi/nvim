@@ -70,6 +70,7 @@ inputs: {
       gitsigns-nvim
       go-nvim
       highlight-undo-nvim
+      hover-nvim
       luasnip
       neotest
       neotest-java

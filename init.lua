@@ -65,6 +65,7 @@ vim.opt.iskeyword:append "-" -- include - in words
 vim.opt.path:append "**" -- include subdirs in search
 vim.opt.selection = "inclusive" -- include last char in selection
 vim.opt.mouse = "a" -- enable mouse support
+vim.opt.mousemoveevent = true -- hover popup from mouse hover
 vim.opt.modifiable = true -- allow buffer modifications
 vim.opt.encoding = "utf-8" -- set encoding
 
@@ -429,7 +430,7 @@ lze.load {
         pattern = "*.rs",
         callback = function()
           local cwd = vim.lsp.buf.list_workspace_folders()
-          if not (cwd == null) then
+          if not (cwd == nil) then
             if vim.fn.filereadable(cwd[1] .. "/Dioxus.toml") == 1 then
               local command = "dx fmt --file %"
               vim.cmd("silent ! " .. command)
@@ -794,52 +795,16 @@ lze.load {
     end,
   },
   {
-    "noice.nvim",
+    "hover.nvim",
     lazy = true,
-    event = "DeferredUIEnter",
+    keys = { "K", "gK" },
     after = function()
-      require("noice").setup {
-        lsp = {
-          signature = { enabled = false },
-          message = { enabled = false },
-          override = {
-            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-            ["vim.lsp.util.stylize_markdown"] = true,
-          },
-        },
-        presets = {
-          lsp_doc_border = true,
-        },
-        cmdline = { enabled = false },
-        messages = { enabled = false },
-        popupmenu = { enabled = false },
-        notify = { enabled = false },
-        views = {
-          mini = {
-            position = {
-              row = -2,
-              col = "100%",
-            },
-          },
-        },
-        routes = {
-          {
-            filter = {
-              event = "lsp",
-              kind = "progress",
-              cond = function(message)
-                local client = vim.tbl_get(message.opts, "progress", "client")
-                if client == "jdtls" then
-                  local content = vim.tbl_get(message.opts, "progress", "message")
-                  return content == "Validate documents"
-                end
-                return false
-              end,
-            },
-            opts = { skip = true },
-          },
-        },
+      require("hover").config {
+        title = false,
       }
+      vim.keymap.set("n", "K", function() require("hover").open() end, { desc = "hover.nvim (open)" })
+      vim.keymap.set("n", "gK", function() require("hover").enter() end, { desc = "hover.nvim (enter)" })
+      vim.keymap.set("n", "<MouseMove>", function() require("hover").mouse() end, { desc = "hover.nvim (mouse)" })
     end,
   },
   {
@@ -861,10 +826,7 @@ lze.load {
     keys = { "gb" },
     after = function()
       local snipe = require "snipe"
-      snipe.setup {
-        ui = { open_win_override = { border = "rounded" } },
-        navigate = { cancel_snipe = { "<Esc>", "q" } },
-      }
+      snipe.setup { navigate = { cancel_snipe = { "<Esc>", "q" } } }
       vim.keymap.set("n", "gb", snipe.open_buffer_menu)
     end,
   },
