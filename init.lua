@@ -808,6 +808,12 @@ lze.load {
     end,
   },
   {
+    "fidget.nvim",
+    lazy = true,
+    event = "DeferredUIEnter",
+    after = function() require("fidget").setup {} end,
+  },
+  {
     "trouble.nvim",
     lazy = true,
     keys = "<C-t>",

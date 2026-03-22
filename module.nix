@@ -65,6 +65,7 @@ inputs: {
       cloak-nvim
       conform-nvim
       cord-nvim
+      fidget-nvim
       friendly-snippets
       fzf-lua
       gitsigns-nvim
@@ -74,7 +75,6 @@ inputs: {
       luasnip
       neotest
       neotest-java
-      noice-nvim
       nui-nvim
       nvim-autopairs
       nvim-colorizer-lua
