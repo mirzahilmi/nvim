@@ -997,4 +997,22 @@ lze.load {
       vim.keymap.set("n", "gct", ":CloakToggle<cr>", { noremap = true, silent = true })
     end,
   },
+  {
+    "persistence.nvim",
+    lazy = true,
+    event = "DeferredUIEnter",
+    after = function()
+      local persistence = require "persistence"
+      persistence.setup()
+
+      -- load the session for the current directory
+      vim.keymap.set("n", "<leader>qs", persistence.load)
+      -- select a session to load
+      vim.keymap.set("n", "<leader>qS", persistence.select)
+      -- load the last session
+      vim.keymap.set("n", "<leader>ql", function() persistence.load { last = true } end)
+      -- stop Persistence => session won't be saved on exit
+      vim.keymap.set("n", "<leader>qd", persistence.stop)
+    end,
+  },
 }

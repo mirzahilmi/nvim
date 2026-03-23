@@ -87,6 +87,7 @@ inputs: {
       nvim-tree-lua
       nvim-treesitter.withAllGrammars
       nvim-web-devicons
+      persistence-nvim
       plenary-nvim
       snacks-nvim
       snipe-nvim
