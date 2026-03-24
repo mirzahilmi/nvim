@@ -65,7 +65,6 @@ vim.opt.iskeyword:append "-" -- include - in words
 vim.opt.path:append "**" -- include subdirs in search
 vim.opt.selection = "inclusive" -- include last char in selection
 vim.opt.mouse = "a" -- enable mouse support
-vim.opt.mousemoveevent = true -- hover popup from mouse hover
 vim.opt.modifiable = true -- allow buffer modifications
 vim.opt.encoding = "utf-8" -- set encoding
 
@@ -804,7 +803,6 @@ lze.load {
       }
       vim.keymap.set("n", "K", function() require("hover").open() end, { desc = "hover.nvim (open)" })
       vim.keymap.set("n", "gK", function() require("hover").enter() end, { desc = "hover.nvim (enter)" })
-      vim.keymap.set("n", "<MouseMove>", function() require("hover").mouse() end, { desc = "hover.nvim (mouse)" })
     end,
   },
   {
@@ -965,6 +963,7 @@ lze.load {
   },
   {
     "vscode.nvim",
+    enabled = false,
     lazy = false,
     priority = 1000,
     after = function()
@@ -1013,6 +1012,11 @@ lze.load {
       vim.keymap.set("n", "<leader>ql", function() persistence.load { last = true } end)
       -- stop Persistence => session won't be saved on exit
       vim.keymap.set("n", "<leader>qd", persistence.stop)
+
+      persistence.load()
     end,
   },
 }
+
+vim.cmd.colorscheme "custom"
+vim.cmd ":hi statusline guibg=NONE"
