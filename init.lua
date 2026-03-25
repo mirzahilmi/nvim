@@ -2,8 +2,6 @@
 -- OPTIONS
 -- ============================================================================
 
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
 vim.opt.termguicolors = true
 
 vim.opt.relativenumber = true -- relative line numbers
@@ -28,7 +26,7 @@ vim.opt.incsearch = true -- show matches as you type
 vim.opt.signcolumn = "yes" -- always show a sign column
 vim.opt.colorcolumn = "100" -- show a column at 100 position chars
 vim.opt.showmatch = true -- highlights matching brackets
-vim.opt.cmdheight = 1 -- single line command line
+vim.opt.cmdheight = 1 -- embedded command line
 vim.opt.completeopt = "menuone,noinsert,noselect" -- completion options
 vim.opt.showmode = false -- do not show the mode, instead have it in statusline
 vim.opt.pumheight = 10 -- popup menu height
@@ -99,6 +97,11 @@ vim.g.rustaceanvim = {
     },
   },
 }
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+-- Disable entire built-in ftplugin mappings to avoid conflicts.
+-- See https://github.com/neovim/neovim/tree/master/runtime/ftplugin for built-in ftplugins.
+vim.g.no_plugin_maps = true
 
 vim.filetype.add { extension = { zul = "html" } }
 vim.filetype.add {
@@ -186,6 +189,7 @@ lze.load {
   { "nvim-nio", lazy = true, dep_of = { "nvim-dap", "neotest" } },
   { "plenary.nvim", lazy = true, dep_of = { "neotest", "todo-comments.nvim" } },
   { "nui.nvim", lazy = true, dep_of = { "noice.nvim" } },
+  { "friendly-snippets", lazy = true, dep_of = { "luasnip" } },
 }
 
 -- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -320,7 +324,6 @@ lze.load {
       end
     end,
   },
-  { "friendly-snippets", dep_of = "luasnip" },
   {
     "luasnip",
     lazy = true,
@@ -329,6 +332,7 @@ lze.load {
   },
   {
     "blink.cmp",
+    lazy = true,
     event = { "InsertEnter", "CmdlineEnter" },
     after = function()
       vim.lsp.config["*"] = { capabilities = require("blink.cmp").get_lsp_capabilities() }
@@ -931,7 +935,17 @@ lze.load {
     lazy = true,
     event = "BufReadPost",
     after = function()
-      require("mini.ai").setup { n_lines = 500 }
+      local spec_treesitter = require("mini.ai").gen_spec.treesitter
+      require("mini.ai").setup {
+        n_lines = 500,
+        custom_textobjects = {
+          ["c"] = spec_treesitter { a = "@class.outer", i = "@class.inner" },
+          ["/"] = spec_treesitter { a = "@comment.outer", i = "@comment.inner" },
+          ["i"] = spec_treesitter { a = "@conditional.outer", i = "@conditional.inner" },
+          ["f"] = spec_treesitter { a = "@function.outer", i = "@function.inner" },
+          ["o"] = spec_treesitter { a = "@loop.inner", i = "@loop.outer" },
+        },
+      }
       require("mini.surround").setup {}
       -- motions:
       -- [r]eplace
@@ -1012,8 +1026,6 @@ lze.load {
       vim.keymap.set("n", "<leader>ql", function() persistence.load { last = true } end)
       -- stop Persistence => session won't be saved on exit
       vim.keymap.set("n", "<leader>qd", persistence.stop)
-
-      persistence.load()
     end,
   },
 }

@@ -51,8 +51,9 @@ inputs: {
 
     specs.default = with pkgs.vimPlugins; [
       config.nvim-lib.neovimPlugins.lze
-      mini-nvim
       nvim-lspconfig
+      nvim-treesitter.withAllGrammars
+      nvim-treesitter-textobjects
       rustaceanvim
       vim-sleuth
       vscode-nvim
@@ -73,6 +74,7 @@ inputs: {
       highlight-undo-nvim
       hover-nvim
       luasnip
+      mini-nvim
       neotest
       neotest-java
       nui-nvim
@@ -85,7 +87,6 @@ inputs: {
       nvim-lint
       nvim-nio
       nvim-tree-lua
-      nvim-treesitter.withAllGrammars
       nvim-web-devicons
       persistence-nvim
       plenary-nvim
