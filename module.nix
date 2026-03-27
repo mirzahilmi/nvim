@@ -36,16 +36,16 @@ inputs: {
   config = {
     settings.config_directory = lib.generators.mkLuaInline "vim.fn.stdpath('config')";
     extraPackages = with pkgs; [
-      alejandra
+      alejandra # Nix formatter
       fzf
-      hadolint
-      lemminx
+      hadolint # Dockerfile linter
+      lemminx # XML LSP
       lua-language-server
       luajitPackages.jsregexp
-      nixd
-      python313Packages.cfn-lint
+      nixd # Nix LSP
+      python313Packages.cfn-lint # CloudFormation linter
       ripgrep
-      stylua
+      stylua # Lua formatter
       yaml-language-server
     ];
 
@@ -56,6 +56,7 @@ inputs: {
       nvim-treesitter-textobjects
       rustaceanvim
       vim-sleuth
+      vim-unimpaired
       vscode-nvim
     ];
 
