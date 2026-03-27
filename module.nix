@@ -75,6 +75,7 @@ inputs: {
       highlight-undo-nvim
       hover-nvim
       luasnip
+      marks-nvim
       mini-nvim
       neotest
       neotest-java

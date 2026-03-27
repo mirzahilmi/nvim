@@ -15,6 +15,7 @@ vim.opt.softtabstop = 2 -- soft tab stop not tabs on tab/backspace
 vim.opt.expandtab = true -- use spaces instead of tabs
 vim.opt.smartindent = true -- smart auto-indent
 vim.opt.autoindent = true -- copy indent from current line
+vim.opt.breakindent = true -- enable break indent
 vim.opt.list = true
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
@@ -54,6 +55,7 @@ vim.opt.timeoutlen = 500 -- timeout duration
 vim.opt.ttimeoutlen = 0 -- key code timeout
 vim.opt.autoread = true -- auto-reload changes if outside of neovim
 vim.opt.autowrite = false -- do not auto-save
+vim.opt.confirm = true -- raise a dialog asking if you wish to save the current file
 
 vim.opt.hidden = true -- allow hidden buffers
 vim.opt.errorbells = false -- no error sounds
@@ -841,7 +843,7 @@ lze.load {
   {
     "snacks.nvim",
     lazy = true,
-    event = "UIEnter",
+    event = "DeferredUIEnter",
     after = function()
       local snacks = require "snacks"
       snacks.setup {
@@ -866,6 +868,26 @@ lze.load {
         renderer = { group_empty = true },
       }
       vim.keymap.set("n", "<leader>e", function() require("nvim-tree.api").tree.toggle() end, { desc = "Toggle NvimTree" })
+    end,
+  },
+  {
+    "cloak.nvim",
+    lazy = true,
+    ft = {
+      "sh", -- ft for *.env files, perhaps set custom ft for these?
+    },
+    after = function()
+      require("cloak").setup {
+        patterns = {
+          {
+            file_pattern = "*.env",
+            cloak_pattern = "=.+",
+            replace = nil,
+          },
+          -- TODO: configures json yaml secrets
+        },
+      }
+      vim.keymap.set("n", "gct", ":CloakToggle<cr>", { noremap = true, silent = true })
     end,
   },
 }
@@ -991,26 +1013,6 @@ lze.load {
     end,
   },
   {
-    "cloak.nvim",
-    lazy = true,
-    ft = {
-      "sh", -- ft for *.env files, perhaps set custom ft for these?
-    },
-    after = function()
-      require("cloak").setup {
-        patterns = {
-          {
-            file_pattern = "*.env",
-            cloak_pattern = "=.+",
-            replace = nil,
-          },
-          -- TODO: configures json yaml secrets
-        },
-      }
-      vim.keymap.set("n", "gct", ":CloakToggle<cr>", { noremap = true, silent = true })
-    end,
-  },
-  {
     "persistence.nvim",
     lazy = true,
     event = "DeferredUIEnter",
@@ -1027,6 +1029,12 @@ lze.load {
       -- stop Persistence => session won't be saved on exit
       vim.keymap.set("n", "<leader>qd", persistence.stop)
     end,
+  },
+  {
+    "marks.nvim",
+    lazy = true,
+    event = "DeferredUIEnter",
+    after = function() require("marks").setup {} end,
   },
 }
 
