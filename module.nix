@@ -34,6 +34,8 @@ inputs: {
   };
 
   config = {
+    # package = inputs.nixpkgs-master.legacyPackages.${pkgs.stdenv.hostPlatform.system}.neovim;
+
     settings.config_directory = lib.generators.mkLuaInline "vim.fn.stdpath('config')";
     extraPackages = with pkgs; [
       alejandra # Nix formatter
