@@ -56,7 +56,6 @@ inputs: {
       nvim-treesitter-textobjects
       rustaceanvim
       vim-sleuth
-      vim-unimpaired
       vscode-nvim
     ];
 
