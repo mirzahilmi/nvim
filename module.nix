@@ -97,7 +97,6 @@ inputs: {
       snipe-nvim
       todo-comments-nvim
       treesj
-      trouble-nvim
 
       (roslyn-nvim.overrideAttrs {
         src = pkgs.fetchFromGitHub {

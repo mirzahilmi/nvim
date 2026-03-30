@@ -143,10 +143,6 @@ vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower win
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 -- see https://www.reddit.com/r/neovim/comments/1fq0y8u/comment/lp2ez92
 vim.keymap.set({ "x" }, "y", '"+y', { noremap = true, silent = true })
--- see https://stackoverflow.com/a/5562707
-vim.keymap.set("n", "<leader>n", ":bnext<cr>", { desc = "Goto next buffer" })
-vim.keymap.set("n", "<leader>p", ":bprevious<cr>", { desc = "Goto previous buffer" })
-vim.keymap.set("n", "<leader>d", ":bdelete<cr>", { desc = "Delete buffer" })
 vim.keymap.set("n", "<Esc>", function() vim.cmd "nohlsearch" end, { silent = true })
 
 -- ============================================================================
@@ -818,19 +814,6 @@ lze.load {
     after = function() require("fidget").setup {} end,
   },
   {
-    "trouble.nvim",
-    lazy = true,
-    keys = "<C-t>",
-    after = function()
-      require("trouble").setup {
-        auto_preview = false,
-        warn_no_results = false,
-        -- win = { wo = { wrap = true } },
-      }
-      vim.keymap.set("n", "<C-t>", ":Trouble diagnostics toggle<CR>", { noremap = true, silent = true })
-    end,
-  },
-  {
     "snipe.nvim",
     lazy = true,
     keys = { "gb" },
@@ -1039,4 +1022,3 @@ lze.load {
 }
 
 vim.cmd.colorscheme "custom"
-vim.cmd ":hi statusline guibg=NONE"
