@@ -95,7 +95,6 @@ inputs: {
       persistence-nvim
       plenary-nvim
       snacks-nvim
-      snipe-nvim
       todo-comments-nvim
       treesj
 
