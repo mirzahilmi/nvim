@@ -57,6 +57,7 @@ inputs: {
       nvim-treesitter.withAllGrammars
       nvim-treesitter-textobjects
       rustaceanvim
+      vim-monokai
       vim-sleuth
       vscode-nvim
     ];
