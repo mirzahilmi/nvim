@@ -58,7 +58,6 @@ inputs: {
       nvim-treesitter-textobjects
       rustaceanvim
       vim-monokai
-      vim-sleuth
       vscode-nvim
     ];
 
@@ -77,6 +76,7 @@ inputs: {
       go-nvim
       highlight-undo-nvim
       hover-nvim
+      indent-o-matic
       marks-nvim
       mini-nvim
       neotest
