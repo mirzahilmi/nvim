@@ -143,7 +143,28 @@ vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower win
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 -- see https://www.reddit.com/r/neovim/comments/1fq0y8u/comment/lp2ez92
 vim.keymap.set({ "x" }, "y", '"+y', { noremap = true, silent = true })
-vim.keymap.set("n", "<Esc>", function() vim.cmd "nohlsearch" end, { silent = true })
+vim.keymap.set("n", "<Esc>", function()
+  vim.cmd "nohlsearch"
+  vim.snippet.stop()
+end, { silent = true })
+-- thanks to https://github.com/pawelgrzybek/dotfiles/blob/master/nvim/lua/keymaps.lua#L92-L107
+-- incremental outter selection treesitter/lsp
+vim.keymap.set({ "n", "x", "o" }, "<A-o>", function()
+  if vim.treesitter.get_parser(nil, nil, { error = false }) then
+    require("vim.treesitter._select").select_parent(vim.v.count1)
+  else
+    vim.lsp.buf.selection_range(vim.v.count1)
+  end
+end, { desc = "Select parent treesitter node or outer incremental lsp selections" })
+-- incremental outter selection treesitter/lsp
+vim.keymap.set({ "n", "x", "o" }, "<A-i>", function()
+  if vim.treesitter.get_parser(nil, nil, { error = false }) then
+    require("vim.treesitter._select").select_child(vim.v.count1)
+  else
+    vim.lsp.buf.selection_range(-vim.v.count1)
+  end
+end, { desc = "Select child treesitter node or inner incremental lsp selections" })
+vim.keymap.set("n", "<C-t>", vim.diagnostic.setqflist)
 
 -- ============================================================================
 -- AUTOCMDS
@@ -187,7 +208,7 @@ lze.load {
   { "nvim-nio", lazy = true, dep_of = { "nvim-dap", "neotest" } },
   { "plenary.nvim", lazy = true, dep_of = { "neotest", "todo-comments.nvim" } },
   { "nui.nvim", lazy = true, dep_of = { "noice.nvim" } },
-  { "friendly-snippets", lazy = true, dep_of = { "luasnip" } },
+  { "friendly-snippets", lazy = true, dep_of = { "blink.cmp" } },
 }
 
 -- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -264,8 +285,14 @@ local servers = {
   vtsls = {
     settings = {
       typescript = {
-        format = { semicolons = "insert" },
-        preferences = { quoteStyle = "double" },
+        preferences = {
+          quoteStyle = "double",
+        },
+      },
+      javascript = {
+        preferences = {
+          quoteStyle = "double",
+        },
       },
     },
   },
@@ -323,12 +350,6 @@ lze.load {
     end,
   },
   {
-    "luasnip",
-    lazy = true,
-    dep_of = "blink.cmp",
-    after = function() require("luasnip.loaders.from_vscode").lazy_load() end,
-  },
-  {
     "blink.cmp",
     lazy = true,
     event = { "InsertEnter", "CmdlineEnter" },
@@ -336,10 +357,11 @@ lze.load {
       vim.lsp.config["*"] = { capabilities = require("blink.cmp").get_lsp_capabilities() }
 
       require("blink.cmp").setup {
-        sources = { default = { "lsp", "path", "buffer", "snippets", "omni" } },
+        sources = {
+          default = { "lsp", "path", "buffer", "snippets", "omni" },
+          providers = { snippets = { opts = { extended_filetypes = { typescriptreact = { "html" } } } } },
+        },
         fuzzy = { implementation = "prefer_rust" },
-        -- see https://www.reddit.com/r/neovim/comments/1hmuwaz/comment/m421fcn
-        snippets = { preset = "luasnip" },
         appearance = { nerd_font_variant = "mono" },
         completion = {
           list = { selection = { auto_insert = false } },
@@ -556,7 +578,7 @@ lze.load {
 }
 
 -- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
--- Debugger
+-- Debugger (DAP)
 -- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 lze.load {
   {
@@ -567,9 +589,13 @@ lze.load {
       local dapview = require "dap-view"
       dapview.setup {
         auto_toggle = true,
-        winbar = { controls = { enabled = true } },
+        winbar = {
+          controls = { enabled = true },
+          sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl", "console" },
+        },
       }
       vim.keymap.set("n", "<F7>", dapview.toggle)
+      vim.keymap.set("n", "<leader>dw", dapview.add_expr)
     end,
   },
   {
@@ -579,6 +605,7 @@ lze.load {
     after = function()
       local dap = require "dap"
 
+      -- Go
       -- see https://codeberg.org/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#go-using-delve-directly
       dap.adapters.delve = function(callback, config)
         if config.mode == "remote" and config.request == "attach" then
@@ -599,6 +626,17 @@ lze.load {
           }
         end
       end
+      -- TypeScript (and JavaScript also i think)
+      -- bug https://github.com/mfussenegger/nvim-dap/issues/1492
+      dap.adapters["pwa-node"] = {
+        type = "server",
+        host = "localhost",
+        port = "${port}",
+        executable = {
+          command = "js-debug",
+          args = { "${port}" },
+        },
+      }
 
       vim.api.nvim_set_hl(0, "DapBreak", { fg = "#e51400" })
       vim.api.nvim_set_hl(0, "DapStop", { fg = "#ffcc00" })
@@ -692,6 +730,19 @@ lze.load {
           },
         },
       }
+
+      -- - "gra" (Normal and Visual mode) is mapped to |vim.lsp.buf.code_action()|
+      -- - "gri" is mapped to |vim.lsp.buf.implementation()|
+      -- - "grn" is mapped to |vim.lsp.buf.rename()|
+      -- - "grr" is mapped to |vim.lsp.buf.references()|
+      -- - "grt" is mapped to |vim.lsp.buf.type_definition()|
+      -- - "grx" is mapped to |vim.lsp.codelens.run()|
+      -- - "gO" is mapped to |vim.lsp.buf.document_symbol()|
+      -- - CTRL-S (Insert mode) is mapped to |vim.lsp.buf.signature_help()|
+      -- - |v_an| and |v_in| fall back to LSP |vim.lsp.buf.selection_range()| if
+      --   treesitter is not active.
+      -- - |gx| handles `textDocument/documentLink`. Example: with gopls, invoking gx
+      --   on "os" in this Go code will open documentation externally: >
       fzflua.register_ui_select(function(_, items)
         local min_h, max_h = 0.15, 0.70
         local h = (#items + 4) / vim.o.lines
@@ -703,11 +754,10 @@ lze.load {
         return { winopts = { height = h, width = 0.60, row = 0.40 } }
       end)
 
+      -- Keymaps
       vim.keymap.set("n", "<leader>sh", fzflua.helptags)
       vim.keymap.set("n", "<leader>sk", fzflua.keymaps)
       vim.keymap.set("n", "<leader>sm", fzflua.marks)
-      vim.keymap.set("n", "gd", fzflua.lsp_definitions)
-      vim.keymap.set("n", "gi", fzflua.lsp_implementations)
       vim.keymap.set(
         "n",
         "<leader>sf",
@@ -755,7 +805,22 @@ lze.load {
       )
       vim.keymap.set(
         "n",
-        "<leader>ds",
+        "<leader><leader>",
+        function()
+          fzflua.buffers {
+            formatter = "path.filename_first",
+            previewer = false,
+            winopts = { width = 0.3, height = 0.8 },
+          }
+        end
+      )
+
+      -- LSP Keymaps
+      vim.keymap.set("n", "gd", fzflua.lsp_definitions)
+      -- vim.keymap.set("n", "gi", fzflua.lsp_implementations)
+      vim.keymap.set(
+        "n",
+        "gO",
         function()
           fzflua.lsp_document_symbols {
             previewer = false,
@@ -764,11 +829,12 @@ lze.load {
               height = 0.7,
             },
           }
-        end
+        end,
+        { noremap = true, silent = true }
       )
       vim.keymap.set(
         "n",
-        "<leader>gr",
+        "grr",
         function()
           fzflua.lsp_references {
             winopts = {
@@ -778,11 +844,12 @@ lze.load {
               },
             },
           }
-        end
+        end,
+        { noremap = true, silent = true }
       )
       vim.keymap.set(
-        { "n", "v" },
-        "<leader>ca",
+        "n",
+        "gra",
         function()
           fzflua.lsp_code_actions {
             previewer = false,
@@ -791,7 +858,8 @@ lze.load {
               height = 0.7,
             },
           }
-        end
+        end,
+        { noremap = true, silent = true }
       )
     end,
   },
@@ -814,23 +882,16 @@ lze.load {
     after = function() require("fidget").setup {} end,
   },
   {
-    "snipe.nvim",
-    lazy = true,
-    keys = { "gb" },
-    after = function()
-      local snipe = require "snipe"
-      snipe.setup { navigate = { cancel_snipe = { "<Esc>", "q" } } }
-      vim.keymap.set("n", "gb", snipe.open_buffer_menu)
-    end,
-  },
-  {
     "snacks.nvim",
     lazy = true,
     event = "DeferredUIEnter",
     after = function()
       local snacks = require "snacks"
       snacks.setup {
-        zen = { enabled = true },
+        zen = {
+          enabled = true,
+          toggles = { dim = false },
+        },
         toggles = { dim = false },
         styles = { zen = { backdrop = { transparent = false } } },
       }
@@ -840,7 +901,10 @@ lze.load {
   {
     "nvim-tree.lua",
     lazy = true,
-    keys = { "<leader>e" },
+    keys = {
+      "<leader>e",
+      "<leader>E",
+    },
     after = function()
       require("nvim-tree").setup {
         view = {
@@ -851,6 +915,7 @@ lze.load {
         renderer = { group_empty = true },
       }
       vim.keymap.set("n", "<leader>e", function() require("nvim-tree.api").tree.toggle() end, { desc = "Toggle NvimTree" })
+      vim.keymap.set("n", "<leader>E", function() require("nvim-tree.api").tree.toggle { current_window = true } end, { desc = "Toggle NvimTree" })
     end,
   },
   {
@@ -872,6 +937,20 @@ lze.load {
       }
       vim.keymap.set("n", "gct", ":CloakToggle<cr>", { noremap = true, silent = true })
     end,
+  },
+  {
+    "nvim.undotree",
+    lazy = true,
+    event = "DeferredUIEnter",
+    after = function() vim.keymap.set("n", "<leader>u", require("undotree").open) end,
+  },
+  {
+    "blink.indent",
+    -- enabled = false,
+    lazy = true,
+    event = "DeferredUIEnter",
+    -- ft = { "javascriptreact", "typescriptreact" },
+    after = function() require("blink.indent").setup { scope = { enabled = false } } end,
   },
 }
 
@@ -958,7 +1037,7 @@ lze.load {
       -- [x]change (swap)
       -- [=]evaluate
       -- [s]ort
-      require("mini.operators").setup {}
+      require("mini.operators").setup { replace = { prefix = "cr" } }
     end,
   },
   {
@@ -989,16 +1068,18 @@ lze.load {
       local c = require("vscode.colors").get_colors()
       require("vscode").setup {
         underline_links = false,
-        group_overrides = { BlinkCmpMenu = { bg = c.vscPopupBack } },
+        group_overrides = {
+          BlinkCmpMenu = { bg = c.vscPopupBack },
+          StatusLine = { link = "Normal" },
+          StatusLineNC = { link = "Normal" },
+        },
       }
       vim.cmd.colorscheme "vscode"
-      vim.cmd ":hi statusline guibg=NONE"
     end,
   },
   {
     "persistence.nvim",
-    lazy = true,
-    event = "DeferredUIEnter",
+    lazy = false,
     after = function()
       local persistence = require "persistence"
       persistence.setup()
@@ -1016,9 +1097,18 @@ lze.load {
   {
     "marks.nvim",
     lazy = true,
-    event = "DeferredUIEnter",
+    event = "BufReadPost",
     after = function() require("marks").setup {} end,
+  },
+  {
+    "indent-o-matic",
+    lazy = true,
+    event = "DeferredUIEnter",
+    after = function() require("indent-o-matic").setup { standard_widths = { 2, 4 } } end,
   },
 }
 
-vim.cmd.colorscheme "custom"
+vim.cmd.colorscheme "monokai"
+vim.api.nvim_set_hl(0, "StatusLine", { link = "Normal" })
+vim.api.nvim_set_hl(0, "StatusLineNC", { link = "StatusLine" })
+vim.api.nvim_set_hl(0, "debugPC", { bg = "#4C4C19" })
