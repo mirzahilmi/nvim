@@ -11,6 +11,8 @@ vim.opt.sidescrolloff = 10 -- keep 10 lines to left/right of cursor
 
 vim.opt.tabstop = 2 -- tabwidth
 vim.opt.shiftwidth = 2 -- indent width
+vim.opt.numberwidth = 1
+vim.opt.textwidth = 90 -- text width until wrapped with `gw` motion
 vim.opt.softtabstop = 2 -- soft tab stop not tabs on tab/backspace
 vim.opt.expandtab = true -- use spaces instead of tabs
 vim.opt.smartindent = true -- smart auto-indent
@@ -196,6 +198,12 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 
     pcall(vim.api.nvim_win_set_cursor, 0, last_pos)
   end,
+})
+
+-- No auto continue comments on new line
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("no_auto_comment", {}),
+  callback = function() vim.opt_local.formatoptions:remove { "c", "r", "o" } end,
 })
 
 -- ============================================================================
@@ -547,6 +555,7 @@ lze.load {
           nix = { "alejandra" },
           tex = { "latexindent" },
           html = { "biome" },
+          typescript = { "biome" },
         },
       }
       vim.keymap.set("n", "<leader>f", function() conform.format { async = true, lsp_format = "fallback" } end)
@@ -591,7 +600,8 @@ lze.load {
         auto_toggle = true,
         winbar = {
           controls = { enabled = true },
-          sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl", "console" },
+          sections = { "console", "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },
+          default_section = "console",
         },
       }
       vim.keymap.set("n", "<F7>", dapview.toggle)
@@ -848,7 +858,7 @@ lze.load {
         { noremap = true, silent = true }
       )
       vim.keymap.set(
-        "n",
+        { "n", "v" },
         "gra",
         function()
           fzflua.lsp_code_actions {
@@ -972,6 +982,7 @@ lze.load {
           changedelete = { text = "~" },
         },
       }
+      vim.opt.signcolumn = "yes:1" -- add this
     end,
   },
   {
@@ -1037,7 +1048,10 @@ lze.load {
       -- [x]change (swap)
       -- [=]evaluate
       -- [s]ort
-      require("mini.operators").setup { replace = { prefix = "cr" } }
+      require("mini.operators").setup {
+        replace = { prefix = "cr" },
+        exchange = { prefix = "cx" },
+      }
     end,
   },
   {
@@ -1085,9 +1099,9 @@ lze.load {
       persistence.setup()
 
       -- load the session for the current directory
-      vim.keymap.set("n", "<leader>qs", persistence.load)
+      vim.keymap.set("n", "<leader>s", persistence.load)
       -- select a session to load
-      vim.keymap.set("n", "<leader>qS", persistence.select)
+      vim.keymap.set("n", "<leader>S", persistence.select)
       -- load the last session
       vim.keymap.set("n", "<leader>ql", function() persistence.load { last = true } end)
       -- stop Persistence => session won't be saved on exit
