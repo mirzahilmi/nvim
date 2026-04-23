@@ -12,7 +12,7 @@ vim.opt.sidescrolloff = 10 -- keep 10 lines to left/right of cursor
 vim.opt.tabstop = 2 -- tabwidth
 vim.opt.shiftwidth = 2 -- indent width
 vim.opt.numberwidth = 1
-vim.opt.textwidth = 90 -- text width until wrapped with `gw` motion
+vim.opt.textwidth = 80 -- text width until wrapped with `gw` motion
 vim.opt.softtabstop = 2 -- soft tab stop not tabs on tab/backspace
 vim.opt.expandtab = true -- use spaces instead of tabs
 vim.opt.smartindent = true -- smart auto-indent
@@ -615,6 +615,11 @@ lze.load {
     after = function()
       local dap = require "dap"
 
+      -- remap .vscode/launch.json location to dap.jsonc
+      -- .vscode folder in a project are too sussy baka
+      local getconfig = require("dap.ext.vscode").getconfigs
+      require("dap.ext.vscode").getconfigs = function() return getconfig(vim.fn.getcwd() .. "/dap.jsonc") end
+
       -- Go
       -- see https://codeberg.org/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#go-using-delve-directly
       dap.adapters.delve = function(callback, config)
@@ -686,6 +691,7 @@ lze.load {
 lze.load {
   {
     "neotest",
+    enabled = false,
     lazy = true,
     keys = {
       "<leader>tt",
@@ -982,7 +988,6 @@ lze.load {
           changedelete = { text = "~" },
         },
       }
-      vim.opt.signcolumn = "yes:1" -- add this
     end,
   },
   {
@@ -1112,7 +1117,27 @@ lze.load {
     "marks.nvim",
     lazy = true,
     event = "BufReadPost",
-    after = function() require("marks").setup {} end,
+    after = function()
+      -- mx              Set mark x
+      -- m,              Set the next available alphabetical (lowercase) mark
+      -- m;              Toggle the next available mark at the current line
+      -- dmx             Delete mark x
+      -- dm-             Delete all marks on the current line
+      -- dm<space>       Delete all marks in the current buffer
+      -- m]              Move to next mark
+      -- m[              Move to previous mark
+      -- m:              Preview mark. This will prompt you for a specific mark to
+      --                 preview; press <cr> to preview the next mark.
+
+      -- m[0-9]          Add a bookmark from bookmark group[0-9].
+      -- dm[0-9]         Delete all bookmarks from bookmark group[0-9].
+      -- m}              Move to the next bookmark having the same type as the bookmark under
+      --                 the cursor. Works across buffers.
+      -- m{              Move to the previous bookmark having the same type as the bookmark under
+      --                 the cursor. Works across buffers.
+      -- dm=             Delete the bookmark under the cursor.
+      require("marks").setup {}
+    end,
   },
   {
     "indent-o-matic",
@@ -1126,3 +1151,5 @@ vim.cmd.colorscheme "monokai"
 vim.api.nvim_set_hl(0, "StatusLine", { link = "Normal" })
 vim.api.nvim_set_hl(0, "StatusLineNC", { link = "StatusLine" })
 vim.api.nvim_set_hl(0, "debugPC", { bg = "#4C4C19" })
+
+require("vim._core.ui2").enable {}
