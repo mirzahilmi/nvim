@@ -79,8 +79,6 @@ inputs: {
       indent-o-matic
       marks-nvim
       mini-nvim
-      neotest
-      neotest-java
       nui-nvim
       nvim-autopairs
       nvim-colorizer-lua

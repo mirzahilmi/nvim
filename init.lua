@@ -213,8 +213,8 @@ vim.api.nvim_create_autocmd("FileType", {
 local lze = require "lze"
 lze.load {
   { "nvim-web-devicons", lazy = true, dep_of = { "fzf-lua", "trouble.nvim" } },
-  { "nvim-nio", lazy = true, dep_of = { "nvim-dap", "neotest" } },
-  { "plenary.nvim", lazy = true, dep_of = { "neotest", "todo-comments.nvim" } },
+  { "nvim-nio", lazy = true, dep_of = { "nvim-dap" } },
+  { "plenary.nvim", lazy = true, dep_of = { "todo-comments.nvim" } },
   { "nui.nvim", lazy = true, dep_of = { "noice.nvim" } },
   { "friendly-snippets", lazy = true, dep_of = { "blink.cmp" } },
 }
@@ -386,7 +386,6 @@ lze.load {
     "nvim-jdtls",
     lazy = true,
     ft = "java",
-    dep_of = { "neotest-java" },
     after = function()
       local config = {
         cmd = {
@@ -682,44 +681,6 @@ lze.load {
       -- load nvim-dap-view after dap configured
       lze.trigger_load { "nvim-dap-view" }
     end,
-  },
-}
-
--- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
--- Test runner
--- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-lze.load {
-  {
-    "neotest",
-    enabled = false,
-    lazy = true,
-    keys = {
-      "<leader>tt",
-      "<leader>td",
-      "<leader>TT",
-      "<leader>ts",
-    },
-    after = function()
-      local neotest = require "neotest"
-      neotest.setup {
-        adapters = {
-          require "neotest-java" {},
-        },
-      }
-      vim.keymap.set("n", "<leader>tt", function() neotest.run.run(vim.fn.expand "%") end, { noremap = true })
-      vim.keymap.set("n", "<leader>td", function() neotest.run.run { strategy = "dap" } end, { noremap = true })
-      vim.keymap.set("n", "<leader>TT", function()
-        ---@diagnostic disable-next-line: undefined-field
-        neotest.run.run(vim.uv.cwd())
-      end, { noremap = true })
-      vim.keymap.set("n", "<leader>ts", neotest.summary.toggle, { noremap = true })
-      vim.keymap.set("n", "<leader>tu", neotest.output_panel.toggle, { noremap = true })
-    end,
-  },
-  {
-    "neotest-java",
-    lazy = true,
-    ft = "java",
   },
 }
 
@@ -1080,7 +1041,6 @@ lze.load {
   },
   {
     "vscode.nvim",
-    enabled = false,
     lazy = false,
     priority = 1000,
     after = function()
