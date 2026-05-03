@@ -89,6 +89,7 @@ inputs: {
       nvim-lint
       nvim-nio
       nvim-tree-lua
+      nvim-ts-autotag
       nvim-web-devicons
       persistence-nvim
       plenary-nvim
