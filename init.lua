@@ -233,6 +233,7 @@ local servers = {
   gopls = {},
   biome = {},
   elp = {},
+  tailwindcss = {},
   qmlls = { cmd = { "qmlls", "-E" } },
   nixd = {
     settings = {
@@ -290,19 +291,56 @@ local servers = {
       },
     },
   },
-  vtsls = {
+  tsgo = {
+    on_attach = function(client, _) client.server_capabilities.codeActionProvider = false end,
     settings = {
       typescript = {
+        format = { enable = false },
         preferences = {
           quoteStyle = "double",
-        },
-      },
-      javascript = {
-        preferences = {
-          quoteStyle = "double",
+          -- Thanks to https://github.com/LazyVim/LazyVim/discussions/1124#discussioncomment-10237303
+          includeCompletionsForModuleExports = true,
+          includeCompletionsForImportStatements = true,
+          importModuleSpecifier = "non-relative",
         },
       },
     },
+  },
+  -- complementary lsp with tsgo solely for better code action, remove later
+  -- when tsgo code action become better
+  vtsls = {
+    on_attach = function(client, _)
+      -- taken from https://github.com/sergiornelas/nvim/blob/261d3b8bb633e0c9a7253d9b5243d9e985a56f5f/lua/plugins/lsp/capabilities/tsgo.lua
+      -- based on https://www.reddit.com/r/neovim/comments/1rxc29w/comment/ob8varr
+
+      local caps = client.server_capabilities
+
+      -- UX / interaction
+      caps.hoverProvider = false
+      caps.completionProvider = false
+      caps.definitionProvider = false
+      caps.declarationProvider = false
+      caps.implementationProvider = false
+      caps.referencesProvider = false
+      caps.renameProvider = false
+      caps.signatureHelpProvider = false
+      caps.documentHighlightProvider = false
+
+      -- symbols / navegation
+      caps.documentSymbolProvider = false
+      caps.workspaceSymbolProvider = false
+
+      -- format / tokens
+      caps.documentFormattingProvider = false
+      caps.documentRangeFormattingProvider = false
+      caps.semanticTokensProvider = nil
+
+      -- other
+      caps.typeDefinitionProvider = false
+      caps.callHierarchyProvider = false
+      caps.selectionRangeProvider = false
+      caps.inlayHintProvider = false
+    end,
   },
 }
 
@@ -312,6 +350,11 @@ lze.load {
     -- see https://www.reddit.com/r/neovim/comments/1nb0w5k/comment/nczrv70
     lazy = false,
     after = function()
+      for server_name, config in pairs(servers) do
+        vim.lsp.config(server_name, config)
+        vim.lsp.enable(server_name)
+      end
+
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(event)
           vim.keymap.set(
@@ -350,11 +393,6 @@ lze.load {
           }
         end,
       })
-
-      for server_name, config in pairs(servers) do
-        vim.lsp.config(server_name, config)
-        vim.lsp.enable(server_name)
-      end
     end,
   },
   {
@@ -537,7 +575,13 @@ lze.load {
       conform.setup {
         notify_on_error = false,
         format_after_save = function(bufnr)
-          local disable_filetypes = { c = true, cpp = true, java = true }
+          local disable_filetypes = {
+            c = true,
+            cpp = true,
+            java = true,
+            typescript = true,
+            typescriptreact = true,
+          }
           local lsp_format_opt
           if disable_filetypes[vim.bo[bufnr].filetype] then
             lsp_format_opt = "never"
@@ -555,6 +599,7 @@ lze.load {
           tex = { "latexindent" },
           html = { "biome" },
           typescript = { "biome" },
+          typescriptreact = { "biome" },
         },
       }
       vim.keymap.set("n", "<leader>f", function() conform.format { async = true, lsp_format = "fallback" } end)
@@ -1104,6 +1149,12 @@ lze.load {
     lazy = true,
     event = "DeferredUIEnter",
     after = function() require("indent-o-matic").setup { standard_widths = { 2, 4 } } end,
+  },
+  {
+    "nvim-ts-autotag",
+    lazy = true,
+    ft = { "html", "javascriptreact", "typescriptreact" },
+    after = function() require("nvim-ts-autotag").setup {} end,
   },
 }
 
