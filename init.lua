@@ -38,7 +38,15 @@ vim.opt.winblend = 0 -- floating window transparency
 vim.opt.conceallevel = 0 -- do not hide markup
 vim.opt.concealcursor = "" -- do not hide cursorline in markup
 vim.opt.synmaxcol = 300 -- syntax highlighting limit
-vim.opt.fillchars = { eob = " " } -- hide "~" on empty lines
+vim.opt.fillchars = {
+  eob = " ", -- hide "~" on empty lines
+  -- fold things, thanks to https://www.reddit.com/r/neovim/comments/1t3aftx/comment/ojvnyqj
+  fold = " ",
+  foldopen = "▾",
+  foldclose = "▸",
+  foldinner = " ",
+  foldsep = " ",
+}
 
 local undodir = vim.fn.expand "~/.vim/undodir"
 if
@@ -71,6 +79,7 @@ vim.opt.modifiable = true -- allow buffer modifications
 vim.opt.encoding = "utf-8" -- set encoding
 
 -- Folding: requires treesitter available at runtime; safe fallback if not
+vim.opt.foldenable = true -- enable fold yk
 vim.opt.foldmethod = "expr" -- use expression for folding
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()" -- use treesitter for folding
 vim.opt.foldlevel = 99 -- start with all folds open
@@ -145,10 +154,13 @@ vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower win
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 -- see https://www.reddit.com/r/neovim/comments/1fq0y8u/comment/lp2ez92
 vim.keymap.set({ "x" }, "y", '"+y', { noremap = true, silent = true })
-vim.keymap.set("n", "<Esc>", function()
-  vim.cmd "nohlsearch"
-  vim.snippet.stop()
-end, { silent = true })
+vim.keymap.set("n", "<Esc>", function() vim.cmd "nohlsearch" end, { silent = true })
+-- thanks to https://github.com/saghen/blink.cmp/discussions/2218#discussioncomment-14803834
+-- clear snippet placeholder highlight on exit to normal mode
+vim.keymap.set({ "i", "s" }, "<ESC>", function()
+  if vim.snippet then vim.snippet.stop() end
+  return "<ESC>"
+end, { expr = true })
 -- thanks to https://github.com/pawelgrzybek/dotfiles/blob/master/nvim/lua/keymaps.lua#L92-L107
 -- incremental outter selection treesitter/lsp
 vim.keymap.set({ "n", "x", "o" }, "<A-o>", function()
@@ -400,8 +412,6 @@ lze.load {
     lazy = true,
     event = { "InsertEnter", "CmdlineEnter" },
     after = function()
-      vim.lsp.config["*"] = { capabilities = require("blink.cmp").get_lsp_capabilities() }
-
       require("blink.cmp").setup {
         sources = {
           default = { "lsp", "path", "buffer", "snippets", "omni" },
@@ -932,6 +942,7 @@ lze.load {
         view = {
           width = 35,
           relativenumber = true,
+          side = "right",
         },
         filters = { dotfiles = false },
         renderer = { group_empty = true },
