@@ -1008,12 +1008,6 @@ lze.load {
     end,
   },
   {
-    "nvim-autopairs",
-    lazy = true,
-    event = "InsertEnter",
-    after = function() require("nvim-autopairs").setup {} end,
-  },
-  {
     "todo-comments.nvim",
     lazy = true,
     event = "BufReadPost",
@@ -1036,22 +1030,13 @@ lze.load {
     cmd = "CellularAutomaton",
   },
   {
-    "cord-nvim",
-    enabled = false,
-    lazy = true,
-    event = "UIEnter",
-    after = function()
-      require("cord").setup {
-        editor = { tooltip = "Neovim" },
-        idle = { enabled = false },
-      }
-    end,
-  },
-  {
     "mini.nvim",
     lazy = true,
     event = "BufReadPost",
     after = function()
+      require("mini.surround").setup {}
+      require("mini.pairs").setup {}
+
       local spec_treesitter = require("mini.ai").gen_spec.treesitter
       require("mini.ai").setup {
         n_lines = 500,
@@ -1063,7 +1048,6 @@ lze.load {
           ["o"] = spec_treesitter { a = "@loop.inner", i = "@loop.outer" },
         },
       }
-      require("mini.surround").setup {}
       -- motions:
       -- [r]eplace
       -- [m]ultiply

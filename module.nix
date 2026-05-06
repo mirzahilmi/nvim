@@ -68,7 +68,6 @@ inputs: {
       cellular-automaton-nvim
       cloak-nvim
       conform-nvim
-      cord-nvim
       fidget-nvim
       friendly-snippets
       fzf-lua
@@ -80,7 +79,6 @@ inputs: {
       marks-nvim
       mini-nvim
       nui-nvim
-      nvim-autopairs
       nvim-colorizer-lua
       nvim-dap
       nvim-dap-view
