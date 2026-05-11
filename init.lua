@@ -110,11 +110,13 @@ vim.g.rustaceanvim = {
     },
   },
 }
+
+-- see https://github.com/nvim-tree/nvim-tree.lua/wiki/Open-At-Startup#netrw-hijacking
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
--- Disable entire built-in ftplugin mappings to avoid conflicts.
--- See https://github.com/neovim/neovim/tree/master/runtime/ftplugin for built-in ftplugins.
-vim.g.no_plugin_maps = true
+-- -- Disable entire built-in ftplugin mappings to avoid conflicts.
+-- -- See https://github.com/neovim/neovim/tree/master/runtime/ftplugin for built-in ftplugins.
+-- vim.g.no_plugin_maps = true
 
 vim.filetype.add { extension = { zul = "html" } }
 vim.filetype.add {
@@ -947,7 +949,7 @@ lze.load {
         filters = { dotfiles = false },
         renderer = { group_empty = true },
       }
-      vim.keymap.set("n", "<leader>e", function() require("nvim-tree.api").tree.toggle() end, { desc = "Toggle NvimTree" })
+      vim.keymap.set("n", "<leader>e", function() require("nvim-tree.api").tree.toggle { find_file = true } end, { desc = "Toggle NvimTree" })
       vim.keymap.set("n", "<leader>E", function() require("nvim-tree.api").tree.toggle { current_window = true } end, { desc = "Toggle NvimTree" })
     end,
   },
