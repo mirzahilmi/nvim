@@ -65,6 +65,7 @@ inputs: {
     specs.optional.data = with pkgs.vimPlugins; [
       blink-cmp
       blink-indent
+      blink-pairs
       cellular-automaton-nvim
       cloak-nvim
       conform-nvim

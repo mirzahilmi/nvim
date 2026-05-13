@@ -1037,7 +1037,6 @@ lze.load {
     event = "BufReadPost",
     after = function()
       require("mini.surround").setup {}
-      require("mini.pairs").setup {}
 
       local spec_treesitter = require("mini.ai").gen_spec.treesitter
       require("mini.ai").setup {
@@ -1152,6 +1151,16 @@ lze.load {
     lazy = true,
     ft = { "html", "javascriptreact", "typescriptreact" },
     after = function() require("nvim-ts-autotag").setup {} end,
+  },
+  {
+    "blink.pairs",
+    lazy = true,
+    event = { "InsertEnter", "CmdlineEnter" },
+    after = function()
+      require("blink.pairs").setup {
+        highlights = { enabled = false },
+      }
+    end,
   },
 }
 
