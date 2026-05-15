@@ -17,48 +17,17 @@
   } @ inputs: let
     forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.platforms.all;
     module = nixpkgs.lib.modules.importApply ./module.nix inputs;
-    wrapper = wrappers.lib.evalModule module;
+    wrapper = extraModule: wrappers.lib.evalModules {modules = [module extraModule];};
   in {
-    overlays = {
-      neovim = final: prev: {neovim = wrapper.config.wrap {pkgs = final;};};
-      default = self.overlays.neovim;
-    };
-    wrapperModules = {
-      neovim = module;
-      default = self.wrapperModules.neovim;
-    };
-    wrappers = {
-      neovim = wrapper.config;
-      default = self.wrappers.neovim;
-    };
-
     packages = forAllSystems (
       system: let
         pkgs = import nixpkgs {inherit system;};
       in {
-        neovim = wrapper.config.wrap {inherit pkgs;};
+        neovim = (wrapper {}).config.wrap {inherit pkgs;};
         default = self.packages.${system}.neovim;
+        neovim-static = (wrapper {config.settings.config_directory = nixpkgs.lib.mkForce ./.;})
+          .config.wrap {inherit pkgs;};
       }
     );
-
-    nixosModules = {
-      default = self.nixosModules.neovim;
-      neovim = wrappers.lib.mkInstallModule {
-        name = "neovim";
-        value = module;
-      };
-    };
-
-    homeModules = {
-      default = self.homeModules.neovim;
-      neovim = wrappers.lib.mkInstallModule {
-        name = "neovim";
-        value = module;
-        loc = [
-          "home"
-          "packages"
-        ];
-      };
-    };
   };
 }
