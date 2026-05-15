@@ -117,6 +117,8 @@ vim.g.loaded_netrwPlugin = 1
 -- -- Disable entire built-in ftplugin mappings to avoid conflicts.
 -- -- See https://github.com/neovim/neovim/tree/master/runtime/ftplugin for built-in ftplugins.
 -- vim.g.no_plugin_maps = true
+-- see https://github.com/neovim/neovim/issues/14433#issuecomment-1183682651
+vim.g.omni_sql_default_compl_type = "syntax"
 
 vim.filetype.add { extension = { zul = "html" } }
 vim.filetype.add {
