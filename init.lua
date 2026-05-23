@@ -62,7 +62,27 @@ vim.opt.undofile = true -- do create an undo file
 vim.opt.undodir = undodir -- set the undo directory
 vim.opt.updatetime = 300 -- faster completion
 vim.opt.timeoutlen = 500 -- timeout duration
-vim.opt.ttimeoutlen = 0 -- key code timeout
+
+-- Disabled due to: (Explained from Gemini)
+-- 1. The Query: When Neovim starts, it sends invisible queries to your terminal to
+-- ask for its capabilities (like cursor shape, background color, and terminal
+-- type).
+--
+-- 2. The Response: Windows Terminal responds back via standard input using ANSI
+-- escape sequences, which usually look something like ESC [ ? 62 ; c or ESC [ 0 q.
+--
+-- 3. The ttimeoutlen Trap: ttimeoutlen controls how many milliseconds Neovim waits
+-- after receiving an ESC key to see if it is part of a larger escape sequence.
+-- By setting it to 0, Neovim immediately processes the ESC key, terminating the
+-- sequence early.
+--
+-- 4. The "0" Insertion: Because the sequence was broken, Neovim treats the remaining
+-- characters from the terminal's response (e.g., [, 0, q, c) as literal
+-- keystrokes typed by you. One of these characters triggers a Normal mode
+-- command (like c for change) which throws you into Insert mode, and the
+-- subsequent 0 gets typed directly into your buffer.
+-- vim.opt.ttimeoutlen = 0 -- key code timeout
+
 vim.opt.autoread = true -- auto-reload changes if outside of neovim
 vim.opt.autowrite = false -- do not auto-save
 vim.opt.confirm = true -- raise a dialog asking if you wish to save the current file
@@ -128,21 +148,19 @@ vim.filetype.add {
 }
 
 -- see https://www.reddit.com/r/neovim/comments/1byy8lu/copying_to_the_windows_clipboard_from_wsl2
+-- idk why but in order to work it need both copy and paste
 if vim.fn.has "wsl" == 1 then
   vim.g.clipboard = {
-    name = "win_clipboard",
+    name = "WslClipboard",
     copy = {
       ["+"] = "clip.exe",
-      ["*"] = "clip.exe",
     },
     paste = {
-      ["+"] = "powershell.exe Get-Clipboard",
-      ["*"] = "powershell.exe Get-Clipboard",
+      ["+"] = 'powershell.exe -NoLogo -NoProfile -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
     },
     cache_enabled = 0,
   }
-  vim.keymap.set({ "n", "v" }, "y", '"+y', { noremap = true, silent = true })
-  vim.keymap.set({ "n", "v" }, "p", '"+p', { noremap = true, silent = true })
+  vim.keymap.set({ "v" }, "y", '"+y', { noremap = true, silent = true })
 end
 
 -- ============================================================================
