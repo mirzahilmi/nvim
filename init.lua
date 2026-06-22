@@ -1027,26 +1027,6 @@ lze.load {
     end,
   },
   {
-    "cloak.nvim",
-    lazy = true,
-    ft = {
-      "sh", -- ft for *.env files, perhaps set custom ft for these?
-    },
-    after = function()
-      require("cloak").setup {
-        patterns = {
-          {
-            file_pattern = "*.env",
-            cloak_pattern = "=.+",
-            replace = nil,
-          },
-          -- TODO: configures json yaml secrets
-        },
-      }
-      vim.keymap.set("n", "gct", ":CloakToggle<cr>", { noremap = true, silent = true })
-    end,
-  },
-  {
     "nvim.undotree",
     lazy = true,
     event = "DeferredUIEnter",
@@ -1100,11 +1080,6 @@ lze.load {
     end,
   },
   {
-    "cellular-automaton.nvim",
-    lazy = true,
-    cmd = "CellularAutomaton",
-  },
-  {
     "mini.nvim",
     lazy = true,
     event = "BufReadPost",
@@ -1154,23 +1129,6 @@ lze.load {
     after = function() require("highlight-undo").setup {} end,
   },
   {
-    "vscode.nvim",
-    lazy = false,
-    priority = 1000,
-    after = function()
-      local c = require("vscode.colors").get_colors()
-      require("vscode").setup {
-        underline_links = false,
-        group_overrides = {
-          BlinkCmpMenu = { bg = c.vscPopupBack },
-          StatusLine = { link = "Normal" },
-          StatusLineNC = { link = "Normal" },
-        },
-      }
-      vim.cmd.colorscheme "vscode"
-    end,
-  },
-  {
     "persistence.nvim",
     lazy = false,
     after = function()
@@ -1185,32 +1143,6 @@ lze.load {
       vim.keymap.set("n", "<leader>ql", function() persistence.load { last = true } end)
       -- stop Persistence => session won't be saved on exit
       vim.keymap.set("n", "<leader>qd", persistence.stop)
-    end,
-  },
-  {
-    "marks.nvim",
-    lazy = true,
-    event = "BufReadPost",
-    after = function()
-      -- mx              Set mark x
-      -- m,              Set the next available alphabetical (lowercase) mark
-      -- m;              Toggle the next available mark at the current line
-      -- dmx             Delete mark x
-      -- dm-             Delete all marks on the current line
-      -- dm<space>       Delete all marks in the current buffer
-      -- m]              Move to next mark
-      -- m[              Move to previous mark
-      -- m:              Preview mark. This will prompt you for a specific mark to
-      --                 preview; press <cr> to preview the next mark.
-
-      -- m[0-9]          Add a bookmark from bookmark group[0-9].
-      -- dm[0-9]         Delete all bookmarks from bookmark group[0-9].
-      -- m}              Move to the next bookmark having the same type as the bookmark under
-      --                 the cursor. Works across buffers.
-      -- m{              Move to the previous bookmark having the same type as the bookmark under
-      --                 the cursor. Works across buffers.
-      -- dm=             Delete the bookmark under the cursor.
-      require("marks").setup {}
     end,
   },
   {

@@ -58,7 +58,6 @@ inputs: {
       nvim-treesitter-textobjects
       rustaceanvim
       vim-monokai
-      vscode-nvim
     ];
 
     specs.optional.lazy = true;
@@ -66,8 +65,6 @@ inputs: {
       blink-cmp
       blink-indent
       blink-pairs
-      cellular-automaton-nvim
-      cloak-nvim
       conform-nvim
       fidget-nvim
       friendly-snippets
@@ -77,7 +74,6 @@ inputs: {
       highlight-undo-nvim
       hover-nvim
       indent-o-matic
-      marks-nvim
       mini-nvim
       nui-nvim
       nvim-colorizer-lua
