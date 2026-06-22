@@ -174,6 +174,12 @@ vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left wind
 vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+-- Resize the current window using hjkl motions.
+vim.keymap.set("n", "<A-k>", "<Cmd>resize -2<CR>", { desc = "Increase window height" })
+vim.keymap.set("n", "<A-j>", "<Cmd>resize +2<CR>", { desc = "Decrease window height" })
+vim.keymap.set("n", "<A-l>", "<Cmd>vertical resize -2<CR>", { desc = "Increase window width" })
+vim.keymap.set("n", "<A-h>", "<Cmd>vertical resize +2<CR>", { desc = "Decrease window width" })
+vim.keymap.set("n", "<A-0>", "<C-w>=", { desc = "Equalize all window sizes" })
 -- see https://www.reddit.com/r/neovim/comments/1fq0y8u/comment/lp2ez92
 vim.keymap.set({ "x" }, "y", '"+y', { noremap = true, silent = true })
 vim.keymap.set("n", "<Esc>", function() vim.cmd "nohlsearch" end, { silent = true })
