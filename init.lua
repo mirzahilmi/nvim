@@ -616,18 +616,51 @@ lze.load {
     keys = "<leader>f",
     after = function()
       local conform = require "conform"
+
+      local js_formatter_cache = {}
+      local function detect_js_formatter(bufnr)
+        local name = vim.api.nvim_buf_get_name(bufnr)
+        local dir = name ~= "" and vim.fs.dirname(name) or vim.fn.getcwd()
+        if js_formatter_cache[dir] then return js_formatter_cache[dir] end
+
+        local biome = vim.fs.find({ "biome.json", "biome.jsonc" }, { upward = true, path = dir })[1]
+        if biome then
+          js_formatter_cache[dir] = { "biome" }
+          return js_formatter_cache[dir]
+        end
+
+        local prettier = vim.fs.find({
+          ".prettierrc",
+          ".prettierrc.json",
+          ".prettierrc.yaml",
+          ".prettierrc.yml",
+          ".prettierrc.js",
+          ".prettierrc.cjs",
+          ".prettierrc.mjs",
+          ".prettierrc.toml",
+          "prettier.config.js",
+          "prettier.config.cjs",
+          "prettier.config.mjs",
+        }, { upward = true, path = dir })[1]
+        if prettier then
+          js_formatter_cache[dir] = { "prettier" }
+          return js_formatter_cache[dir]
+        end
+
+        js_formatter_cache[dir] = {}
+        return js_formatter_cache[dir]
+      end
+
       conform.setup {
         notify_on_error = false,
         format_after_save = function(bufnr)
-          local disable_filetypes = {
+          local disabled_filetypes = {
             c = true,
             cpp = true,
             java = true,
-            typescript = true,
-            typescriptreact = true,
           }
           local lsp_format_opt
-          if disable_filetypes[vim.bo[bufnr].filetype] then
+          if disabled_filetypes[vim.bo[bufnr].filetype] then
             lsp_format_opt = "never"
           else
             lsp_format_opt = "fallback"
@@ -642,11 +675,19 @@ lze.load {
           nix = { "alejandra" },
           tex = { "latexindent" },
           html = { "biome" },
-          typescript = { "biome" },
-          typescriptreact = { "biome" },
+          javascript = detect_js_formatter,
+          javascriptreact = detect_js_formatter,
+          typescript = detect_js_formatter,
+          typescriptreact = detect_js_formatter,
+          vue = detect_js_formatter,
+          svelte = detect_js_formatter,
+          css = detect_js_formatter,
+          scss = detect_js_formatter,
+          json = detect_js_formatter,
+          jsonc = detect_js_formatter,
         },
       }
-      vim.keymap.set("n", "<leader>f", function() conform.format { async = true, lsp_format = "fallback" } end)
+      vim.keymap.set("n", "<leader>f", function() conform.format { async = true } end)
     end,
   },
   {
