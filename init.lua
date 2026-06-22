@@ -275,29 +275,35 @@ local servers = {
   elp = {},
   tailwindcss = {},
   qmlls = { cmd = { "qmlls", "-E" } },
-  nixd = {
-    settings = {
-      nixd = {
-        nixpkgs = {
-          expr = [[
-                  let
-                    flake = builtins.getFlake "/home/mirza/nixfilesv2/";
-                  in import flake.inputs.nixpkgs {
-                    overlays = builtins.attrValues flake.outputs.overlays;
-                  }
-                ]],
-        },
-        options = {
-          nixos = {
-            expr = '(builtins.getFlake "/home/mirza/nixfiles2").nixosConfigurations."t4nix".options',
+  nixd = (function()
+    local nixfiles_flake = vim.env.HOME .. "/nixfilesv2"
+    return {
+      settings = {
+        nixd = {
+          nixpkgs = {
+            expr = string.format(
+              [[
+                let
+                  flake = builtins.getFlake "%s";
+                in import flake.inputs.nixpkgs {
+                  overlays = builtins.attrValues flake.outputs.overlays;
+                }
+              ]],
+              nixfiles_flake
+            ),
           },
-          home_manager = {
-            expr = '(builtins.getFlake "/home/mirza/nixfiles2").homeConfigurations."mirza@t4nix".options',
+          options = {
+            nixos = {
+              expr = string.format('(builtins.getFlake "%s").nixosConfigurations."t4nix".options', nixfiles_flake),
+            },
+            home_manager = {
+              expr = string.format('(builtins.getFlake "%s").homeConfigurations."mirza@t4nix".options', nixfiles_flake),
+            },
           },
         },
       },
-    },
-  },
+    }
+  end)(),
   lua_ls = {
     settings = {
       Lua = {
