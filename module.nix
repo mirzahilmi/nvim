@@ -86,6 +86,7 @@ inputs: {
       nvim-tree-lua
       nvim-ts-autotag
       nvim-web-devicons
+      obsidian-nvim
       persistence-nvim
       plenary-nvim
       snacks-nvim

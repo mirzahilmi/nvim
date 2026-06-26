@@ -1019,7 +1019,7 @@ lze.load {
           relativenumber = true,
           side = "right",
         },
-        filters = { dotfiles = false },
+        filters = { dotfiles = false, git_ignored = false },
         renderer = { group_empty = true },
       }
       vim.keymap.set("n", "<leader>e", function() require("nvim-tree.api").tree.toggle { find_file = true } end, { desc = "Toggle NvimTree" })
@@ -1165,6 +1165,32 @@ lze.load {
       require("blink.pairs").setup {
         highlights = { enabled = false },
       }
+    end,
+  },
+  {
+    "obsidian.nvim",
+    lazy = true,
+    on_plugin = "fzf-lua",
+    after = function()
+      require("lze").trigger_load { "blink.cmp" }
+      require("obsidian").setup {
+        workspaces = {
+          { name = "notes", path = "~/notes" },
+        },
+        daily_notes = {
+          folder = "daily",
+          date_format = "%Y-%m-%d",
+        },
+        picker = { name = "fzf-lua" },
+        completion = { blink = true, min_chars = 2 },
+        ui = { enable = false },
+        legacy_commands = false,
+      }
+
+      vim.keymap.set("n", "<leader>od", "<Cmd>Obsidian today<CR>", { desc = "[O]bsidian [d]aily note" })
+      vim.keymap.set("n", "<leader>on", "<Cmd>Obsidian new<CR>", { desc = "[O]bsidian [n]ew note" })
+      vim.keymap.set("n", "<leader>os", "<Cmd>Obsidian search<CR>", { desc = "[O]bsidian [s]earch" })
+      vim.keymap.set("n", "<leader>oo", "<Cmd>Obsidian quick_switch<CR>", { desc = "[O]bsidian [o]pen note" })
     end,
   },
 }
