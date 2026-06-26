@@ -1031,7 +1031,13 @@ lze.load {
         renderer = { group_empty = true },
       }
       vim.keymap.set("n", "<leader>e", function() require("nvim-tree.api").tree.toggle { find_file = true } end, { desc = "Toggle NvimTree" })
-      vim.keymap.set("n", "<leader>E", function() require("nvim-tree.api").tree.toggle { current_window = true } end, { desc = "Toggle NvimTree" })
+      vim.keymap.set("n", "<leader>E", function()
+        if vim.bo.filetype == "NvimTree" then
+          vim.cmd "buffer #"
+        else
+          require("nvim-tree.api").tree.toggle { current_window = true }
+        end
+      end, { desc = "Toggle NvimTree" })
     end,
   },
   {
