@@ -206,7 +206,15 @@ vim.keymap.set({ "n", "x", "o" }, "<A-i>", function()
     vim.lsp.buf.selection_range(-vim.v.count1)
   end
 end, { desc = "Select child treesitter node or inner incremental lsp selections" })
-vim.keymap.set("n", "<C-t>", vim.diagnostic.setqflist)
+vim.keymap.set("n", "<C-t>", function()
+  for _, win in ipairs(vim.fn.getwininfo()) do
+    if win.quickfix == 1 then
+      vim.cmd "cclose"
+      return
+    end
+  end
+  vim.diagnostic.setqflist()
+end)
 
 -- ============================================================================
 -- AUTOCMDS
