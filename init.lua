@@ -896,7 +896,7 @@ lze.load {
             winopts = {
               preview = {
                 layout = "vertical",
-                vertical = "down:40%",
+                vertical = "down:70%",
               },
             },
             formatter = "path.filename_first",
@@ -912,7 +912,7 @@ lze.load {
               width = 0.6,
               preview = {
                 layout = "vertical",
-                vertical = "up:60%",
+                vertical = "down:60%",
               },
             },
           }
@@ -925,7 +925,7 @@ lze.load {
           fzflua.buffers {
             formatter = "path.filename_first",
             previewer = false,
-            winopts = { width = 0.3, height = 0.8 },
+            winopts = { width = 0.4, height = 0.8 },
           }
         end
       )
@@ -969,8 +969,8 @@ lze.load {
           fzflua.lsp_code_actions {
             previewer = false,
             winopts = {
-              width = 0.5,
-              height = 0.7,
+              width = 0.4,
+              height = 0.3,
             },
           }
         end,
