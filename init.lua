@@ -1018,7 +1018,6 @@ lze.load {
     lazy = true,
     keys = {
       "<leader>e",
-      "<leader>E",
     },
     after = function()
       require("nvim-tree").setup {
@@ -1029,9 +1028,10 @@ lze.load {
         },
         filters = { dotfiles = false, git_ignored = false },
         renderer = { group_empty = true },
+        actions = { open_file = { quit_on_open = true } },
       }
-      vim.keymap.set("n", "<leader>e", function() require("nvim-tree.api").tree.toggle { find_file = true } end, { desc = "Toggle NvimTree" })
-      vim.keymap.set("n", "<leader>E", function()
+      -- vim.keymap.set("n", "<leader>e", function() require("nvim-tree.api").tree.toggle { find_file = true } end, { desc = "Toggle NvimTree" })
+      vim.keymap.set("n", "<leader>e", function()
         if vim.bo.filetype == "NvimTree" then
           vim.cmd "buffer #"
         else
@@ -1206,6 +1206,12 @@ lze.load {
       vim.keymap.set("n", "<leader>os", "<Cmd>Obsidian search<CR>", { desc = "[O]bsidian [s]earch" })
       vim.keymap.set("n", "<leader>oo", "<Cmd>Obsidian quick_switch<CR>", { desc = "[O]bsidian [o]pen note" })
     end,
+  },
+  {
+    "git-conflict.nvim",
+    lazy = true,
+    event = "DeferredUIEnter",
+    after = function() require("git-conflict").setup {} end,
   },
 }
 

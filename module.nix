@@ -69,6 +69,7 @@ inputs: {
       fidget-nvim
       friendly-snippets
       fzf-lua
+      git-conflict-nvim
       gitsigns-nvim
       go-nvim
       highlight-undo-nvim
