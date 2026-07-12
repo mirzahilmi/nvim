@@ -334,17 +334,6 @@ local servers = {
       },
     },
   },
-  texlab = {
-    settings = {
-      texlab = {
-        build = { onSave = true, forwardSearchAfter = true },
-        forwardSearch = {
-          executable = "zathura",
-          args = { "--synctex-forward", "%l:1:%f", "%p" },
-        },
-      },
-    },
-  },
   tsgo = {
     on_attach = function(client, _) client.server_capabilities.codeActionProvider = false end,
     settings = {
@@ -602,8 +591,11 @@ lze.load {
 
           -- check if parser exists and load it
           if not vim.treesitter.language.add(language) then return end
-          -- enables syntax highlighting and other treesitter features
-          vim.treesitter.start(buf, language)
+          -- enables syntax highlighting (skip filetypes with dedicated syntax plugins)
+          local ts_highlight_disabled = { "tex" }
+          if not vim.tbl_contains(ts_highlight_disabled, filetype) then
+            vim.treesitter.start(buf, language)
+          end
 
           -- enables treesitter based folds
           -- for more info on folds see `:help folds`
@@ -681,7 +673,6 @@ lze.load {
         formatters_by_ft = {
           lua = { "stylua" },
           nix = { "alejandra" },
-          tex = { "latexindent" },
           html = { "biome" },
           javascript = detect_js_formatter,
           javascriptreact = detect_js_formatter,
@@ -1171,6 +1162,7 @@ lze.load {
     ft = { "html", "javascriptreact", "typescriptreact" },
     after = function() require("nvim-ts-autotag").setup {} end,
   },
+
   {
     "blink.pairs",
     lazy = true,
@@ -1184,6 +1176,7 @@ lze.load {
   {
     "obsidian.nvim",
     lazy = true,
+    enabled = false,
     on_plugin = "fzf-lua",
     after = function()
       require("lze").trigger_load { "blink.cmp" }
@@ -1212,6 +1205,29 @@ lze.load {
     lazy = true,
     event = "DeferredUIEnter",
     after = function() require("git-conflict").setup {} end,
+  },
+  {
+    -- ┌─────────┬────────────────────┬───────────────────────────────────┐
+    -- │ Keybind │ You actually press │           What it does            │
+    -- ├─────────┼────────────────────┼───────────────────────────────────┤
+    -- │ \ll     │ Space l l          │ Start/stop continuous compilation │
+    -- ├─────────┼────────────────────┼───────────────────────────────────┤
+    -- │ \lv     │ Space l v          │ View PDF in Zathura               │
+    -- ├─────────┼────────────────────┼───────────────────────────────────┤
+    -- │ \le     │ Space l e          │ View compilation errors           │
+    -- ├─────────┼────────────────────┼───────────────────────────────────┤
+    -- │ \lk     │ Space l k          │ Stop compilation                  │
+    -- ├─────────┼────────────────────┼───────────────────────────────────┤
+    -- │ \lc     │ Space l c          │ Clean auxiliary files             │
+    -- ├─────────┼────────────────────┼───────────────────────────────────┤
+    -- │ \lt     │ Space l t          │ Table of contents                 │
+    -- └─────────┴────────────────────┴───────────────────────────────────┘
+    "vimtex",
+    lazy = false,
+    after = function()
+      vim.g.vimtex_view_method = "zathura"
+      vim.g.vimtex_compiler_method = "latexmk"
+    end,
   },
 }
 

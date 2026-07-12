@@ -93,6 +93,7 @@ inputs: {
       snacks-nvim
       todo-comments-nvim
       treesj
+      vimtex
 
       (roslyn-nvim.overrideAttrs {
         src = pkgs.fetchFromGitHub {
