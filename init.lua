@@ -1027,6 +1027,7 @@ lze.load {
           relativenumber = true,
           side = "right",
         },
+        update_focused_file = { enable = true, update_root = false },
         filters = { dotfiles = false, git_ignored = false },
         renderer = { group_empty = true },
         actions = { open_file = { quit_on_open = true } },
