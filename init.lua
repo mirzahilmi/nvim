@@ -1215,7 +1215,16 @@ lze.load {
     "git-conflict.nvim",
     lazy = true,
     event = "DeferredUIEnter",
-    after = function() require("git-conflict").setup {} end,
+    after = function()
+      require("git-conflict").setup { default_mappings = true, default_commands = true, disable_diagnostics = false }
+
+      vim.api.nvim_set_hl(0, "GitConflictCurrent", { bg = "#1e3a3a" })
+      vim.api.nvim_set_hl(0, "GitConflictIncoming", { bg = "#1e3a2a" })
+      vim.api.nvim_set_hl(0, "GitConflictAncestor", { bg = "#3a2a3a" })
+      vim.api.nvim_set_hl(0, "GitConflictCurrentLabel", { bg = "#2a4a4a", bold = true })
+      vim.api.nvim_set_hl(0, "GitConflictIncomingLabel", { bg = "#2a4a3a", bold = true })
+      vim.api.nvim_set_hl(0, "GitConflictAncestorLabel", { bg = "#4a3a4a", bold = true })
+    end,
   },
   {
     -- ┌─────────┬────────────────────┬───────────────────────────────────┐
