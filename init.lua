@@ -258,6 +258,16 @@ vim.api.nvim_create_autocmd("FileType", {
 -- PLUGINS
 -- ============================================================================
 
+-- True when running under WSL. Use in a plugin spec as
+-- `enabled = not_wsl` to skip loading that plugin under WSL.
+local function is_wsl()
+  if vim.env.WSL_DISTRO_NAME or vim.env.WSL_INTEROP then return true end
+  local ok, osrelease = pcall(vim.fn.readfile, "/proc/sys/kernel/osrelease")
+  return ok and osrelease[1] and osrelease[1]:lower():find "microsoft" ~= nil
+end
+
+local function not_wsl() return not is_wsl() end
+
 local lze = require "lze"
 lze.load {
   { "nvim-web-devicons", lazy = true, dep_of = { "fzf-lua", "trouble.nvim" } },
@@ -1223,6 +1233,8 @@ lze.load {
     -- │ \lt     │ Space l t          │ Table of contents                 │
     -- └─────────┴────────────────────┴───────────────────────────────────┘
     "vimtex",
+    -- Disable under WSL (no native zathura PDF viewer there)
+    enabled = not_wsl,
     lazy = false,
     after = function()
       vim.g.vimtex_view_method = "zathura"
