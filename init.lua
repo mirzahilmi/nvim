@@ -603,9 +603,7 @@ lze.load {
           if not vim.treesitter.language.add(language) then return end
           -- enables syntax highlighting (skip filetypes with dedicated syntax plugins)
           local ts_highlight_disabled = { "tex" }
-          if not vim.tbl_contains(ts_highlight_disabled, filetype) then
-            vim.treesitter.start(buf, language)
-          end
+          if not vim.tbl_contains(ts_highlight_disabled, filetype) then vim.treesitter.start(buf, language) end
 
           -- enables treesitter based folds
           -- for more info on folds see `:help folds`
@@ -1187,7 +1185,6 @@ lze.load {
   {
     "obsidian.nvim",
     lazy = true,
-    enabled = false,
     on_plugin = "fzf-lua",
     after = function()
       require("lze").trigger_load { "blink.cmp" }
