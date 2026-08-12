@@ -160,7 +160,7 @@ if vim.fn.has "wsl" == 1 then
     },
     cache_enabled = 0,
   }
-  vim.keymap.set({ "v" }, "y", '"+y', { noremap = true, silent = true })
+  vim.keymap.set({ "v" }, "y", '"+y', { noremap = true, silent = true, desc = "clipboard: yank selection to the Windows system clipboard (WSL, clip.exe)" })
 end
 
 -- ============================================================================
@@ -168,27 +168,27 @@ end
 -- ============================================================================
 
 -- Exit terminal mode in the builtin terminal.
-vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "terminal: exit terminal insert mode back to normal mode" })
 -- Keybinds to make split navigation easier.
-vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "window: move focus to the split on the left" })
+vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "window: move focus to the split on the right" })
+vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "window: move focus to the split below" })
+vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "window: move focus to the split above" })
 -- Resize the current window using hjkl motions.
-vim.keymap.set("n", "<A-k>", "<Cmd>resize -2<CR>", { desc = "Increase window height" })
-vim.keymap.set("n", "<A-j>", "<Cmd>resize +2<CR>", { desc = "Decrease window height" })
-vim.keymap.set("n", "<A-l>", "<Cmd>vertical resize -2<CR>", { desc = "Increase window width" })
-vim.keymap.set("n", "<A-h>", "<Cmd>vertical resize +2<CR>", { desc = "Decrease window width" })
-vim.keymap.set("n", "<A-0>", "<C-w>=", { desc = "Equalize all window sizes" })
+vim.keymap.set("n", "<A-k>", "<Cmd>resize -2<CR>", { desc = "window: shrink current split height by 2 rows" })
+vim.keymap.set("n", "<A-j>", "<Cmd>resize +2<CR>", { desc = "window: grow current split height by 2 rows" })
+vim.keymap.set("n", "<A-l>", "<Cmd>vertical resize -2<CR>", { desc = "window: shrink current split width by 2 columns" })
+vim.keymap.set("n", "<A-h>", "<Cmd>vertical resize +2<CR>", { desc = "window: grow current split width by 2 columns" })
+vim.keymap.set("n", "<A-0>", "<C-w>=", { desc = "window: equalize the size of every split" })
 -- see https://www.reddit.com/r/neovim/comments/1fq0y8u/comment/lp2ez92
-vim.keymap.set({ "x" }, "y", '"+y', { noremap = true, silent = true })
-vim.keymap.set("n", "<Esc>", function() vim.cmd "nohlsearch" end, { silent = true })
+vim.keymap.set({ "x" }, "y", '"+y', { noremap = true, silent = true, desc = "clipboard: yank selection to the system clipboard register" })
+vim.keymap.set("n", "<Esc>", function() vim.cmd "nohlsearch" end, { silent = true, desc = "search: clear the search match highlight (nohlsearch)" })
 -- thanks to https://github.com/saghen/blink.cmp/discussions/2218#discussioncomment-14803834
 -- clear snippet placeholder highlight on exit to normal mode
 vim.keymap.set({ "i", "s" }, "<ESC>", function()
   if vim.snippet then vim.snippet.stop() end
   return "<ESC>"
-end, { expr = true })
+end, { expr = true, desc = "blink.cmp: stop the active snippet session and leave insert mode" })
 -- thanks to https://github.com/pawelgrzybek/dotfiles/blob/master/nvim/lua/keymaps.lua#L92-L107
 -- incremental outter selection treesitter/lsp
 vim.keymap.set({ "n", "x", "o" }, "<A-o>", function()
@@ -197,7 +197,7 @@ vim.keymap.set({ "n", "x", "o" }, "<A-o>", function()
   else
     vim.lsp.buf.selection_range(vim.v.count1)
   end
-end, { desc = "Select parent treesitter node or outer incremental lsp selections" })
+end, { desc = "nvim-treesitter: expand selection to the parent node, falling back to lsp selection range" })
 -- incremental outter selection treesitter/lsp
 vim.keymap.set({ "n", "x", "o" }, "<A-i>", function()
   if vim.treesitter.get_parser(nil, nil, { error = false }) then
@@ -205,7 +205,7 @@ vim.keymap.set({ "n", "x", "o" }, "<A-i>", function()
   else
     vim.lsp.buf.selection_range(-vim.v.count1)
   end
-end, { desc = "Select child treesitter node or inner incremental lsp selections" })
+end, { desc = "nvim-treesitter: shrink selection to the child node, falling back to lsp selection range" })
 vim.keymap.set("n", "<C-t>", function()
   for _, win in ipairs(vim.fn.getwininfo()) do
     if win.quickfix == 1 then
@@ -214,7 +214,7 @@ vim.keymap.set("n", "<C-t>", function()
     end
   end
   vim.diagnostic.setqflist()
-end)
+end, { desc = "diagnostic: toggle the quickfix list of all workspace diagnostics" })
 
 -- ============================================================================
 -- AUTOCMDS
@@ -414,7 +414,7 @@ lze.load {
             "n",
             "<leader>th",
             function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end,
-            { desc = "[T]oggle Inlay [H]ints" }
+            { desc = "nvim-lspconfig: toggle lsp inlay hints in this buffer" }
           )
 
           vim.diagnostic.config {
@@ -621,7 +621,9 @@ lze.load {
     lazy = true,
     event = "BufWritePre",
     cmd = "ConformInfo",
-    keys = "<leader>f",
+    -- desc is duplicated on the real keymap below: this one labels the lze lazy
+    -- load stub so the mapping is still searchable before conform.nvim loads
+    keys = { { "<leader>f", desc = "conform.nvim: format the current buffer asynchronously" } },
     after = function()
       local conform = require "conform"
 
@@ -694,7 +696,7 @@ lze.load {
           jsonc = detect_js_formatter,
         },
       }
-      vim.keymap.set("n", "<leader>f", function() conform.format { async = true } end)
+      vim.keymap.set("n", "<leader>f", function() conform.format { async = true } end, { desc = "conform.nvim: format the current buffer asynchronously" })
     end,
   },
   {
@@ -740,8 +742,8 @@ lze.load {
           default_section = "console",
         },
       }
-      vim.keymap.set("n", "<F7>", dapview.toggle)
-      vim.keymap.set("n", "<leader>dw", dapview.add_expr)
+      vim.keymap.set("n", "<F7>", dapview.toggle, { desc = "nvim-dap-view: toggle the debugger panel (console, scopes, breakpoints)" })
+      vim.keymap.set("n", "<leader>dw", dapview.add_expr, { desc = "nvim-dap-view: add a watch expression for the debugger" })
     end,
   },
   {
@@ -812,8 +814,8 @@ lze.load {
         vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
       end
 
-      vim.keymap.set("n", "<F5>", dap.continue)
-      vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint)
+      vim.keymap.set("n", "<F5>", dap.continue, { desc = "nvim-dap: start or continue the debug session" })
+      vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { desc = "nvim-dap: toggle a breakpoint on the current line" })
 
       -- load nvim-dap-view after dap configured
       lze.trigger_load { "nvim-dap-view" }
@@ -869,9 +871,9 @@ lze.load {
       end)
 
       -- Keymaps
-      vim.keymap.set("n", "<leader>sh", fzflua.helptags)
-      vim.keymap.set("n", "<leader>sk", fzflua.keymaps)
-      vim.keymap.set("n", "<leader>sm", fzflua.marks)
+      vim.keymap.set("n", "<leader>sh", fzflua.helptags, { desc = "fzf-lua: search neovim help tags and documentation" })
+      vim.keymap.set("n", "<leader>sk", fzflua.keymaps, { desc = "fzf-lua: search all keymaps and their descriptions" })
+      vim.keymap.set("n", "<leader>sm", fzflua.marks, { desc = "fzf-lua: search marks and jump to one" })
       vim.keymap.set(
         "n",
         "<leader>sf",
@@ -885,7 +887,8 @@ lze.load {
               width = 0.50,
             },
           }
-        end
+        end,
+        { desc = "fzf-lua: search files by filename in the current project (ctrl-g toggles ignored files)" }
       )
       vim.keymap.set(
         "n",
@@ -900,7 +903,8 @@ lze.load {
             },
             formatter = "path.filename_first",
           }
-        end
+        end,
+        { desc = "fzf-lua: live grep for text across every file in the project" }
       )
       vim.keymap.set(
         "n",
@@ -915,7 +919,8 @@ lze.load {
               },
             },
           }
-        end
+        end,
+        { desc = "fzf-lua: live grep for text inside the current buffer only" }
       )
       vim.keymap.set(
         "n",
@@ -926,11 +931,12 @@ lze.load {
             previewer = false,
             winopts = { width = 0.4, height = 0.8 },
           }
-        end
+        end,
+        { desc = "fzf-lua: switch between open buffers" }
       )
 
       -- LSP Keymaps
-      vim.keymap.set("n", "gd", fzflua.lsp_definitions)
+      vim.keymap.set("n", "gd", fzflua.lsp_definitions, { desc = "fzf-lua: go to the lsp definition of the symbol under the cursor" })
       -- vim.keymap.set("n", "gi", fzflua.lsp_implementations)
       vim.keymap.set(
         "n",
@@ -944,7 +950,7 @@ lze.load {
             },
           }
         end,
-        { noremap = true, silent = true }
+        { noremap = true, silent = true, desc = "fzf-lua: search lsp document symbols in the current buffer" }
       )
       vim.keymap.set(
         "n",
@@ -959,7 +965,7 @@ lze.load {
             },
           }
         end,
-        { noremap = true, silent = true }
+        { noremap = true, silent = true, desc = "fzf-lua: search lsp references to the symbol under the cursor" }
       )
       vim.keymap.set(
         { "n", "v" },
@@ -973,20 +979,23 @@ lze.load {
             },
           }
         end,
-        { noremap = true, silent = true }
+        { noremap = true, silent = true, desc = "fzf-lua: pick an lsp code action for the cursor or selection" }
       )
     end,
   },
   {
     "hover.nvim",
     lazy = true,
-    keys = { "K", "gK" },
+    keys = {
+      { "K", desc = "hover.nvim: show hover documentation for the symbol under the cursor" },
+      { "gK", desc = "hover.nvim: enter the hover window to scroll it" },
+    },
     after = function()
       require("hover").config {
         title = false,
       }
-      vim.keymap.set("n", "K", function() require("hover").open() end, { desc = "hover.nvim (open)" })
-      vim.keymap.set("n", "gK", function() require("hover").enter() end, { desc = "hover.nvim (enter)" })
+      vim.keymap.set("n", "K", function() require("hover").open() end, { desc = "hover.nvim: show hover documentation for the symbol under the cursor" })
+      vim.keymap.set("n", "gK", function() require("hover").enter() end, { desc = "hover.nvim: enter the hover window to scroll it" })
     end,
   },
   {
@@ -1009,14 +1018,14 @@ lze.load {
         toggles = { dim = false },
         styles = { zen = { backdrop = { transparent = false } } },
       }
-      vim.keymap.set("n", "<leader>z", function() snacks.zen() end)
+      vim.keymap.set("n", "<leader>z", function() snacks.zen() end, { desc = "snacks.nvim: toggle zen mode (distraction free centered buffer)" })
     end,
   },
   {
     "nvim-tree.lua",
     lazy = true,
     keys = {
-      "<leader>e",
+      { "<leader>e", desc = "nvim-tree.lua: toggle the file explorer tree in the current window" },
     },
     after = function()
       require("nvim-tree").setup {
@@ -1037,14 +1046,14 @@ lze.load {
         else
           require("nvim-tree.api").tree.toggle { current_window = true }
         end
-      end, { desc = "Toggle NvimTree" })
+      end, { desc = "nvim-tree.lua: toggle the file explorer tree in the current window" })
     end,
   },
   {
     "nvim.undotree",
     lazy = true,
     event = "DeferredUIEnter",
-    after = function() vim.keymap.set("n", "<leader>u", require("undotree").open) end,
+    after = function() vim.keymap.set("n", "<leader>u", require("undotree").open, { desc = "nvim.undotree: open the undo history tree for this buffer" }) end,
   },
   {
     "blink.indent",
@@ -1090,7 +1099,7 @@ lze.load {
       require("colorizer").setup {
         options = { parsers = { css_fn = true } },
       }
-      vim.keymap.set("n", "gtc", ":ColorizerToggle<cr>", { desc = "[g]o [t]oggle [c]olor" })
+      vim.keymap.set("n", "gtc", ":ColorizerToggle<cr>", { desc = "nvim-colorizer.lua: toggle inline color code highlighting (hex, rgb, css)" })
     end,
   },
   {
@@ -1126,20 +1135,23 @@ lze.load {
   {
     "treesj",
     lazy = true,
-    keys = "<space>j",
+    keys = { { "<space>j", desc = "treesj: toggle splitting or joining the block under the cursor onto multiple lines" } },
     after = function()
       local treesj = require "treesj"
       treesj.setup {
         use_default_keymaps = false,
         max_join_length = 1024,
       }
-      vim.keymap.set("n", "<space>j", treesj.toggle)
+      vim.keymap.set("n", "<space>j", treesj.toggle, { desc = "treesj: toggle splitting or joining the block under the cursor onto multiple lines" })
     end,
   },
   {
     "highlight-undo.nvim",
     lazy = true,
-    keys = { "u", "<C-r>" },
+    keys = {
+      { "u", desc = "highlight-undo.nvim: undo and briefly highlight the restored text" },
+      { "<C-r>", desc = "highlight-undo.nvim: redo and briefly highlight the restored text" },
+    },
     after = function() require("highlight-undo").setup {} end,
   },
   {
@@ -1150,13 +1162,13 @@ lze.load {
       persistence.setup()
 
       -- load the session for the current directory
-      vim.keymap.set("n", "<leader>s", persistence.load)
+      vim.keymap.set("n", "<A-s>", persistence.load, { desc = "persistence.nvim: restore the saved session for the current directory" })
       -- select a session to load
-      vim.keymap.set("n", "<leader>S", persistence.select)
+      vim.keymap.set("n", "<A-S>", persistence.select, { desc = "persistence.nvim: pick a saved session to restore from the session list" })
       -- load the last session
-      vim.keymap.set("n", "<leader>ql", function() persistence.load { last = true } end)
+      vim.keymap.set("n", "<leader>ql", function() persistence.load { last = true } end, { desc = "persistence.nvim: restore the most recently used session" })
       -- stop Persistence => session won't be saved on exit
-      vim.keymap.set("n", "<leader>qd", persistence.stop)
+      vim.keymap.set("n", "<leader>qd", persistence.stop, { desc = "persistence.nvim: stop session tracking so this session is not saved on exit" })
     end,
   },
   {
@@ -1202,10 +1214,10 @@ lze.load {
         legacy_commands = false,
       }
 
-      vim.keymap.set("n", "<leader>od", "<Cmd>Obsidian today<CR>", { desc = "[O]bsidian [d]aily note" })
-      vim.keymap.set("n", "<leader>on", "<Cmd>Obsidian new<CR>", { desc = "[O]bsidian [n]ew note" })
-      vim.keymap.set("n", "<leader>os", "<Cmd>Obsidian search<CR>", { desc = "[O]bsidian [s]earch" })
-      vim.keymap.set("n", "<leader>oo", "<Cmd>Obsidian quick_switch<CR>", { desc = "[O]bsidian [o]pen note" })
+      vim.keymap.set("n", "<leader>od", "<Cmd>Obsidian today<CR>", { desc = "obsidian.nvim: open today's daily note in the notes vault" })
+      vim.keymap.set("n", "<leader>on", "<Cmd>Obsidian new<CR>", { desc = "obsidian.nvim: create a new note in the notes vault" })
+      vim.keymap.set("n", "<leader>os", "<Cmd>Obsidian search<CR>", { desc = "obsidian.nvim: grep for text across all notes in the vault" })
+      vim.keymap.set("n", "<leader>oo", "<Cmd>Obsidian quick_switch<CR>", { desc = "obsidian.nvim: quick switch to another note by filename" })
     end,
   },
   {
