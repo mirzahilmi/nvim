@@ -29,6 +29,7 @@ vim.opt.incsearch = true -- show matches as you type
 vim.opt.signcolumn = "yes" -- always show a sign column
 vim.opt.colorcolumn = "100" -- show a column at 100 position chars
 vim.opt.showmatch = true -- highlights matching brackets
+vim.opt.cursorline = true -- highlight the line the cursor is on
 vim.opt.cmdheight = 1 -- embedded command line
 vim.opt.completeopt = "menuone,noinsert,noselect" -- completion options
 vim.opt.showmode = false -- do not show the mode, instead have it in statusline
@@ -215,6 +216,11 @@ vim.keymap.set("n", "<C-t>", function()
   end
   vim.diagnostic.setqflist()
 end, { desc = "diagnostic: toggle the quickfix list of all workspace diagnostics" })
+vim.keymap.set("n", "<leader>tn", function()
+  local rnu = vim.wo.relativenumber
+  vim.wo.relativenumber = not rnu
+  vim.wo.number = rnu
+end, { desc = "number: toggle between relative and absolute line numbers" })
 
 -- ============================================================================
 -- AUTOCMDS
@@ -362,6 +368,11 @@ local servers = {
   -- complementary lsp with tsgo solely for better code action, remove later
   -- when tsgo code action become better
   vtsls = {
+    -- diagnostics have no server_capabilities switch to turn off, and neovim keeps a
+    -- separate namespace per client, so tsgo and vtsls would each report every error
+    handlers = {
+      ["textDocument/publishDiagnostics"] = function() end,
+    },
     on_attach = function(client, _)
       -- taken from https://github.com/sergiornelas/nvim/blob/261d3b8bb633e0c9a7253d9b5243d9e985a56f5f/lua/plugins/lsp/capabilities/tsgo.lua
       -- based on https://www.reddit.com/r/neovim/comments/1rxc29w/comment/ob8varr
@@ -1013,7 +1024,7 @@ lze.load {
       snacks.setup {
         zen = {
           enabled = true,
-          toggles = { dim = false },
+          -- toggles = { dim = false },
         },
         toggles = { dim = false },
         styles = { zen = { backdrop = { transparent = false } } },
