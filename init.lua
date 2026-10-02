@@ -1036,14 +1036,28 @@ lze.load {
     "nvim-tree.lua",
     lazy = true,
     keys = {
-      { "<leader>e", desc = "nvim-tree.lua: toggle the file explorer tree in the current window" },
+      { "<leader>e", desc = "nvim-tree.lua: toggle the file explorer tree in a centered floating window" },
     },
     after = function()
       require("nvim-tree").setup {
         view = {
-          width = 35,
           relativenumber = true,
-          side = "right",
+          float = {
+            enable = true,
+            -- recomputed on every open so the window stays centered after resizes
+            open_win_config = function()
+              local width = math.floor(vim.o.columns * 0.5)
+              local height = math.floor((vim.o.lines - vim.o.cmdheight) * 0.7)
+              return {
+                relative = "editor",
+                border = "rounded",
+                width = width,
+                height = height,
+                row = math.floor((vim.o.lines - height) / 2) - 1,
+                col = math.floor((vim.o.columns - width) / 2),
+              }
+            end,
+          },
         },
         update_focused_file = { enable = true, update_root = false },
         filters = { dotfiles = false, git_ignored = false },
@@ -1051,13 +1065,7 @@ lze.load {
         actions = { open_file = { quit_on_open = true } },
       }
       -- vim.keymap.set("n", "<leader>e", function() require("nvim-tree.api").tree.toggle { find_file = true } end, { desc = "Toggle NvimTree" })
-      vim.keymap.set("n", "<leader>e", function()
-        if vim.bo.filetype == "NvimTree" then
-          vim.cmd "buffer #"
-        else
-          require("nvim-tree.api").tree.toggle { current_window = true }
-        end
-      end, { desc = "nvim-tree.lua: toggle the file explorer tree in the current window" })
+      vim.keymap.set("n", "<leader>e", function() require("nvim-tree.api").tree.toggle() end, { desc = "nvim-tree.lua: toggle the file explorer tree in a centered floating window" })
     end,
   },
   {
